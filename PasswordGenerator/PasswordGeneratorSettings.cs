@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Configuration;
 
 /// <summary>
 /// Holds all of the settings for the password generator
@@ -9,65 +10,62 @@ public class PasswordGeneratorSettings
     const string UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const string NUMERIC_CHARACTERS = "0123456789";
     const string SPECIAL_CHARACTERS = @"!#$%&*@\";
-    const int PASSWORD_LENGTH_MIN = 8;
-    const int PASSWORD_LENGTH_MAX = 128;
+    int _defaultPasswordLength = 8; // int.Parse(ConfigurationManager.AppSettings["DefaultPasswordLength"]);
+    int _defaultMinPasswordLength = 8; //int.Parse(ConfigurationManager.AppSettings["MinPasswordLength"]);
+    int _defaultMaxPasswordLength = 128;//int.Parse(ConfigurationManager.AppSettings["MaxPasswordLength"]);
+    int _defaultMaxPasswordAttempts = 10000; //int.Parse(ConfigurationManager.AppSettings["InvalidPasswordLengthMessage"]);
 
     public bool IncludeLowercase { get; set; }
     public bool IncludeUppercase { get; set; }
-    public bool IncludeNumbers { get; set; }
+    public bool IncludeNumeric { get; set; }
     public bool IncludeSpecial { get; set; }
     public int PasswordLength { get; set; }
     public string CharacterSet { get; set; }
     public int MaximumAttempts { get; set; }
+    public int MinimumLength { get; set; }
+    public int MaximumLength { get; set; }
 
-    public PasswordGeneratorSettings(bool includeLowercase, bool includeUppercase, bool includeNumbers, bool includeSpecial, int passwordLength)
+    public PasswordGeneratorSettings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
+    {
+        SetPasswordGeneratorProperties(includeLowercase, includeUppercase, includeNumeric, includeSpecial, _defaultPasswordLength, _defaultMaxPasswordAttempts);
+    }
+
+    public PasswordGeneratorSettings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, int passwordLength)
+    {
+        SetPasswordGeneratorProperties(includeLowercase, includeUppercase, includeNumeric, includeSpecial, passwordLength, _defaultMaxPasswordAttempts);
+    }
+
+    public PasswordGeneratorSettings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, int passwordLength, int maximumAttempts)
+    {
+        SetPasswordGeneratorProperties(includeLowercase, includeUppercase, includeNumeric, includeSpecial, passwordLength, maximumAttempts);
+    }
+
+    private void SetPasswordGeneratorProperties(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, int passwordLength, int maximumAttempts)
     {
         IncludeLowercase = includeLowercase;
         IncludeUppercase = includeUppercase;
-        IncludeNumbers = includeNumbers;
+        IncludeNumeric = includeNumeric;
         IncludeSpecial = includeSpecial;
         PasswordLength = passwordLength;
-
+        MaximumAttempts = maximumAttempts;
+        MinimumLength = _defaultMinPasswordLength;
+        MaximumLength = _defaultMaxPasswordLength;
         StringBuilder characterSet = new StringBuilder();
 
-        if (includeLowercase)
-        {
-            characterSet.Append(LOWERCASE_CHARACTERS);
-        }
-
-        if (includeUppercase)
-        {
-            characterSet.Append(UPPERCASE_CHARACTERS);
-        }
-
-        if (includeNumbers)
-        {
-            characterSet.Append(NUMERIC_CHARACTERS);
-        }
-
-        if (includeSpecial)
-        {
-            characterSet.Append(SPECIAL_CHARACTERS);
-        }
+        AppendCharactersIfTrue(includeLowercase, LOWERCASE_CHARACTERS, ref characterSet);
+        AppendCharactersIfTrue(includeUppercase, UPPERCASE_CHARACTERS, ref characterSet);
+        AppendCharactersIfTrue(includeNumeric, NUMERIC_CHARACTERS, ref characterSet);
+        AppendCharactersIfTrue(includeSpecial, SPECIAL_CHARACTERS, ref characterSet);
 
         CharacterSet = characterSet.ToString();
     }
 
-    /// <summary>
-    /// Checks that the password is within the valid length range
-    /// </summary>
-    /// <returns>A bool to say if it is valid or not</returns>
-    public bool IsValidLength()
+    private void AppendCharactersIfTrue(bool includeCharacters, string characters, ref StringBuilder characterSet)
     {
-        return PasswordLength >= PASSWORD_LENGTH_MIN && PasswordLength <= PASSWORD_LENGTH_MAX;
+        if (includeCharacters)
+        {
+            characterSet.Append(LOWERCASE_CHARACTERS);
+        }
     }
 
-    /// <summary>
-    /// An error message string with the min and max length
-    /// </summary>
-    /// <returns>An error message string with the min and max length</returns>
-    public string LengthErrorMessage()
-    {
-        return $"Password length must be between {PASSWORD_LENGTH_MIN} and {PASSWORD_LENGTH_MAX} characters";
-    }
 }
