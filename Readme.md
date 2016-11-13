@@ -27,7 +27,7 @@ string password = pwdGen.Next();
 ```javascript
 // Same as above but you can set the length. Must be between 8 and 128
 // Will return a password which only contains lowercase and uppercase characters and is 21 characters long.
-PasswordGenerator pwdGen = new PasswordGenerator(true, true, false, false, 21);
+PasswordGenerator pwdGen = new PasswordGenerator(includeLowercase: true, includeUppercase: true, includeNumeric: false, includeSpecial: false, passwordLength: 21);
 string password = pwdGen.Next();
 ```
 
