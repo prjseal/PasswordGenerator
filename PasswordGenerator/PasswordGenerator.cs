@@ -4,32 +4,99 @@ using System.Configuration;
 /// <summary>
 /// Generates random passwords and validates that they meet the rules passed in
 /// </summary>
-public static class PasswordGenerator
+public class PasswordGenerator
 {
+    private int _defaultPasswordLength = 16;
+    private int _defaultMaxPasswordAttempts = 10000;
+    private bool _defaultIncludeLowercase = true;
+    private bool _defaultIncludeUppercase = true;
+    private bool _defaultIncludeNumeric = true;
+    private bool _defaultIncludeSpecial = true;
+
+    private PasswordGeneratorSettings _settings { get; set; }
+
+    public PasswordGenerator()
+    {
+        _settings = new PasswordGeneratorSettings(_defaultIncludeLowercase, _defaultIncludeUppercase, _defaultIncludeNumeric, _defaultIncludeSpecial, _defaultPasswordLength, _defaultMaxPasswordAttempts, true);
+    }
+
+    public PasswordGenerator(PasswordGeneratorSettings settings)
+    {
+        _settings = settings;
+    }
+
+    public PasswordGenerator(int passwordLength)
+    {
+        _settings = new PasswordGeneratorSettings(_defaultIncludeLowercase, _defaultIncludeUppercase, _defaultIncludeNumeric, _defaultIncludeSpecial, passwordLength, _defaultMaxPasswordAttempts, true);
+    }
+
+    public PasswordGenerator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
+    {
+        _settings = new PasswordGeneratorSettings(includeLowercase, includeUppercase, includeNumeric, includeSpecial, _defaultPasswordLength, _defaultMaxPasswordAttempts, false);
+    }
+
+    public PasswordGenerator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, int passwordLength)
+    {
+        _settings = new PasswordGeneratorSettings(includeLowercase, includeUppercase, includeNumeric, includeSpecial, passwordLength, _defaultMaxPasswordAttempts, false);
+    }
+
+    public PasswordGenerator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, int passwordLength, int maximumAttempts)
+    {
+        _settings = new PasswordGeneratorSettings(includeLowercase, includeUppercase, includeNumeric, includeSpecial, passwordLength, maximumAttempts, false);
+    }
+
+    public PasswordGenerator IncludeLowercase()
+    {
+        this._settings = _settings.AddLowercase();
+        return this;
+    }
+
+    public PasswordGenerator IncludeUppercase()
+    {
+        this._settings = _settings.AddUppercase();
+        return this;
+    }
+
+    public PasswordGenerator IncludeNumeric()
+    {
+        this._settings = _settings.AddNumeric();
+        return this;
+    }
+
+    public PasswordGenerator IncludeSpecial()
+    {
+        this._settings = _settings.AddSpecial();
+        return this;
+    }
+
+    public PasswordGenerator LengthRequired(int passwordLength)
+    {
+        this._settings.PasswordLength = passwordLength;
+        return this;
+    }
+
     /// <summary>
-    /// Calls the method to generate a random password and continues until it returns
-    /// a valid password or the number of attempts exceeds the limit.
+    /// Gets the next random password which meets the requirements
     /// </summary>
-    /// <param name="settings">Password generator settings object</param>
-    /// <returns>A random password which is validated</returns>
-    public static string GetValidPassword(PasswordGeneratorSettings settings)
+    /// <returns>A password as a string</returns>
+    public string Next()
     {
         string password;
-        if (!LengthIsValid(settings.PasswordLength, settings.MinimumLength, settings.MaximumLength))
+        if (!LengthIsValid(_settings.PasswordLength, _settings.MinimumLength, _settings.MaximumLength))
         {
-            password = string.Format("Password length invalid. Must be between {0} and {1} characters long", settings.MinimumLength, settings.MaximumLength);
+            password = string.Format("Password length invalid. Must be between {0} and {1} characters long", _settings.MinimumLength, _settings.MaximumLength);
         }
         else
         {
             int passwordAttempts = 0;
             do
             {
-                password = PasswordGenerator.GenerateRandomPassword(settings);
+                password = GenerateRandomPassword(_settings);
                 passwordAttempts++;
             }
-            while (passwordAttempts < settings.MaximumAttempts && !PasswordGenerator.PasswordIsValid(settings, password));
+            while (passwordAttempts < _settings.MaximumAttempts && !PasswordIsValid(_settings, password));
 
-            password = PasswordGenerator.PasswordIsValid(settings, password) ? password : "Try again";
+            password = PasswordIsValid(_settings, password) ? password : "Try again";
         }
 
         return password;
@@ -42,7 +109,7 @@ public static class PasswordGenerator
     /// </summary>
     /// <param name="settings">Password generator settings object</param>
     /// <returns>a random password</returns>
-    public static string GenerateRandomPassword(PasswordGeneratorSettings settings)
+    private string GenerateRandomPassword(PasswordGeneratorSettings settings)
     {
         const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
         char[] password = new char[settings.PasswordLength];
@@ -68,30 +135,27 @@ public static class PasswordGenerator
     }
 
     /// <summary>
-    /// When you give it a password and some settings, it validates the password against the settings.
+    /// When you give it a password and some _settings, it validates the password against the _settings.
     /// </summary>
     /// <param name="settings">Password settings</param>
     /// <param name="password">Password to test</param>
     /// <returns>True or False to say if the password is valid or not</returns>
-    public static bool PasswordIsValid(PasswordGeneratorSettings settings, string password)
+    public bool PasswordIsValid(PasswordGeneratorSettings settings, string password)
     {
         const string REGEX_LOWERCASE = @"[a-z]";
         const string REGEX_UPPERCASE = @"[A-Z]";
         const string REGEX_NUMERIC = @"[\d]";
         const string REGEX_SPECIAL = @"([!#$%&*@\\])+";
-        const int PASSWORD_LENGTH_MIN = 8;
-        const int PASSWORD_LENGTH_MAX = 128;
 
-        bool lowerCaseIsValid = ValidateCharacterSet(settings.IncludeLowercase, password, REGEX_LOWERCASE);
-        bool upperCaseIsValid = ValidateCharacterSet(settings.IncludeUppercase, password, REGEX_UPPERCASE);
-        bool numericIsValid = ValidateCharacterSet(settings.IncludeNumeric, password, REGEX_NUMERIC);
-        bool symbolsAreValid = !settings.IncludeSpecial || (settings.IncludeSpecial && Regex.IsMatch(password, REGEX_SPECIAL));
-        bool isValidLength = LengthIsValid(password.Length, PASSWORD_LENGTH_MIN, PASSWORD_LENGTH_MAX);
+        bool lowerCaseIsValid = !settings.IncludeLowercase || (settings.IncludeLowercase && Regex.IsMatch(password, REGEX_LOWERCASE));
+        bool upperCaseIsValid = !settings.IncludeUppercase || (settings.IncludeUppercase && Regex.IsMatch(password, REGEX_UPPERCASE));
+        bool numericIsValid = !settings.IncludeNumeric || (settings.IncludeNumeric && Regex.IsMatch(password, REGEX_NUMERIC));
+        bool specialIsValid = !settings.IncludeSpecial || (settings.IncludeSpecial && Regex.IsMatch(password, REGEX_SPECIAL));
 
-        return lowerCaseIsValid && upperCaseIsValid && numericIsValid && symbolsAreValid;
+        return lowerCaseIsValid && upperCaseIsValid && numericIsValid && specialIsValid && LengthIsValid(password.Length, settings.MinimumLength, settings.MaximumLength);
     }
 
-    private static bool ValidateCharacterSet(bool includeThisCharacterSet, string password, string charactersetRegex)
+    private bool CharacterSetIsValid(bool includeThisCharacterSet, string password, string charactersetRegex)
     {
         return !includeThisCharacterSet || (includeThisCharacterSet && Regex.IsMatch(password, charactersetRegex));
     }
@@ -101,7 +165,7 @@ public static class PasswordGenerator
     /// </summary>
     /// <param name="password">The password to validate</param>
     /// <returns>A bool to say if it is valid or not</returns>
-    public static bool LengthIsValid(int passwordLength, int minLength, int maxLength)
+    private static bool LengthIsValid(int passwordLength, int minLength, int maxLength)
     {
         return passwordLength >= minLength && passwordLength <= maxLength;
     }
