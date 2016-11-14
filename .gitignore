@@ -3,3 +3,4 @@ UnitTests/bin/Debug/$RANDOM_SEED$
 PasswordGenerator/bin/Debug/$RANDOM_SEED$
 *.suo
 PasswordGenerator/bin/Debug/$RANDOM_SEED$
+*.suo
