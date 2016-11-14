@@ -10,6 +10,8 @@ Install via NuGet: ``` Install-Package PasswordGenerator ```
 
 ## Basic usage
 
+See below or play around with it in [Dotnetfiddle](https://dotnetfiddle.net/U8TLQA)
+
 ```javascript
 // By default, all characters available for use and a length of 16
 // Will return a random password with the default settings 
