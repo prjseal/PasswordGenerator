@@ -10,7 +10,7 @@ Install via NuGet: ``` Install-Package PasswordGenerator ```
 
 ## Basic usage
 
-See below or play around with it in [Dotnetfiddle](https://dotnetfiddle.net/U8TLQA)
+See examples below or try them out now in your browser using [Dotnetfiddle](https://dotnetfiddle.net/Q0hMlU)
 
 ```javascript
 // By default, all characters available for use and a length of 16
@@ -55,7 +55,7 @@ string password = pwdGen.Next();
 ```
 
 ```javascript
-// This is the same as the above, but with passes the length in using the method RequiredLength()
-PasswordGenerator pwdGen = new PasswordGenerator().IncludeLowercase().IncludeUppercase().IncludeSpecial().RequiredLength(128);
+// This is the same as the above, but with passes the length in using the method LengthRequired()
+PasswordGenerator pwdGen = new PasswordGenerator().IncludeLowercase().IncludeUppercase().IncludeSpecial().LengthRequired(128);
 string password = pwdGen.Next();
 ```
