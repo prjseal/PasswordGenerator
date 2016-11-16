@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
-using System.Configuration;
+using System.Linq;
+using System.Collections.Generic;
 
 /// <summary>
 /// Generates random passwords and validates that they meet the rules passed in
@@ -113,12 +114,17 @@ public class PasswordGenerator
     {
         const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
         char[] password = new char[settings.PasswordLength];
-        int characterSetLength = settings.CharacterSet.Length;
+
+        char[] characters = settings.CharacterSet.ToCharArray();
+        char[] shuffledChars = Shuffle(characters.Select(x => x)).ToArray();
+
+        string shuffledCharacterSet = string.Join(null, shuffledChars);
+        int characterSetLength = shuffledCharacterSet.Length;
 
         System.Random random = new System.Random();
         for (int characterPosition = 0; characterPosition < settings.PasswordLength; characterPosition++)
         {
-            password[characterPosition] = settings.CharacterSet[random.Next(characterSetLength - 1)];
+            password[characterPosition] = shuffledCharacterSet[random.Next(characterSetLength - 1)];
 
             bool moreThanTwoIdenticalInARow =
                 characterPosition > MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS
@@ -165,8 +171,13 @@ public class PasswordGenerator
     /// </summary>
     /// <param name="password">The password to validate</param>
     /// <returns>A bool to say if it is valid or not</returns>
-    private static bool LengthIsValid(int passwordLength, int minLength, int maxLength)
+    private bool LengthIsValid(int passwordLength, int minLength, int maxLength)
     {
         return passwordLength >= minLength && passwordLength <= maxLength;
+    }
+
+    public IEnumerable<T> Shuffle<T>(IEnumerable<T> items)
+    {
+        return from item in items orderby System.Guid.NewGuid() ascending select item;
     }
 }
