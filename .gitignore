@@ -4,3 +4,8 @@ PasswordGenerator/bin/Debug/$RANDOM_SEED$
 *.suo
 PasswordGenerator/bin/Debug/$RANDOM_SEED$
 *.suo
+/.vs
+/PasswordGenerator/obj
+/PasswordGenerator/bin/Debug
+/UnitTests/obj
+/UnitTests/bin/Debug
