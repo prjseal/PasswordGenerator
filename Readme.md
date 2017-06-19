@@ -6,6 +6,8 @@ A library which generates random passwords with different settings to meet the O
 
 Install via NuGet: ``` Install-Package PasswordGenerator ```
 
+[![Nuget Downloads](https://img.shields.io/nuget/dt/PasswordGenerator.svg)](https://www.nuget.org/packages/PasswordGenerator)
+
 [Or click here to go to the package landing page](https://www.nuget.org/packages/PasswordGenerator)
 
 ## Basic usage
