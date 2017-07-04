@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PasswordGenerator\PasswordGenerator.csproj">
-      <Project>{a5ffcd9a-041d-4181-9429-1b59a31a5abe}</Project>
+      <Project>{5128e70c-78e1-411d-ae9b-5d8a0c331523}</Project>
       <Name>PasswordGenerator</Name>
     </ProjectReference>
   </ItemGroup>
