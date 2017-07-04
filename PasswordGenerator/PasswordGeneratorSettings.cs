@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Configuration;
 
 /// <summary>
 /// Holds all of the settings for the password generator
