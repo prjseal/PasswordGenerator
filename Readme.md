@@ -62,6 +62,6 @@ PasswordGenerator pwdGen = new PasswordGenerator().IncludeLowercase().IncludeUpp
 string password = pwdGen.Next();
 ```
 
-### Compaitible with .NET Core
+### Compatible with .NET Core
 
 You can use this library with .NET Core. [Read this post by Jamie Taylor](https://dotnetcore.gaprogman.com/2017/06/01/net-core-and-net-framework-working-together-or-the-magic-of-net-standard/) who shows you how to do it.
