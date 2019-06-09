@@ -12,6 +12,7 @@ Usage Example
 
 // Here is how to get lowercase, uppercase and special characters using the fluent approach
 // This example also passes the length in using the fluent method LengthRequired()
+
 PasswordGenerator pwdGen = new PasswordGenerator().IncludeLowercase().IncludeUppercase().IncludeSpecial().LengthRequired(128);
 string password = pwdGen.Next();
 
