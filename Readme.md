@@ -38,7 +38,7 @@ string password = pwdGen.Next();
 ## Fluent usage
 
 ```javascript
-// You can build up your reqirements by adding things to the end, like .AddNumeric()
+// You can build up your reqirements by adding things to the end, like .IncludeNumeric()
 // This will return a password which is just numbers and has a default length of 16
 PasswordGenerator pwdGen = new PasswordGenerator().IncludeNumeric();
 string password = pwdGen.Next();

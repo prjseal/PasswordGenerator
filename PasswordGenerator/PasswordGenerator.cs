@@ -1,6 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Generates random passwords and validates that they meet the rules passed in
