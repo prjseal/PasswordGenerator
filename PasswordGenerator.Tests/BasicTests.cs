@@ -1,57 +1,56 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using PasswordGenerator.Services;
 
-namespace UnitTests
+namespace PasswordGenerator.Tests
 {
-    [TestClass]
-    public class PasswordGeneratorTests
+    public class BasicTests
     {
-        [TestMethod]
+        [Test]
         public void PasswordGenerator_GivenNoSettings_ShouldReturn16Length()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator();
-            string result = pwdGen.Next();
+            var pwd = new PasswordService();
+            var result = pwd.Next();
             Assert.AreEqual(16, result.Length);
         }
 
-        [TestMethod]
+        [Test]
         public void PasswordGenerator_GivenLength7_ShouldReturnLengthErrorMessage()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator(7);
-            string result = pwdGen.Next();
+            var pwd = new PasswordService(7);
+            var result = pwd.Next();
             Assert.AreEqual("Password length invalid. Must be between 8 and 128 characters long", result);
         }
 
-        [TestMethod]
+        [Test]
         public void PasswordGenerator_GivenLength129_ShouldReturnLengthErrorMessage()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator(129);
-            string result = pwdGen.Next();
+            var pwd = new PasswordService(129);
+            var result = pwd.Next();
             Assert.AreEqual("Password length invalid. Must be between 8 and 128 characters long", result);
         }
 
-        [TestMethod]
+        [Test]
         public void PasswordGenerator_GivenLength128_ShouldReturn128Length()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator(128);
-            string result = pwdGen.Next();
+            var pwd = new PasswordService(128);
+            var result = pwd.Next();
             Assert.AreEqual(128, result.Length);
         }
 
-        [TestMethod]
+        [Test]
         public void PasswordGenerator_IncludeLowercase_ShouldReturn16Length()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator().IncludeLowercase();
-            string result = pwdGen.Next();
+            var pwd = new PasswordService().IncludeLowercase();
+            var result = pwd.Next();
             Assert.AreEqual(16, result.Length);
         }
 
-        [TestMethod]
+        [Test]
         public void PasswordGenerator_LengthRequired50_ShouldReturn50Length()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator().LengthRequired(50);
-            string result = pwdGen.Next();
+            var pwd = new PasswordService().LengthRequired(50);
+            var result = pwd.Next();
             Assert.AreEqual(50, result.Length);
         }
-
     }
 }

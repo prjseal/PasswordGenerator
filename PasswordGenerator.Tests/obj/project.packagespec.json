@@ -1,0 +1,63 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "D:\\piess\\Code\\GitHub\\PasswordGenerator\\PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj",
+    "projectName": "PasswordGenerator.Tests",
+    "projectPath": "D:\\piess\\Code\\GitHub\\PasswordGenerator\\PasswordGenerator.Tests\\PasswordGenerator.Tests.csproj",
+    "outputPath": "D:\\piess\\Code\\GitHub\\PasswordGenerator\\PasswordGenerator.Tests\\obj\\",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "netcoreapp2.2"
+    ],
+    "sources": {
+      "D:\\LocalPackages": {},
+      "https://api.nuget.org/v3/index.json": {}
+    },
+    "frameworks": {
+      "netcoreapp2.2": {
+        "projectReferences": {
+          "D:\\piess\\Code\\GitHub\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj": {
+            "projectPath": "D:\\piess\\Code\\GitHub\\PasswordGenerator\\PasswordGenerator\\PasswordGenerator.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "netcoreapp2.2": {
+      "dependencies": {
+        "Microsoft.NET.Test.Sdk": {
+          "target": "Package",
+          "version": "[15.9.0, )"
+        },
+        "Microsoft.NETCore.App": {
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.2.0, )",
+          "autoReferenced": true
+        },
+        "NUnit3TestAdapter": {
+          "target": "Package",
+          "version": "[3.11.0, )"
+        },
+        "nunit": {
+          "target": "Package",
+          "version": "[3.11.0, )"
+        }
+      },
+      "imports": [
+        "net461"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}

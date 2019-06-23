@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="dbb613f7-18c1-4462-afcf-23e5ca820951" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/PasswordGenerator/Models/IPasswordSettings.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PasswordGenerator/Models/PasswordSettings.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PasswordGenerator/Services/IPasswordService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PasswordGenerator/Services/PasswordService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator.sln" beforeDir="false" afterPath="$PROJECT_DIR$/PasswordGenerator.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator/App.config" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator/PasswordGenerator.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator/PasswordGenerator.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/PasswordGenerator/PasswordGenerator.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator/PasswordGenerator.csproj.user" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator/PasswordGenerator.nuspec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator/PasswordGeneratorSettings.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator/Properties/AssemblyInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PasswordGenerator/readme.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/Readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/PasswordGeneratorTests.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Properties/AssemblyInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/UnitTests.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/packages.config" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pg_logo.png" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PasswordGenerator/Services/IPasswordService.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="92">
+              <caret line="4" column="25" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
+              <folding>
+                <marker date="1561327421760" expanded="true" signature="36:357" ph="{...}" />
+                <marker date="1561327421760" expanded="true" signature="76:355" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PasswordGenerator/Services/PasswordService.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-368">
+              <caret line="84" column="31" selection-start-line="84" selection-start-column="31" selection-end-line="84" selection-end-column="31" />
+              <folding>
+                <marker date="1561327756391" expanded="false" signature="6:136" ph="..." />
+                <marker date="1561327756391" expanded="true" signature="174:8064" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="177:297" ph="///     Generates random passwords and validates that they meet the rules passed in ... " />
+                <marker date="1561327756391" expanded="true" signature="349:8062" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="737:987" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="1047:1100" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="1152:1379" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="1499:1706" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="1858:2058" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="2231:2420" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="2530:2623" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="2675:2768" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="2818:2909" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="2959:3050" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="3118:3217" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="3227:3392" ph="///     Gets the next random password which meets the requirements ... " />
+                <marker date="1561327756391" expanded="true" signature="3421:4225" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="3565:3755" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="3772:4185" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="4236:4543" ph="///     Generates a random password based on the rules passed in the settings parameter ... " />
+                <marker date="1561327756391" expanded="true" signature="4624:5753" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="5191:5694" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="5763:6117" ph="///     When you give it a password and some _settings, it validates the password against the _settings. ... " />
+                <marker date="1561327756391" expanded="true" signature="6206:7294" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="7304:7699" ph="///     Checks that the password is within the valid length range ... " />
+                <marker date="1561327756391" expanded="true" signature="7791:7890" ph="{...}" />
+                <marker date="1561327756391" expanded="true" signature="7962:8056" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/PasswordGenerator.Tests/BasicTests.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="184">
+              <caret line="29" column="9" lean-forward="true" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
+              <folding>
+                <marker date="1561327952442" expanded="true" signature="6:56" ph="..." />
+                <marker date="1561327952442" expanded="true" signature="91:1774" ph="{...}" />
+                <marker date="1561327952442" expanded="true" signature="121:1772" ph="{...}" />
+                <marker date="1561327952442" expanded="true" signature="219:369" ph="{...}" />
+                <marker date="1561327952442" expanded="true" signature="469:679" ph="{...}" />
+                <marker date="1561327952442" expanded="true" signature="781:993" ph="{...}" />
+                <marker date="1561327952442" expanded="true" signature="1086:1240" ph="{...}" />
+                <marker date="1561327952442" expanded="true" signature="1334:1503" ph="{...}" />
+                <marker date="1561327952442" expanded="true" signature="1597:1766" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PasswordGenerator/Models/IPasswordSettings.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="115">
+              <caret line="5" column="21" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
+              <folding>
+                <marker date="1561327421440" expanded="true" signature="34:692" ph="{...}" />
+                <marker date="1561327421440" expanded="true" signature="41:138" ph="///     Holds all of the settings for the password generator ... " />
+                <marker date="1561327421440" expanded="true" signature="177:690" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PasswordGenerator/Models/PasswordSettings.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="161">
+              <caret line="7" column="41" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="41" />
+              <folding>
+                <marker date="1561327421820" expanded="true" signature="54:3632" ph="{...}" />
+                <marker date="1561327421820" expanded="true" signature="61:158" ph="///     Holds all of the settings for the password generator ... " />
+                <marker date="1561327421820" expanded="true" signature="212:3630" ph="{...}" />
+                <marker date="1561327421820" expanded="true" signature="813:1378" ph="{...}" />
+                <marker date="1561327421820" expanded="true" signature="1943:2107" ph="{...}" />
+                <marker date="1561327421820" expanded="true" signature="2156:2320" ph="{...}" />
+                <marker date="1561327421820" expanded="true" signature="2367:2527" ph="{...}" />
+                <marker date="1561327421820" expanded="true" signature="2574:2734" ph="{...}" />
+                <marker date="1561327421820" expanded="true" signature="2883:3298" ph="{...}" />
+                <marker date="1561327421820" expanded="true" signature="3340:3624" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/PasswordGenerator/Services/PasswordService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/PasswordGenerator.Tests/BasicTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/PasswordGenerator/Models/PasswordSettings.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/PasswordGenerator/Models/IPasswordSettings.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/PasswordGenerator/Services/IPasswordService.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/PasswordGenerator/Services/Password.cs" />
+        <option value="$PROJECT_DIR$/PasswordGenerator/IPasswordSettings.cs" />
+        <option value="$PROJECT_DIR$/PasswordGenerator/PasswordSettings.cs" />
+        <option value="$PROJECT_DIR$/PasswordGenerator/Models/IPasswordSettings.cs" />
+        <option value="$PROJECT_DIR$/PasswordGenerator/Models/PasswordSettings.cs" />
+        <option value="$PROJECT_DIR$/PasswordGenerator/Services/IPasswordService.cs" />
+        <option value="$PROJECT_DIR$/PasswordGenerator/Services/PasswordService.cs" />
+        <option value="$PROJECT_DIR$/PasswordGenerator.Tests/UnitTest1.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="260" />
+    <option name="y" value="20" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="AssemblyExplorer" />
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="PasswordGenerator" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="PasswordGenerator" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="PasswordGenerator" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="PasswordGenerator" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="PasswordGenerator" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Models" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="PasswordGenerator" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="PasswordGenerator" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Services" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="PasswordGenerator" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="PasswordGenerator.Tests" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-all-files" value="false" />
+      </pane>
+      <pane id="FileSystemExplorer" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dbb613f7-18c1-4462-afcf-23e5ca820951" name="Default Changelist" comment="" />
+      <created>1561283986992</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1561283986992</updated>
+      <workItem from="1561283989830" duration="8000" />
+      <workItem from="1561284045271" duration="2056000" />
+      <workItem from="1561326785969" duration="2168000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="4232000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25860906" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection Results" visible="true" weight="0.32947975" />
+      <window_info anchor="bottom" id="Build" weight="0.32947975" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="NuGet" order="7" />
+      <window_info anchor="bottom" id="Performance Profiler" order="8" />
+      <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="Database Changes" order="11" />
+      <window_info anchor="bottom" id="Unit Tests" order="12" weight="0.32947975" />
+      <window_info anchor="bottom" id="Terminal" order="13" />
+      <window_info anchor="bottom" id="Event Log" order="14" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Errors In Solution" order="3" weight="0.32950708" />
+      <window_info anchor="right" id="Database" order="4" />
+      <window_info anchor="right" id="Unit Tests Coverage" order="5" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/PasswordGenerator/Class1.cs" />
+    <entry file="file://$PROJECT_DIR$/PasswordGenerator/Models/PasswordSettings.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="7" column="41" selection-start-line="7" selection-start-column="41" selection-end-line="7" selection-end-column="41" />
+          <folding>
+            <marker date="1561327421820" expanded="true" signature="54:3632" ph="{...}" />
+            <marker date="1561327421820" expanded="true" signature="61:158" ph="///     Holds all of the settings for the password generator ... " />
+            <marker date="1561327421820" expanded="true" signature="212:3630" ph="{...}" />
+            <marker date="1561327421820" expanded="true" signature="813:1378" ph="{...}" />
+            <marker date="1561327421820" expanded="true" signature="1943:2107" ph="{...}" />
+            <marker date="1561327421820" expanded="true" signature="2156:2320" ph="{...}" />
+            <marker date="1561327421820" expanded="true" signature="2367:2527" ph="{...}" />
+            <marker date="1561327421820" expanded="true" signature="2574:2734" ph="{...}" />
+            <marker date="1561327421820" expanded="true" signature="2883:3298" ph="{...}" />
+            <marker date="1561327421820" expanded="true" signature="3340:3624" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PasswordGenerator/Models/IPasswordSettings.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="5" column="21" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
+          <folding>
+            <marker date="1561327421440" expanded="true" signature="34:692" ph="{...}" />
+            <marker date="1561327421440" expanded="true" signature="41:138" ph="///     Holds all of the settings for the password generator ... " />
+            <marker date="1561327421440" expanded="true" signature="177:690" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PasswordGenerator/Services/PasswordService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-368">
+          <caret line="84" column="31" selection-start-line="84" selection-start-column="31" selection-end-line="84" selection-end-column="31" />
+          <folding>
+            <marker date="1561327756391" expanded="false" signature="6:136" ph="..." />
+            <marker date="1561327756391" expanded="true" signature="174:8064" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="177:297" ph="///     Generates random passwords and validates that they meet the rules passed in ... " />
+            <marker date="1561327756391" expanded="true" signature="349:8062" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="737:987" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="1047:1100" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="1152:1379" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="1499:1706" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="1858:2058" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="2231:2420" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="2530:2623" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="2675:2768" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="2818:2909" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="2959:3050" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="3118:3217" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="3227:3392" ph="///     Gets the next random password which meets the requirements ... " />
+            <marker date="1561327756391" expanded="true" signature="3421:4225" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="3565:3755" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="3772:4185" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="4236:4543" ph="///     Generates a random password based on the rules passed in the settings parameter ... " />
+            <marker date="1561327756391" expanded="true" signature="4624:5753" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="5191:5694" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="5763:6117" ph="///     When you give it a password and some _settings, it validates the password against the _settings. ... " />
+            <marker date="1561327756391" expanded="true" signature="6206:7294" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="7304:7699" ph="///     Checks that the password is within the valid length range ... " />
+            <marker date="1561327756391" expanded="true" signature="7791:7890" ph="{...}" />
+            <marker date="1561327756391" expanded="true" signature="7962:8056" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PasswordGenerator/Services/IPasswordService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="25" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
+          <folding>
+            <marker date="1561327421760" expanded="true" signature="36:357" ph="{...}" />
+            <marker date="1561327421760" expanded="true" signature="76:355" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PasswordGenerator.Tests/BasicTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="29" column="9" lean-forward="true" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
+          <folding>
+            <marker date="1561327952442" expanded="true" signature="6:56" ph="..." />
+            <marker date="1561327952442" expanded="true" signature="91:1774" ph="{...}" />
+            <marker date="1561327952442" expanded="true" signature="121:1772" ph="{...}" />
+            <marker date="1561327952442" expanded="true" signature="219:369" ph="{...}" />
+            <marker date="1561327952442" expanded="true" signature="469:679" ph="{...}" />
+            <marker date="1561327952442" expanded="true" signature="781:993" ph="{...}" />
+            <marker date="1561327952442" expanded="true" signature="1086:1240" ph="{...}" />
+            <marker date="1561327952442" expanded="true" signature="1334:1503" ph="{...}" />
+            <marker date="1561327952442" expanded="true" signature="1597:1766" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
