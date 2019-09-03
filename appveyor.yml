@@ -1,8 +1,7 @@
 version: 2.0.{build}
 image: Visual Studio 2017
 before_build:
-  ps: nuget restore PasswordGenerator.sln
+  ps: nuget restore
 build:
-  project: PasswordGenerator/PasswordGenerator.csproj
   publish_nuget: true
   verbosity: detailed
