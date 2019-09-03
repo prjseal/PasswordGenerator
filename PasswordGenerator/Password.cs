@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using PasswordGenerator.Models;
 
-namespace PasswordGenerator.Services
+namespace PasswordGenerator
 {
 /// <summary>
     ///     Generates random passwords and validates that they meet the rules passed in
     /// </summary>
-    public class PasswordService : IPasswordService
+    public class Password : IPassword
     {
         private const int DefaultPasswordLength = 16;
         private const int DefaultMaxPasswordAttempts = 10000;
@@ -18,38 +17,38 @@ namespace PasswordGenerator.Services
         private const bool DefaultIncludeNumeric = true;
         private const bool DefaultIncludeSpecial = true;
 
-        public PasswordService()
+        public Password()
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts,
                 true);
         }
 
-        public PasswordService(IPasswordSettings settings)
+        public Password(IPasswordSettings settings)
         {
             Settings = settings;
         }
 
-        public PasswordService(int passwordLength)
+        public Password(int passwordLength)
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, passwordLength, DefaultMaxPasswordAttempts, true);
         }
 
-        public PasswordService(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
+        public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts, false);
         }
 
-        public PasswordService(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
+        public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, DefaultMaxPasswordAttempts, false);
         }
 
-        public PasswordService(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
+        public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength, int maximumAttempts)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
@@ -58,31 +57,31 @@ namespace PasswordGenerator.Services
 
         private IPasswordSettings Settings { get; set; }
 
-        public IPasswordService IncludeLowercase()
+        public IPassword IncludeLowercase()
         {
             Settings = Settings.AddLowercase();
             return this;
         }
 
-        public IPasswordService IncludeUppercase()
+        public IPassword IncludeUppercase()
         {
             Settings = Settings.AddUppercase();
             return this;
         }
 
-        public IPasswordService IncludeNumeric()
+        public IPassword IncludeNumeric()
         {
             Settings = Settings.AddNumeric();
             return this;
         }
 
-        public IPasswordService IncludeSpecial()
+        public IPassword IncludeSpecial()
         {
             Settings = Settings.AddSpecial();
             return this;
         }
 
-        public IPasswordService LengthRequired(int passwordLength)
+        public IPassword LengthRequired(int passwordLength)
         {
             Settings.PasswordLength = passwordLength;
             return this;
@@ -115,6 +114,19 @@ namespace PasswordGenerator.Services
             return password;
         }
 
+
+        public IEnumerable<string> NextGroup(int numberOfPasswordsToGenerate)
+        {
+            var passwords = new List<string>();
+
+            for (var i = 0; i < numberOfPasswordsToGenerate; i++)
+            {
+                var pwd = this.Next();
+                passwords.Add(pwd);
+            }
+            
+            return passwords;
+        }
 
         /// <summary>
         ///     Generates a random password based on the rules passed in the settings parameter

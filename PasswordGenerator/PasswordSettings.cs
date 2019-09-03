@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace PasswordGenerator.Models
+namespace PasswordGenerator
 {
     /// <summary>
     ///     Holds all of the settings for the password generator

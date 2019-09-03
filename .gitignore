@@ -10,3 +10,6 @@ PasswordGenerator/bin/Debug/$RANDOM_SEED$
 /UnitTests/obj
 /UnitTests/bin/Debug
 /packages
+/PasswordGenerator.Tests/bin
+/PasswordGenerator.Tests/obj
+/.idea
