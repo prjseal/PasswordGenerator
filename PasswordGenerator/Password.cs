@@ -55,7 +55,7 @@ namespace PasswordGenerator
                 includeSpecial, passwordLength, maximumAttempts, false);
         }
 
-        private IPasswordSettings Settings { get; set; }
+        public IPasswordSettings Settings { get; set; }
 
         public IPassword IncludeLowercase()
         {
