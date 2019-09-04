@@ -1,5 +1,5 @@
 #Password Generator
-![Password Logo](https://github.com/prjseal/Password/blob/master/passwordgeneratorlogo.png "Password Logo")
+![Password Logo](https://github.com/prjseal/PasswordGenerator/blob/dev/v2/passwordgeneratorlogo.png "Password Logo")
 
 A library which generates random passwords with different settings to meet the OWASP requirements
 
