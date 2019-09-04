@@ -8,9 +8,9 @@ A library which generates random passwords with different settings to meet the O
 
 Install via NuGet: ``` Install-Package Password ```
 
-[![Nuget Downloads](https://img.shields.io/nuget/dt/Password.svg)](https://www.nuget.org/packages/Password)
+[![Nuget Downloads](https://img.shields.io/nuget/dt/PasswordGenerator.svg)](https://www.nuget.org/packages/PasswordGenerator)
 
-[Or click here to go to the package landing page](https://www.nuget.org/packages/Password)
+[Or click here to go to the package landing page](https://www.nuget.org/packages/PasswordGenerator)
 
 It is Compatible with .NET Core, .NET Framework and more. See the below chart:
 
