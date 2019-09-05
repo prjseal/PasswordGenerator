@@ -1,6 +1,7 @@
-version: 1.0.{build}
+version: 2.0.{build}
+image: Visual Studio 2017
 before_build:
-- ps: nuget restore
+  ps: nuget restore
 build:
   publish_nuget: true
-  verbosity: minimal
+  verbosity: detailed
