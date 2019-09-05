@@ -6,7 +6,7 @@ A .NET Standard library which generates random passwords with different settings
 
 ## NuGet
 
-Install via NuGet: ``` Install-Package Password ```
+Install via NuGet: ``` Install-Package PasswordGenerator ```
 
 [![Nuget Downloads](https://img.shields.io/nuget/dt/PasswordGenerator.svg)](https://www.nuget.org/packages/PasswordGenerator)
 
