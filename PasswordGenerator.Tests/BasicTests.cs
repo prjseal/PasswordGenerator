@@ -15,27 +15,27 @@ namespace PasswordGenerator.Tests
         }
 
         [Test]
-        public void PasswordGenerator_GivenLength7_ShouldReturnLengthErrorMessage()
+        public void PasswordGenerator_GivenLength3_ShouldReturnLengthErrorMessage()
         {
-            var pwd = new Password(7);
+            var pwd = new Password(3);
             var result = pwd.Next();
-            Assert.AreEqual("Password length invalid. Must be between 8 and 128 characters long", result);
+            Assert.AreEqual("Password length invalid. Must be between 4 and 256 characters long", result);
         }
 
         [Test]
-        public void PasswordGenerator_GivenLength129_ShouldReturnLengthErrorMessage()
+        public void PasswordGenerator_GivenLength257_ShouldReturnLengthErrorMessage()
         {
-            var pwd = new Password(129);
+            var pwd = new Password(257);
             var result = pwd.Next();
-            Assert.AreEqual("Password length invalid. Must be between 8 and 128 characters long", result);
+            Assert.AreEqual("Password length invalid. Must be between 4 and 256 characters long", result);
         }
 
         [Test]
-        public void PasswordGenerator_GivenLength128_ShouldReturn128Length()
+        public void PasswordGenerator_GivenLength256_ShouldReturn128Length()
         {
-            var pwd = new Password(128);
+            var pwd = new Password(256);
             var result = pwd.Next();
-            Assert.AreEqual(128, result.Length);
+            Assert.AreEqual(256, result.Length);
         }
 
         [Test]
@@ -78,6 +78,26 @@ namespace PasswordGenerator.Tests
             var pwd = new Password().IncludeLowercase();
             var result = pwd.Next();
             var pattern = @"^[a-z]{16}$";
+            var m = Regex.Match(result, pattern, RegexOptions.IgnoreCase);
+            Assert.IsTrue(m.Success);
+        }
+
+        [Test]
+        public void PasswordGenerator_SpecificSpecialCharacters_ShouldReturnPasswordWithSpecialCharacterFromSpecificSet()
+        {
+            var pwd = new Password().IncludeSpecial("*(&)_^");
+            var result = pwd.Next();
+            var pattern = @"^[*|(|&|)|_|^]{16}$";
+            var m = Regex.Match(result, pattern, RegexOptions.IgnoreCase);
+            Assert.IsTrue(m.Success);
+        }
+
+        [Test]
+        public void PasswordGenerator_OneTimePasscode_ShouldReturn4DigitNumber()
+        {
+            var pwd = new Password(4).IncludeNumeric();
+            var result = pwd.Next();
+            var pattern = @"^\d{4}$";
             var m = Regex.Match(result, pattern, RegexOptions.IgnoreCase);
             Assert.IsTrue(m.Success);
         }

@@ -81,6 +81,12 @@ namespace PasswordGenerator
             return this;
         }
 
+        public IPassword IncludeSpecial(string specialCharactersToInclude)
+        {
+            Settings = Settings.AddSpecial(specialCharactersToInclude);
+            return this;
+        }
+
         public IPassword LengthRequired(int passwordLength)
         {
             Settings.PasswordLength = passwordLength;

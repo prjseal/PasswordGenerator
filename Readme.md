@@ -68,3 +68,17 @@ var password = pwd.Next();
 var pwd = new Password().IncludeLowercase().IncludeUppercase().IncludeSpecial().LengthRequired(128);
 var password = pwd.Next();
 ```
+
+```javascript
+// One Time Passwords
+// If you want to return a 4 digit number you can use this:
+var pwd = new Password(4).IncludeNumeric();
+var password = pwd.Next();
+```
+
+```javascript
+// Specify your own special characters
+// You can now specify your own special characters
+var pwd = new Password().IncludeLowercase().IncludeUppercase().IncludeNumeric().IncludeSpecial("[]{}^_=");
+var password = pwd.Next();
+```

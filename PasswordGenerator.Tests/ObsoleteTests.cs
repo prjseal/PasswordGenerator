@@ -16,27 +16,27 @@ namespace PasswordGenerator.Tests
         }
 
         [Test]
-        public void PasswordGenerator_GivenLength7_ShouldReturnLengthErrorMessage()
+        public void PasswordGenerator_GivenLength3_ShouldReturnLengthErrorMessage()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator(7);
+            PasswordGenerator pwdGen = new PasswordGenerator(3);
             string result = pwdGen.Next();
-            Assert.AreEqual("Password length invalid. Must be between 8 and 128 characters long", result);
+            Assert.AreEqual("Password length invalid. Must be between 4 and 256 characters long", result);
         }
 
         [Test]
-        public void PasswordGenerator_GivenLength129_ShouldReturnLengthErrorMessage()
+        public void PasswordGenerator_GivenLength257_ShouldReturnLengthErrorMessage()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator(129);
+            PasswordGenerator pwdGen = new PasswordGenerator(257);
             string result = pwdGen.Next();
-            Assert.AreEqual("Password length invalid. Must be between 8 and 128 characters long", result);
+            Assert.AreEqual("Password length invalid. Must be between 4 and 256 characters long", result);
         }
 
         [Test]
-        public void PasswordGenerator_GivenLength128_ShouldReturn128Length()
+        public void PasswordGenerator_GivenLength256_ShouldReturn256Length()
         {
-            PasswordGenerator pwdGen = new PasswordGenerator(128);
+            PasswordGenerator pwdGen = new PasswordGenerator(256);
             string result = pwdGen.Next();
-            Assert.AreEqual(128, result.Length);
+            Assert.AreEqual(256, result.Length);
         }
 
         [Test]

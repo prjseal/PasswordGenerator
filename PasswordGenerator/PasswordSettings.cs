@@ -11,8 +11,8 @@ namespace PasswordGenerator
         private const string UppercaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string NumericCharacters = "0123456789";
         private const string SpecialCharacters = @"!#$%&*@\";
-        private const int DefaultMinPasswordLength = 8;
-        private const int DefaultMaxPasswordLength = 128;
+        private const int DefaultMinPasswordLength = 4;
+        private const int DefaultMaxPasswordLength = 256;
 
         public PasswordSettings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength, int maximumAttempts, bool usingDefaults)
@@ -70,6 +70,14 @@ namespace PasswordGenerator
             StopUsingDefaults();
             IncludeSpecial = true;
             CharacterSet += SpecialCharacters;
+            return this;
+        }
+
+        public IPasswordSettings AddSpecial(string specialCharactersToAdd)
+        {
+            StopUsingDefaults();
+            IncludeSpecial = true;
+            CharacterSet += specialCharactersToAdd;
             return this;
         }
 
