@@ -10,9 +10,10 @@ namespace PasswordGenerator
         private const string LowercaseCharacters = "abcdefghijklmnopqrstuvwxyz";
         private const string UppercaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string NumericCharacters = "0123456789";
-        private const string SpecialCharacters = @"!#$%&*@\";
+        private const string DefaultSpecialCharacters = @"!#$%&*@\";
         private const int DefaultMinPasswordLength = 4;
         private const int DefaultMaxPasswordLength = 256;
+        public string SpecialCharacters { get; set; }
 
         public PasswordSettings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength, int maximumAttempts, bool usingDefaults)
@@ -26,6 +27,7 @@ namespace PasswordGenerator
             MinimumLength = DefaultMinPasswordLength;
             MaximumLength = DefaultMaxPasswordLength;
             UsingDefaults = usingDefaults;
+            SpecialCharacters = DefaultSpecialCharacters;
             CharacterSet = BuildCharacterSet(includeLowercase, includeUppercase, includeNumeric, includeSpecial);
         }
 
@@ -69,6 +71,7 @@ namespace PasswordGenerator
         {
             StopUsingDefaults();
             IncludeSpecial = true;
+            SpecialCharacters = DefaultSpecialCharacters;
             CharacterSet += SpecialCharacters;
             return this;
         }
@@ -77,11 +80,12 @@ namespace PasswordGenerator
         {
             StopUsingDefaults();
             IncludeSpecial = true;
+            SpecialCharacters = specialCharactersToAdd;
             CharacterSet += specialCharactersToAdd;
             return this;
         }
 
-        private static string BuildCharacterSet(bool includeLowercase, bool includeUppercase, bool includeNumeric,
+        private string BuildCharacterSet(bool includeLowercase, bool includeUppercase, bool includeNumeric,
             bool includeSpecial)
         {
             var characterSet = new StringBuilder();

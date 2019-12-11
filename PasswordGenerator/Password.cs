@@ -178,7 +178,6 @@ namespace PasswordGenerator
             const string regexLowercase = @"[a-z]";
             const string regexUppercase = @"[A-Z]";
             const string regexNumeric = @"[\d]";
-            const string regexSpecial = @"([!#$%&*@\\])+";
 
             var lowerCaseIsValid = !settings.IncludeLowercase ||
                                    settings.IncludeLowercase && Regex.IsMatch(password, regexLowercase);
@@ -186,8 +185,16 @@ namespace PasswordGenerator
                                    settings.IncludeUppercase && Regex.IsMatch(password, regexUppercase);
             var numericIsValid = !settings.IncludeNumeric ||
                                  settings.IncludeNumeric && Regex.IsMatch(password, regexNumeric);
-            var specialIsValid = !settings.IncludeSpecial ||
-                                 settings.IncludeSpecial && Regex.IsMatch(password, regexSpecial);
+
+            var specialIsValid = !settings.IncludeSpecial;
+
+            if (settings.IncludeSpecial && !string.IsNullOrWhiteSpace(settings.SpecialCharacters))
+            {
+                var listA = settings.SpecialCharacters.ToCharArray();
+                var listB = password.ToCharArray();
+
+                specialIsValid = listA.Any(x => listB.Contains(x));
+            }
 
             return lowerCaseIsValid && upperCaseIsValid && numericIsValid && specialIsValid &&
                    LengthIsValid(password.Length, settings.MinimumLength, settings.MaximumLength);

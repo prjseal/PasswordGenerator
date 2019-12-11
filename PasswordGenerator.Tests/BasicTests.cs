@@ -101,5 +101,13 @@ namespace PasswordGenerator.Tests
             var m = Regex.Match(result, pattern, RegexOptions.IgnoreCase);
             Assert.IsTrue(m.Success);
         }
+
+        [Test]
+        public void PasswordGenerator_SpecificSpecialCharacters_ShouldNotReturnTryAgain()
+        {
+            var pwd = new Password().IncludeLowercase().IncludeUppercase().IncludeNumeric().IncludeSpecial("[]{}^_=");
+            var result = pwd.Next();
+            Assert.AreNotEqual("Try again", result);
+        }
     }
 }
