@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace PasswordGenerator
@@ -16,17 +17,22 @@ namespace PasswordGenerator
         private const bool DefaultIncludeUppercase = true;
         private const bool DefaultIncludeNumeric = true;
         private const bool DefaultIncludeSpecial = true;
+        private static RNGCryptoServiceProvider _rng;
 
         public Password()
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts,
                 true);
+
+            _rng = new RNGCryptoServiceProvider();
         }
 
         public Password(IPasswordSettings settings)
         {
             Settings = settings;
+
+            _rng = new RNGCryptoServiceProvider();
         }
 
         public Password(int passwordLength)
@@ -151,10 +157,9 @@ namespace PasswordGenerator
             var shuffledCharacterSet = string.Join(null, shuffledChars);
             var characterSetLength = shuffledCharacterSet.Length;
 
-            var random = new Random();
             for (var characterPosition = 0; characterPosition < settings.PasswordLength; characterPosition++)
             {
-                password[characterPosition] = shuffledCharacterSet[random.Next(characterSetLength - 1)];
+                password[characterPosition] = shuffledCharacterSet[GetRandomNumberInRange(0,characterSetLength - 1)];
 
                 var moreThanTwoIdenticalInARow =
                     characterPosition > maximumIdenticalConsecutiveChars
@@ -165,6 +170,25 @@ namespace PasswordGenerator
             }
 
             return string.Join(null, password);
+        }
+
+        private static int GetRandomNumberInRange(int min, int max)
+        {
+            if (min > max)
+                throw new ArgumentOutOfRangeException();
+
+            var data = new byte[sizeof(int)];
+            _rng.GetBytes(data);
+            var randomNumber = BitConverter.ToInt32(data, 0);
+
+            return (int)Math.Floor((double)(min + Math.Abs(randomNumber % (max - min))));
+        }
+
+        private static int GetRngCryptoSeed(RNGCryptoServiceProvider rng)
+        {
+            var rngByteArray = new byte[4];
+            rng.GetBytes(rngByteArray);
+            return BitConverter.ToInt32(rngByteArray, 0);
         }
 
         /// <summary>
