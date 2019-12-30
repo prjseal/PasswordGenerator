@@ -109,5 +109,37 @@ namespace PasswordGenerator.Tests
             var result = pwd.Next();
             Assert.AreNotEqual("Try again", result);
         }
+
+        [Test]
+        public void PasswordGenerator_LengthOnly_ShouldNotThrowAnError()
+        {
+            var pwd = new Password(passwordLength: 21);
+            string result = pwd.Next();
+            Assert.AreEqual(21,result.Length);
+        }
+
+        [Test]
+        public void PasswordGenerator_NoLengthTest_ShouldNotThrowAnError()
+        {
+            var pwd = new Password(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: false);
+            string result = pwd.Next();
+            Assert.AreEqual(16, result.Length);
+        }
+
+        [Test]
+        public void PasswordGenerator_ParametersWithLength_ShouldNotThrowAnError()
+        {
+            var pwd = new Password(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: false, passwordLength: 21);
+            string result = pwd.Next();
+            Assert.AreEqual(21, result.Length);
+        }
+
+        [Test]
+        public void PasswordGenerator_ParametersWithLengthAndMaxAttempts_ShouldNotThrowAnError()
+        {
+            var pwd = new Password(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: false, passwordLength: 24, maximumAttempts: 100);
+            string result = pwd.Next();
+            Assert.AreEqual(24, result.Length);
+        }
     }
 }

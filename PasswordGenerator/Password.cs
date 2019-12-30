@@ -39,12 +39,16 @@ namespace PasswordGenerator
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, passwordLength, DefaultMaxPasswordAttempts, true);
+            
+            _rng = new RNGCryptoServiceProvider();
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts, false);
+
+            _rng = new RNGCryptoServiceProvider();
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
@@ -52,6 +56,8 @@ namespace PasswordGenerator
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, DefaultMaxPasswordAttempts, false);
+
+            _rng = new RNGCryptoServiceProvider();
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
@@ -59,6 +65,8 @@ namespace PasswordGenerator
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, maximumAttempts, false);
+
+            _rng = new RNGCryptoServiceProvider();
         }
 
         public IPasswordSettings Settings { get; set; }
