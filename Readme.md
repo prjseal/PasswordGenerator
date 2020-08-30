@@ -14,7 +14,7 @@ Install via NuGet: ``` Install-Package PasswordGenerator ```
 
 It is Compatible with .NET Core, .NET Framework and more. See the below chart:
 
-![Compatibility Chart](https://github.com/prjseal/SlackBotMessages/blob/master/images/compatibility.png "Compatibility Chart")
+![Compatibility Chart](https://github.com/prjseal/PasswordGenerator/blob/master/images/compatibility.png "Compatibility Chart")
 
 
 ## Basic usage
