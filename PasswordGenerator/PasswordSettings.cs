@@ -14,9 +14,10 @@ namespace PasswordGenerator
         private const int DefaultMinPasswordLength = 4;
         private const int DefaultMaxPasswordLength = 256;
         public string SpecialCharacters { get; set; }
+        public string OmitCharacters { get; private set; }
 
         public PasswordSettings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
-            int passwordLength, int maximumAttempts, bool usingDefaults)
+            int passwordLength, int maximumAttempts, bool usingDefaults, string omitCharacters)
         {
             IncludeLowercase = includeLowercase;
             IncludeUppercase = includeUppercase;
@@ -28,6 +29,8 @@ namespace PasswordGenerator
             MaximumLength = DefaultMaxPasswordLength;
             UsingDefaults = usingDefaults;
             SpecialCharacters = DefaultSpecialCharacters;
+            OmitCharacters = omitCharacters;
+
             CharacterSet = BuildCharacterSet(includeLowercase, includeUppercase, includeNumeric, includeSpecial);
         }
 
@@ -96,7 +99,16 @@ namespace PasswordGenerator
             if (includeNumeric) characterSet.Append(NumericCharacters);
 
             if (includeSpecial) characterSet.Append(SpecialCharacters);
+
+            if (!string.IsNullOrEmpty(OmitCharacters)) RemoveOmittedCharacters(characterSet);
+
             return characterSet.ToString();
+        }
+
+        private void RemoveOmittedCharacters(StringBuilder characterSet)
+        {
+            foreach (var character in OmitCharacters)
+                characterSet.Replace(character.ToString(), string.Empty);
         }
 
         private void StopUsingDefaults()

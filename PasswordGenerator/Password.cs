@@ -17,13 +17,14 @@ namespace PasswordGenerator
         private const bool DefaultIncludeUppercase = true;
         private const bool DefaultIncludeNumeric = true;
         private const bool DefaultIncludeSpecial = true;
+        private const string DefaultOmitCharacters = null;
         private static RNGCryptoServiceProvider _rng;
 
         public Password()
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts,
-                true);
+                true, DefaultOmitCharacters);
 
             _rng = new RNGCryptoServiceProvider();
         }
@@ -38,7 +39,8 @@ namespace PasswordGenerator
         public Password(int passwordLength)
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
-                DefaultIncludeNumeric, DefaultIncludeSpecial, passwordLength, DefaultMaxPasswordAttempts, true);
+                DefaultIncludeNumeric, DefaultIncludeSpecial, passwordLength, DefaultMaxPasswordAttempts, true,
+                DefaultOmitCharacters);
             
             _rng = new RNGCryptoServiceProvider();
         }
@@ -46,7 +48,7 @@ namespace PasswordGenerator
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
-                includeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts, false);
+                includeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts, false, DefaultOmitCharacters);
 
             _rng = new RNGCryptoServiceProvider();
         }
@@ -55,7 +57,7 @@ namespace PasswordGenerator
             int passwordLength)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
-                includeSpecial, passwordLength, DefaultMaxPasswordAttempts, false);
+                includeSpecial, passwordLength, DefaultMaxPasswordAttempts, false, DefaultOmitCharacters);
 
             _rng = new RNGCryptoServiceProvider();
         }
@@ -64,7 +66,16 @@ namespace PasswordGenerator
             int passwordLength, int maximumAttempts)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
-                includeSpecial, passwordLength, maximumAttempts, false);
+                includeSpecial, passwordLength, maximumAttempts, false, DefaultOmitCharacters);
+
+            _rng = new RNGCryptoServiceProvider();
+        }
+
+        public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
+            string omitCharacters ,int passwordLength, int maximumAttempts)
+        {
+            Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
+                includeSpecial, passwordLength, maximumAttempts, false, omitCharacters);
 
             _rng = new RNGCryptoServiceProvider();
         }
