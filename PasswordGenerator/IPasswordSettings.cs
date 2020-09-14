@@ -20,5 +20,6 @@ namespace PasswordGenerator
         IPasswordSettings AddSpecial();
         IPasswordSettings AddSpecial(string specialCharactersToAdd);
         string SpecialCharacters { get; set; }
+        string OmitCharacters { get; }
     }
 }
