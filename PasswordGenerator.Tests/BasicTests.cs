@@ -117,6 +117,23 @@ namespace PasswordGenerator.Tests
             string result = pwd.Next();
             Assert.AreEqual(21,result.Length);
         }
+        
+        [Test]
+        public void PasswordGenerator_ThrowOnMaximumAttemptsExceededEnabled_ShouldThrow()
+        {
+            Assert.Throws<MaximumAttemptsExceededException>(() =>
+            {
+                // Multiple attempts are needed to make sure the test throws
+                for (int i = 0; i < 1000; i++)
+                {
+                    // Maximum complexity, minimal allowed attempts
+                    var pwd = new Password(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 4, maximumAttempts: 1)
+                        .ThrowOnMaximumAttemptsExceeded();
+                    
+                    pwd.Next();
+                }
+            });
+        }
 
         [Test]
         public void PasswordGenerator_NoLengthTest_ShouldNotThrowAnError()
