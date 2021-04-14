@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace PasswordGenerator
 {
-/// <summary>
+    /// <summary>
     ///     Generates random passwords and validates that they meet the rules passed in
     /// </summary>
     public class Password : IPassword
@@ -18,6 +18,7 @@ namespace PasswordGenerator
         private const bool DefaultIncludeNumeric = true;
         private const bool DefaultIncludeSpecial = true;
         private static RNGCryptoServiceProvider _rng;
+        private bool _throwOnMaximumAttemptsExceeded;
 
         public Password()
         {
@@ -106,10 +107,25 @@ namespace PasswordGenerator
             Settings.PasswordLength = passwordLength;
             return this;
         }
+        
+        /// <summary>
+        ///     Configures the password generator to throw an exception instead of returning "Try again" as a password when the maximum number of attempts exceeded.
+        /// </summary>
+        /// <remarks>See: https://github.com/prjseal/PasswordGenerator/issues/13</remarks>
+        /// <returns>The <see cref="IPassword"/> instance.</returns>
+        public IPassword ThrowOnMaximumAttemptsExceeded()
+        {
+            _throwOnMaximumAttemptsExceeded = true;
+            return this;
+        }
 
         /// <summary>
         ///     Gets the next random password which meets the requirements
         /// </summary>
+        /// <exception cref="MaximumAttemptsExceededException">
+        ///     Thrown when no valid password could be generated (within the configured attempts threshold).
+        ///     Only throws when throwing is configured.
+        /// </exception>
         /// <returns>A password as a string</returns>
         public string Next()
         {
@@ -128,7 +144,17 @@ namespace PasswordGenerator
                     passwordAttempts++;
                 } while (passwordAttempts < Settings.MaximumAttempts && !PasswordIsValid(Settings, password));
 
-                password = PasswordIsValid(Settings, password) ? password : "Try again";
+                if (PasswordIsValid(Settings, password))
+                {
+                    return password;
+                }
+                
+                if (_throwOnMaximumAttemptsExceeded)
+                {
+                    throw new MaximumAttemptsExceededException();
+                }
+
+                password = "Try again";
             }
 
             return password;
