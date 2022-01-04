@@ -17,7 +17,7 @@ namespace PasswordGenerator
         private const bool DefaultIncludeUppercase = true;
         private const bool DefaultIncludeNumeric = true;
         private const bool DefaultIncludeSpecial = true;
-        private static RNGCryptoServiceProvider _rng;
+        private static RandomNumberGenerator _rng;
 
         public Password()
         {
@@ -25,22 +25,22 @@ namespace PasswordGenerator
                 DefaultIncludeNumeric, DefaultIncludeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts,
                 true);
 
-            _rng = new RNGCryptoServiceProvider();
+            _rng = RandomNumberGenerator.Create();
         }
 
         public Password(IPasswordSettings settings)
         {
             Settings = settings;
 
-            _rng = new RNGCryptoServiceProvider();
+            _rng = RandomNumberGenerator.Create();
         }
 
         public Password(int passwordLength)
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, passwordLength, DefaultMaxPasswordAttempts, true);
-            
-            _rng = new RNGCryptoServiceProvider();
+
+            _rng = RandomNumberGenerator.Create();
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
@@ -48,7 +48,7 @@ namespace PasswordGenerator
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts, false);
 
-            _rng = new RNGCryptoServiceProvider();
+            _rng = RandomNumberGenerator.Create();
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
@@ -57,7 +57,7 @@ namespace PasswordGenerator
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, DefaultMaxPasswordAttempts, false);
 
-            _rng = new RNGCryptoServiceProvider();
+            _rng = RandomNumberGenerator.Create();
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
@@ -66,7 +66,7 @@ namespace PasswordGenerator
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, maximumAttempts, false);
 
-            _rng = new RNGCryptoServiceProvider();
+            _rng = RandomNumberGenerator.Create();
         }
 
         public IPasswordSettings Settings { get; set; }
