@@ -15,3 +15,6 @@ PasswordGenerator/bin/Debug/$RANDOM_SEED$
 /.idea
 /PasswordGenerator.2.0.0.nupkg
 *.nupkg
+/debug/
+bin/
+obj/
