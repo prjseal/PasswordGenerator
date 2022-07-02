@@ -1,6 +1,6 @@
 # Password Generator Binary Cmdlet for PowerShell
 
-This repo is a fork of the popular PasswordGenerator nuget package used for dotnet projects. The goal of this repository is to port the nuget package to a powershell module with similar functionallity, allowing PowerShell developers to create 
+This repo is a fork of the popular PasswordGenerator nuget package used for dotnet projects. The goal of this repository is to port the nuget package to a powershell module with similar functionallity, allowing PowerShell developers to take advantage of a fast and customizable Password Generator. 
 
 ## Basic usage
 
