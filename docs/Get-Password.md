@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-Password
 
 ## SYNOPSIS
-{{ A port of the .NET Standard library "Password Generator" which generates random passwords with different settings to meet the OWASP requirements  }}
+ A port of the .NET Standard library "Password Generator" which generates random passwords with different settings to meet the OWASP requirements  
 
 ## SYNTAX
 
@@ -18,63 +18,63 @@ Get-Password [-Length <Int32>] [-Amount <Int32>] [-IncludeSpecial] [-IncludeNume
 ```
 
 ## DESCRIPTION
-{{ Generates random passwords based on parameters }}
+Generates random passwords based on parameters
 
 ## EXAMPLES
 
 ### Example 1
 ```powershell
-PS C:\> {{ Get-Password }}
+PS C:\> Get-Password
 ```
 
-{{ Will return a random password with the default settings, 16 length }}
+Will return a random password with the default settings, 16 length
 
 ### Example 2
 ```powershell
-PS C:\> {{ Get-Password -Length 32 }}
+PS C:\> Get-Password -Length 32
 ```
 
-{{ Will return a password which is 32 characters long }}
+Will return a password which is 32 characters long
 
 ### Example 3
 ```powershell
-PS C:\> {{ Get-Password -IncludeLowercase -IncludeUppercase -Length 21 }}
+PS C:\> Get-Password -IncludeLowercase -IncludeUppercase -Length 21
 ```
 
-{{ Will return a password which only contains lowercase and uppercase characters and is 21 characters long }}
+ Will return a password which only contains lowercase and uppercase characters and is 21 characters long 
 
 ### Example 4
 ```powershell
-PS C:\> {{ Get-Password -IncludeNumeric }}
+PS C:\>  Get-Password -IncludeNumeric
 ```
 
-{{ This will return a password which is just numbers and has a default length of 16 }}
+ This will return a password which is just numbers and has a default length of 16 
 
 ### Example 5
 ```powershell
-PS C:\> {{ Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial }}
+PS C:\>  Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial
 ```
 
-{{ As above, here is how to get lower, upper and special characters using this approach }}
+ As above, here is how to get lower, upper and special characters using this approach 
 
 ### Example 6
 ```powershell
-PS C:\> {{ Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial -Length 128 }}
+PS C:\>  Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial -Length 128
 ```
 
-{{ This is the same as the above, but with a length of 128 }}
+ This is the same as the above, but with a length of 128 
 
 ### Example 7
 ```powershell
-PS C:\> {{ Get-Password -IncludeNumeric -Length 4 }}
+PS C:\>  Get-Password -IncludeNumeric -Length 4
 ```
 
-{{ Returns a 4 digit number, used for PIN or One TIme Passwords }}
+ Returns a 4 digit number, used for PIN or One TIme Passwords 
 
 ## PARAMETERS
 
 ### -Amount
-{{ The amount of passwords to return }}
+ The amount of passwords to return 
 
 ```yaml
 Type: Int32
@@ -89,7 +89,7 @@ Accept wildcard characters: False
 ```
 
 ### -IncludeLowercase
-{{ Include Lowercase characters }}
+ Include Lowercase characters 
 
 ```yaml
 Type: SwitchParameter
@@ -104,7 +104,7 @@ Accept wildcard characters: False
 ```
 
 ### -IncludeNumeric
-{{ Include Numeric characters }}
+ Include Numeric characters 
 
 ```yaml
 Type: SwitchParameter
@@ -119,7 +119,7 @@ Accept wildcard characters: False
 ```
 
 ### -IncludeSpecial
-{{ Include Special characters }}
+ Include Special characters 
 
 ```yaml
 Type: SwitchParameter
@@ -134,7 +134,7 @@ Accept wildcard characters: False
 ```
 
 ### -IncludeUppercase
-{{ Include uppercase characters  }}
+ Include uppercase characters  
 
 ```yaml
 Type: SwitchParameter
@@ -149,7 +149,7 @@ Accept wildcard characters: False
 ```
 
 ### -Length
-{{ Password Length, default is 16 }}
+ Password Length, default is 16 
 
 ```yaml
 Type: Int32
