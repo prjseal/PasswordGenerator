@@ -123,7 +123,7 @@ PrivateData = @{
 } # End of PrivateData hashtable
 
 # HelpInfo URI of this module
-HelpInfoURI = 'https://github.com/ehmiiz/PasswordGenerator/blob/master/en-US/PasswordGenerator.dll-Help.xml'
+HelpInfoURI = 'https://github.com/ehmiiz/PasswordGenerator/tree/master/en-US'
 
 # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
 # DefaultCommandPrefix = ''
