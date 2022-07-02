@@ -12,7 +12,7 @@
 RootModule = '.\BinaryPasswordGenerator.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.1'
+ModuleVersion = '0.0.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -27,7 +27,7 @@ Author = 'Ehmiiz'
 CompanyName = 'Unknown'
 
 # Copyright statement for this module
-Copyright = '(c) Ehmiiz. All rights reserved.'
+Copyright = 'Free, Open Source'
 
 # Description of the functionality provided by this module
 Description = 'A binary password generator rewritten from of the popular PasswordGenerator nuget package.'
@@ -101,7 +101,7 @@ PrivateData = @{
         # LicenseUri = ''
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/ehmiiz/PasswordGenerator/'
 
         # A URL to an icon representing this module.
         # IconUri = ''
