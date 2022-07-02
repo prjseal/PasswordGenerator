@@ -1,5 +1,5 @@
 # Get functions
-Import-Module "$PSScriptRoot\PasswordGenerator\PasswordGenerator.dll" -Force
+Import-Module "$PSScriptRoot\PasswordGenerator.dll" -Force
 
 # Aliases
 New-Alias -Name 'gpwd' -Value "Get-Password"
