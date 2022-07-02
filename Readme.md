@@ -38,6 +38,7 @@ Get-Password -IncludeLowercase -IncludeUppercase -Length 21
 # You can build up your reqirements by adding parameters, like -IncludeNumeric
 
 # This will return a password which is just numbers and has a default length of 16
+
 Get-Password -IncludeNumeric
 ```
 
