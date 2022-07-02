@@ -71,6 +71,13 @@ PS C:\>  Get-Password -IncludeNumeric -Length 4
 
  Returns a 4 digit number, used for PIN or One TIme Passwords 
 
+### Example 8
+```powershell
+PS C:\>  Get-Password | ConvertTo-SecureString -AsPlainText -Force
+```
+
+ Returns a 16 length complex password as a secure string object
+
 ## PARAMETERS
 
 ### -Amount
