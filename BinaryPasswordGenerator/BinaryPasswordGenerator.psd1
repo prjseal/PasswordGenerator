@@ -95,7 +95,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @("Password","ActiveDirectory","OWASP","One Time Password","PIN","Hash")
+        Tags = @("Password","ActiveDirectory","OWASP","OTP","PIN","Hash")
 
         # A URL to the license for this module.
         # LicenseUri = ''
