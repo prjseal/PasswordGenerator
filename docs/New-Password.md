@@ -5,7 +5,7 @@ online version:
 schema: 2.0.0
 ---
 
-# Get-Password
+# New-Password
 
 ## SYNOPSIS
  A port of the .NET Standard library "Password Generator" which generates random passwords with different settings to meet the OWASP requirements  
@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Get-Password [-Length <Int32>] [-Amount <Int32>] [-IncludeSpecial] [-IncludeNumeric] [-IncludeUppercase]
+New-Password [-Length <Int32>] [-Amount <Int32>] [-IncludeSpecial] [-IncludeNumeric] [-IncludeUppercase]
  [-IncludeLowercase] [<CommonParameters>]
 ```
 
@@ -24,56 +24,56 @@ Generates random passwords based on parameters
 
 ### Example 1
 ```powershell
-PS C:\> Get-Password
+PS C:\> New-Password
 ```
 
 Will return a random password with the default settings, 16 length
 
 ### Example 2
 ```powershell
-PS C:\> Get-Password -Length 32
+PS C:\> New-Password -Length 32
 ```
 
 Will return a password which is 32 characters long
 
 ### Example 3
 ```powershell
-PS C:\> Get-Password -IncludeLowercase -IncludeUppercase -Length 21
+PS C:\> New-Password -IncludeLowercase -IncludeUppercase -Length 21
 ```
 
  Will return a password which only contains lowercase and uppercase characters and is 21 characters long 
 
 ### Example 4
 ```powershell
-PS C:\>  Get-Password -IncludeNumeric
+PS C:\>  New-Password -IncludeNumeric
 ```
 
  This will return a password which is just numbers and has a default length of 16 
 
 ### Example 5
 ```powershell
-PS C:\>  Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial
+PS C:\>  New-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial
 ```
 
  As above, here is how to get lower, upper and special characters using this approach 
 
 ### Example 6
 ```powershell
-PS C:\>  Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial -Length 128
+PS C:\>  New-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial -Length 128
 ```
 
  This is the same as the above, but with a length of 128 
 
 ### Example 7
 ```powershell
-PS C:\>  Get-Password -IncludeNumeric -Length 4
+PS C:\>  New-Password -IncludeNumeric -Length 4
 ```
 
  Returns a 4 digit number, used for PIN or One TIme Passwords 
 
 ### Example 8
 ```powershell
-PS C:\>  Get-Password | ConvertTo-SecureString -AsPlainText -Force
+PS C:\>  New-Password | ConvertTo-SecureString -AsPlainText -Force
 ```
 
  Returns a 16 length complex password as a secure string object

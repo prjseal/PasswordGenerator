@@ -4,7 +4,7 @@ using PasswordGenerator;
 
 namespace PasswordGenerator
 {
-    [Cmdlet(VerbsCommon.Get,"Password")]
+    [Cmdlet(VerbsCommon.New,"Password")]
     public class GetGeneratedPasswordCommand : PSCmdlet
     {
         private int _pwLengthDefault = 16;
