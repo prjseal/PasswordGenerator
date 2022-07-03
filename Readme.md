@@ -1,11 +1,9 @@
 # Password Generator Binary Cmdlet for PowerShell
+A fork of the popular [PasswordGenerator](https://www.nuget.org/packages/PasswordGenerator) nuget package used for dotnet projects. The goal of this repository is to port the nuget package to a PowerShell module with similar or exact functionallity, allowing PowerShell module authors and admins to take advantage of a fast and customizable Password Generator.
 
-This repo is a fork of the popular PasswordGenerator nuget package used for dotnet projects. The goal of this repository is to port the nuget package to a powershell module with similar functionallity, allowing PowerShell developers to take advantage of a fast and customizable Password Generator. 
-
-## Basic usage
+## Usage
 
 ### Examples:
-
 
 
 ```powershell
@@ -13,7 +11,7 @@ This repo is a fork of the popular PasswordGenerator nuget package used for dotn
 
 # Will return a random password with the default settings
 
-Get-Password
+New-Password
 ```
 
 ```powershell
@@ -21,7 +19,7 @@ Get-Password
 
 # Will return a password which is 32 characters long
 
-Get-Password -Length 32
+New-Password -Length 32
 ```
 
 ```powershell
@@ -29,29 +27,28 @@ Get-Password -Length 32
 
 # Will return a password which only contains lowercase and uppercase characters and is 21 characters long.
 
-Get-Password -IncludeLowercase -IncludeUppercase -Length 21
+New-Password -IncludeLowercase -IncludeUppercase -Length 21
 ```
 
-## Advanced Usage
 
 ```powershell
 # You can build up your reqirements by adding parameters, like -IncludeNumeric
 
 # This will return a password which is just numbers and has a default length of 16
 
-Get-Password -IncludeNumeric
+New-Password -IncludeNumeric
 ```
 
 ```powershell
 # As above, here is how to get lower, upper and special characters using this approach
 
-Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial
+New-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial
 ```
 
 ```powershell
 # This is the same as the above, but with a length of 128
 
-Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial -Length 128
+New-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial -Length 128
 ```
 
 ```powershell
@@ -59,8 +56,16 @@ Get-Password -IncludeLowercase -IncludeUppercase -IncludeSpecial -Length 128
 
 # If you want to return a 4 digit number you can use this:
 
-Get-Password -IncludeNumeric -Length 4
+New-Password -IncludeNumeric -Length 4
 ```
+
+### Example 8
+```powershell
+# Returns a 16 length complex password as a System.SecureString object
+
+PS C:\>  New-Password | ConvertTo-SecureString -AsPlainText -Force
+```
+
 
 ## Planned Features, up for grabs :)
 
@@ -69,5 +74,12 @@ Get-Password -IncludeNumeric -Length 4
 
 # You can specify your own special characters
 
-Get-Password -IncludeLowercase -IncludeUppercase -IncludeNumeric -IncludeSpecial "!%¤/:)"
+New-Password -IncludeLowercase -IncludeUppercase -IncludeNumeric -IncludeSpecial "!%¤/:)"
 ```
+
+## Compatibility
+
+Since the nuget package is based on netstandard2.0, the module currently works on:
+- Newer versions of PowerShell (6+) 
+- Older versions of PowerShell (Tested on 5.1)
+- Linux, Mac versions of PowerShell (6+)
