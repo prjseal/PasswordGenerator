@@ -83,3 +83,11 @@ Since the nuget package is based on netstandard2.0, the module currently works o
 - Newer versions of PowerShell (6+) 
 - Older versions of PowerShell (Tested on 5.1)
 - Linux, Mac versions of PowerShell (6+)
+
+## ChangeLog
+
+### 
+1.0.1
+- Changed verb from 'Get' to 'New'
+- Fixed a bug with IncludeUppercase & IncludeNumeric
+- Fixed Module Auto-Loading
