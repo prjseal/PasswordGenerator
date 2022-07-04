@@ -115,9 +115,9 @@ namespace PasswordGenerator
                     var password = pwd.Next();
                     WriteObject(password);
                 }
-                else if (IncludeLowercase & IncludeNumeric & IncludeUppercase & IncludeSpecial)
+                else if (!IncludeLowercase & !IncludeSpecial & IncludeUppercase & IncludeNumeric)
                 {
-                    var pwd = new Password(Length).IncludeLowercase().IncludeUppercase().IncludeSpecial().IncludeNumeric();
+                    var pwd = new Password(Length).IncludeUppercase().IncludeNumeric();
                     var password = pwd.Next();
                     WriteObject(password); 
                 }
