@@ -2,64 +2,64 @@
 
 namespace PasswordGenerator
 {
-    [ObsoleteAttribute("The class 'PasswordGenerator' is obsolete. Use 'Password' instead.")]
-    public class PasswordGenerator : Password
+    [Obsolete("The class 'PasswordGenerator' is obsolete. Use 'Password' instead.")]
+    public class Generator : Password
     {
-        public PasswordGenerator()
+        public Generator()
         {
 
         }
 
-        public PasswordGenerator(IPasswordSettings settings) : base (settings)
+        public Generator(IPasswordSettings settings) : base(settings)
         {
         }
 
-        public PasswordGenerator(int passwordLength) : base(passwordLength)
+        public Generator(int passwordLength) : base(passwordLength)
         {
         }
 
-        public PasswordGenerator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial) : base(includeLowercase, includeUppercase, includeNumeric, includeSpecial)
+        public Generator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial) : base(includeLowercase, includeUppercase, includeNumeric, includeSpecial)
         {
         }
 
-        public PasswordGenerator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
+        public Generator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength) : base(includeLowercase, includeUppercase, includeNumeric, includeSpecial, passwordLength)
         {
         }
 
-        public PasswordGenerator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
+        public Generator(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength, int maximumAttempts) : base(includeLowercase, includeUppercase, includeNumeric, includeSpecial,
             passwordLength, maximumAttempts)
         {
         }
 
-        public PasswordGenerator IncludeLowercase()
+        public new Generator IncludeLowercase()
         {
-            base.Settings = base.Settings.AddLowercase();
+            Settings = Settings.AddLowercase();
             return this;
         }
 
-        public PasswordGenerator IncludeUppercase()
+        public new Generator IncludeUppercase()
         {
-            base.Settings = base.Settings.AddUppercase();
+            Settings = Settings.AddUppercase();
             return this;
         }
 
-        public PasswordGenerator IncludeNumeric()
+        public new Generator IncludeNumeric()
         {
-            base.Settings = base.Settings.AddNumeric();
+            Settings = Settings.AddNumeric();
             return this;
         }
 
-        public PasswordGenerator IncludeSpecial()
+        public new Generator IncludeSpecial()
         {
-            base.Settings = base.Settings.AddSpecial();
+            Settings = Settings.AddSpecial();
             return this;
         }
 
-        public PasswordGenerator LengthRequired(int passwordLength)
+        public new Generator LengthRequired(int passwordLength)
         {
-            base.Settings.PasswordLength = passwordLength;
+            Settings.Length = passwordLength;
             return this;
         }
     }
