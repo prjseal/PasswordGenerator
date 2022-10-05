@@ -10,7 +10,7 @@ namespace PasswordGenerator
 
         }
 
-        public PasswordGenerator(PasswordGeneratorSettings settings) : base (settings)
+        public PasswordGenerator(IPasswordSettings settings) : base (settings)
         {
         }
 
