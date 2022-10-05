@@ -5,7 +5,7 @@ namespace PasswordGenerator
     /// <summary>
     ///     Holds all of the settings for the password generator
     /// </summary>
-    public class PasswordSettings : IPasswordSettings
+    public class Settings : IPasswordSettings
     {
         private const string LowercaseCharacters = "abcdefghijklmnopqrstuvwxyz";
         private const string UppercaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -15,14 +15,14 @@ namespace PasswordGenerator
         private const int DefaultMaxPasswordLength = 256;
         public string SpecialCharacters { get; set; }
 
-        public PasswordSettings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
+        public Settings(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength, int maximumAttempts, bool usingDefaults)
         {
             IncludeLowercase = includeLowercase;
             IncludeUppercase = includeUppercase;
             IncludeNumeric = includeNumeric;
             IncludeSpecial = includeSpecial;
-            PasswordLength = passwordLength;
+            Length = passwordLength;
             MaximumAttempts = maximumAttempts;
             MinimumLength = DefaultMinPasswordLength;
             MaximumLength = DefaultMaxPasswordLength;
@@ -37,7 +37,7 @@ namespace PasswordGenerator
         public bool IncludeUppercase { get; private set; }
         public bool IncludeNumeric { get; private set; }
         public bool IncludeSpecial { get; private set; }
-        public int PasswordLength { get; set; }
+        public int Length { get; set; }
         public string CharacterSet { get; private set; }
         public int MaximumAttempts { get; }
         public int MinimumLength { get; }
@@ -89,6 +89,7 @@ namespace PasswordGenerator
             bool includeSpecial)
         {
             var characterSet = new StringBuilder();
+
             if (includeLowercase) characterSet.Append(LowercaseCharacters);
 
             if (includeUppercase) characterSet.Append(UppercaseCharacters);
@@ -96,12 +97,14 @@ namespace PasswordGenerator
             if (includeNumeric) characterSet.Append(NumericCharacters);
 
             if (includeSpecial) characterSet.Append(SpecialCharacters);
+
             return characterSet.ToString();
         }
 
         private void StopUsingDefaults()
         {
             if (!UsingDefaults) return;
+
             CharacterSet = string.Empty;
             IncludeLowercase = false;
             IncludeUppercase = false;

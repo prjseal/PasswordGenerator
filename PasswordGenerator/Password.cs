@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace PasswordGenerator
 {
-/// <summary>
+    /// <summary>
     ///     Generates random passwords and validates that they meet the rules passed in
     /// </summary>
     public class Password : IPassword
@@ -21,7 +21,7 @@ namespace PasswordGenerator
 
         public Password()
         {
-            Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
+            Settings = new Settings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts,
                 true);
 
@@ -37,7 +37,7 @@ namespace PasswordGenerator
 
         public Password(int passwordLength)
         {
-            Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
+            Settings = new Settings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, passwordLength, DefaultMaxPasswordAttempts, true);
 
             _rng = RandomNumberGenerator.Create();
@@ -45,7 +45,7 @@ namespace PasswordGenerator
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
         {
-            Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
+            Settings = new Settings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts, false);
 
             _rng = RandomNumberGenerator.Create();
@@ -54,7 +54,7 @@ namespace PasswordGenerator
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength)
         {
-            Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
+            Settings = new Settings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, DefaultMaxPasswordAttempts, false);
 
             _rng = RandomNumberGenerator.Create();
@@ -63,7 +63,7 @@ namespace PasswordGenerator
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength, int maximumAttempts)
         {
-            Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
+            Settings = new Settings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, maximumAttempts, false);
 
             _rng = RandomNumberGenerator.Create();
@@ -103,7 +103,7 @@ namespace PasswordGenerator
 
         public IPassword LengthRequired(int passwordLength)
         {
-            Settings.PasswordLength = passwordLength;
+            Settings.Length = passwordLength;
             return this;
         }
 
@@ -114,7 +114,7 @@ namespace PasswordGenerator
         public string Next()
         {
             string password;
-            if (!LengthIsValid(Settings.PasswordLength, Settings.MinimumLength, Settings.MaximumLength))
+            if (!LengthIsValid(Settings.Length, Settings.MinimumLength, Settings.MaximumLength))
             {
                 password =
                     $"Password length invalid. Must be between {Settings.MinimumLength} and {Settings.MaximumLength} characters long";
@@ -144,7 +144,7 @@ namespace PasswordGenerator
                 var pwd = this.Next();
                 passwords.Add(pwd);
             }
-            
+
             return passwords;
         }
 
@@ -157,7 +157,7 @@ namespace PasswordGenerator
         private static string GenerateRandomPassword(IPasswordSettings settings)
         {
             const int maximumIdenticalConsecutiveChars = 2;
-            var password = new char[settings.PasswordLength];
+            var password = new char[settings.Length];
 
             var characters = settings.CharacterSet.ToCharArray();
             var shuffledChars = Shuffle(characters.Select(x => x)).ToArray();
@@ -165,9 +165,9 @@ namespace PasswordGenerator
             var shuffledCharacterSet = string.Join(null, shuffledChars);
             var characterSetLength = shuffledCharacterSet.Length;
 
-            for (var characterPosition = 0; characterPosition < settings.PasswordLength; characterPosition++)
+            for (var characterPosition = 0; characterPosition < settings.Length; characterPosition++)
             {
-                password[characterPosition] = shuffledCharacterSet[GetRandomNumberInRange(0,characterSetLength - 1)];
+                password[characterPosition] = shuffledCharacterSet[GetRandomNumberInRange(0, characterSetLength - 1)];
 
                 var moreThanTwoIdenticalInARow =
                     characterPosition > maximumIdenticalConsecutiveChars
@@ -192,7 +192,7 @@ namespace PasswordGenerator
             return (int)Math.Floor((double)(min + Math.Abs(randomNumber % (max - min))));
         }
 
-        private static int GetRngCryptoSeed(RNGCryptoServiceProvider rng)
+        private static int GetRngCryptoSeed(RandomNumberGenerator rng)
         {
             var rngByteArray = new byte[4];
             rng.GetBytes(rngByteArray);

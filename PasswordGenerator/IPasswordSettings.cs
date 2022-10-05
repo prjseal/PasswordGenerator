@@ -9,7 +9,7 @@ namespace PasswordGenerator
         bool IncludeUppercase { get; }
         bool IncludeNumeric { get; }
         bool IncludeSpecial { get; }
-        int PasswordLength { get; set; }
+        int Length { get; set; }
         string CharacterSet { get; }
         int MaximumAttempts { get; }
         int MinimumLength { get; }
