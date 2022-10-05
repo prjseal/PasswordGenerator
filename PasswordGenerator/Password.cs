@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace PasswordGenerator
 {
-/// <summary>
+    /// <summary>
     ///     Generates random passwords and validates that they meet the rules passed in
     /// </summary>
     public class Password : IPassword
@@ -144,7 +144,7 @@ namespace PasswordGenerator
                 var pwd = this.Next();
                 passwords.Add(pwd);
             }
-            
+
             return passwords;
         }
 
@@ -167,7 +167,7 @@ namespace PasswordGenerator
 
             for (var characterPosition = 0; characterPosition < settings.Length; characterPosition++)
             {
-                password[characterPosition] = shuffledCharacterSet[GetRandomNumberInRange(0,characterSetLength - 1)];
+                password[characterPosition] = shuffledCharacterSet[GetRandomNumberInRange(0, characterSetLength - 1)];
 
                 var moreThanTwoIdenticalInARow =
                     characterPosition > maximumIdenticalConsecutiveChars
