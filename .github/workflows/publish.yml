@@ -1,14 +1,33 @@
-name: Publish
+name: publish
+
 on: [workflow_dispatch]
+  
 
 jobs:
-    build:
-      name: Publish
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v1
-        - name: Publish
-          env:
-            APIKEY: ${{ secrets.APIKEY }}
-          run: .\publish.ps1
-          shell: pwsh
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Build
+      run: cd BinaryPasswordGenerator; dotnet publish
+
+    - name: Release
+      env:
+        APIKEY: ${{ secrets.APIKEY }}
+      run: .\publish.ps1
+      shell: pwsh

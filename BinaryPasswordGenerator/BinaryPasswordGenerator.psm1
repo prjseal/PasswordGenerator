@@ -1,5 +1,6 @@
 # Get functions
-Import-Module "$PSScriptRoot\PasswordGenerator.dll" -Force
+Import-Module "$PSScriptRoot\bin\Debug\netstandard2.0\PasswordGenerator.dll\" -Force
+
 
 # Aliases
 New-Alias -Name 'npwd' -Value 'New-Password'

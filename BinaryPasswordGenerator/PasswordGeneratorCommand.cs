@@ -1,39 +1,29 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Management.Automation;
 using PasswordGenerator;
 
 namespace PasswordGenerator
 {
-    [Cmdlet(VerbsCommon.New,"Password")]
+    [Cmdlet(VerbsCommon.New, "Password")]
     public class GetGeneratedPasswordCommand : PSCmdlet
     {
         private int _pwLengthDefault = 16;
         [Parameter]
-        [ValidateRange(4,128)]
-        public Int32 Length
+        [ValidateRange(4, 128)]
+        public int Length
         {
-            get
-            {
-                return _pwLengthDefault;
-            }
-            set
-            {
-                _pwLengthDefault = value;
-            }
+            get { return _pwLengthDefault; }
+            set { _pwLengthDefault = value; }
         }
 
         private int _amountDefault = 1;
         [Parameter]
-        public Int32 Amount
+        public int Amount
         {
-            get
-            {
-                return _amountDefault;
-            }
-            set
-            {
-                _amountDefault = value;
-            }
+            get { return _amountDefault; }
+            set { _amountDefault = value; }
         }
 
         [Parameter]
@@ -45,104 +35,45 @@ namespace PasswordGenerator
         [Parameter]
         public SwitchParameter IncludeLowercase { get; set; }
 
+        /* Since we're in a class already, we can define a method
+        This class builds on top of the `Password` object and calls
+        each method based on the bool (switch) from user input.
+        */
+        private Password ConfigurePasswordGenerator()
+        {
+            var password = new Password(Length);
+            // I could use `single statement body` syntax here but decided against it
+            if (IncludeSpecial)
+            {
+                password.IncludeSpecial();
+            }
+
+            if (IncludeNumeric)
+            {
+                password.IncludeNumeric();
+            }
+
+            if (IncludeUppercase)
+            {
+                password.IncludeUppercase();
+            }
+
+            if (IncludeLowercase)
+            {
+                password.IncludeLowercase();
+            }
+
+            return password;
+        }
+
         protected override void ProcessRecord()
         {
             for (int i = 0; i < Amount; i++)
             {
-                if (!IncludeLowercase & !IncludeUppercase & IncludeSpecial & IncludeNumeric)
-                {
-                    var pwd = new Password(Length).IncludeSpecial().IncludeNumeric();
-                    var password = pwd.Next();
-                    WriteObject(password); 
-                }
-                else if (IncludeNumeric & !IncludeSpecial & !IncludeUppercase & !IncludeLowercase)
-                {
-                    var pwd = new Password(Length).IncludeNumeric();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (IncludeSpecial & !IncludeNumeric & !IncludeUppercase & !IncludeLowercase)
-                {
-                    var pwd = new Password(Length).IncludeSpecial();
-                    var password = pwd.Next();
-                    WriteObject(password); 
-                }
-                else if (!IncludeNumeric & !IncludeSpecial & IncludeUppercase & IncludeLowercase)
-                {
-                    var pwd = new Password(Length).IncludeLowercase().IncludeUppercase();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (!IncludeNumeric & !IncludeSpecial & !IncludeLowercase & IncludeUppercase)
-                {
-                    var pwd = new Password(Length).IncludeUppercase();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (!IncludeNumeric & !IncludeSpecial & !IncludeUppercase & IncludeLowercase)
-                {
-                    var pwd = new Password(Length).IncludeLowercase();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (!IncludeNumeric & IncludeLowercase & IncludeUppercase & IncludeSpecial)
-                {
-                    var pwd = new Password(Length).IncludeLowercase().IncludeUppercase().IncludeSpecial();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (!IncludeNumeric & IncludeLowercase & IncludeUppercase & IncludeNumeric)
-                {
-                    var pwd = new Password(Length).IncludeLowercase().IncludeUppercase().IncludeNumeric();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (!IncludeNumeric & !IncludeUppercase & IncludeSpecial & IncludeLowercase)
-                {
-                    var pwd = new Password(Length).IncludeLowercase().IncludeSpecial();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (!IncludeSpecial & !IncludeUppercase & IncludeLowercase & IncludeNumeric)
-                {
-                    var pwd = new Password(Length).IncludeLowercase().IncludeNumeric();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (!IncludeLowercase & !IncludeNumeric & IncludeUppercase & IncludeSpecial)
-                {
-                    var pwd = new Password(Length).IncludeUppercase().IncludeSpecial();
-                    var password = pwd.Next();
-                    WriteObject(password);
-                }
-                else if (!IncludeLowercase & !IncludeSpecial & IncludeUppercase & IncludeNumeric)
-                {
-                    var pwd = new Password(Length).IncludeUppercase().IncludeNumeric();
-                    var password = pwd.Next();
-                    WriteObject(password); 
-                }
-                else if (!IncludeUppercase & IncludeLowercase & IncludeNumeric & IncludeSpecial)
-                {
-                    var pwd = new Password(Length).IncludeLowercase().IncludeSpecial().IncludeNumeric();
-                    var password = pwd.Next();
-                    WriteObject(password); 
-                }
-                else if (!IncludeLowercase & IncludeUppercase & IncludeNumeric & IncludeSpecial)
-                {
-                    var pwd = new Password(Length).IncludeUppercase().IncludeSpecial().IncludeNumeric();
-                    var password = pwd.Next();
-                    WriteObject(password); 
-                }
-                else
-                {
-                    var pwd = new Password(Length).IncludeLowercase().IncludeUppercase().IncludeSpecial().IncludeNumeric();
-                    var password = pwd.Next();
-                    WriteObject(password); 
-                }
+                var password = ConfigurePasswordGenerator().Next();
+                WriteObject(password);
             }
-            
         }
-
     }
 }
 

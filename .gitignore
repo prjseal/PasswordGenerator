@@ -18,3 +18,5 @@ PasswordGenerator/bin/Debug/$RANDOM_SEED$
 /debug/
 bin/
 obj/
+/BinaryPasswordGenerator/bin
+/BinaryPasswordGenerator/obj
