@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace PasswordGenerator
 {
     /// <summary>
@@ -11,6 +13,12 @@ namespace PasswordGenerator
         bool IncludeSpecial { get; }
         int PasswordLength { get; set; }
         string CharacterSet { get; }
+
+        /// <summary>
+        ///     The character pool for each included character class, in order. Used to guarantee
+        ///     at least one character from every requested class.
+        /// </summary>
+        IReadOnlyList<string> CharacterGroups { get; }
         int MaximumAttempts { get; }
         int MinimumLength { get; }
         int MaximumLength { get; }

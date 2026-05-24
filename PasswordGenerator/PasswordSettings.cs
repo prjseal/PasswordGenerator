@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace PasswordGenerator
@@ -42,6 +43,19 @@ namespace PasswordGenerator
         public int MaximumAttempts { get; }
         public int MinimumLength { get; }
         public int MaximumLength { get; }
+
+        public IReadOnlyList<string> CharacterGroups
+        {
+            get
+            {
+                var groups = new List<string>();
+                if (IncludeLowercase) groups.Add(LowercaseCharacters);
+                if (IncludeUppercase) groups.Add(UppercaseCharacters);
+                if (IncludeNumeric) groups.Add(NumericCharacters);
+                if (IncludeSpecial) groups.Add(SpecialCharacters ?? string.Empty);
+                return groups;
+            }
+        }
 
         public IPasswordSettings AddLowercase()
         {
