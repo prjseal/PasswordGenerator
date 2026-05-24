@@ -167,24 +167,36 @@ plus tests.
 
 ---
 
-## Phase 3 — API: async, DI, builder split (Tier 2b)
+## Phase 3 — API: async, DI, remove v2 wrappers (Tier 2b)
 
-**Objective:** the modern surface from `api-surface.md` with a gentle deprecation path.
+**Objective:** the modern generation surface from `api-surface.md`, additively (no churn for existing
+callers).
+
+**Decisions taken during implementation** (differ from the earlier draft):
+- **Async is added but sync is NOT marked `[Obsolete]`.** Generation is CPU-bound, so obsoleting sync
+  in favour of async would be an anti-pattern and would spam every consumer with build warnings.
+  Async methods exist for ergonomics/cancellation only.
+- **DI lives in the core package** (chosen over a separate `PasswordGenerator.DependencyInjection`
+  package), adding `Microsoft.Extensions.DependencyInjection.Abstractions` and
+  `Microsoft.Extensions.Configuration.Binder` dependencies.
+- **The full `IPasswordBuilder` split is deferred.** The existing `IPassword` remains the fluent
+  builder; `IPasswordGenerator` is added as the generation contract and is what DI hands out.
 
 **Tasks**
-1. Introduce `IPasswordGenerator` (`Next`/`TryNext`/`NextAsync`/`Generate`/`GenerateAsync`) and
-   `IPasswordBuilder`; keep the fluent feel.
-2. Add **async** methods; mark sync `Next()`/`Generate()` `[Obsolete]` pointing to async equivalents.
+1. Introduce `IPasswordGenerator` (`Next`/`TryNext`/`NextAsync`/`Generate`/`GenerateAsync`);
+   `Password` implements it alongside `IPassword`.
+2. Add **async** methods (`NextAsync`/`GenerateAsync`) that honour `CancellationToken`; keep sync fully
+   supported.
 3. **DI**: `AddPasswordGenerator(Action<PasswordOptions>)` **and**
-   `AddPasswordGenerator(IConfiguration section)` (opt-in; wires `IRandomSource`). Ensure `new` vs DI
-   produce identical results.
-4. **Remove the `[Obsolete] PasswordGenerator` / `PasswordGeneratorSettings` wrappers**
-   (recommended in `../V3_VERIFICATION.md` §4) — clears the 5 `CS0108` warnings.
+   `AddPasswordGenerator(IConfiguration section)` (opt-in; wires `IRandomSource`). `new` vs DI produce
+   identical results.
+4. **Remove the `[Obsolete] PasswordGenerator` / `PasswordGeneratorSettings` wrappers** (and their
+   tests) — clears the 5 `CS0108` warnings.
 
 **Verification / exit criteria**
-- Build has **zero `CS0108`**; DI sample app resolves and generates.
-- **Tests green:** new tests cover async, `TryNext`, and DI-resolved equivalence, and `dotnet test`
-  returns 0 across all target frameworks.
+- Build has **zero `CS0108`** (and zero warnings overall); DI resolves and generates.
+- **Tests green:** new tests cover async, cancellation, batch `Generate`, and DI-resolved equivalence;
+  `dotnet test` returns 0.
 - **Commit & push** this phase, e.g. `feat: async API, DI registration, remove obsolete v2 wrappers`.
 
 **Closes:** §8 async/DI; removes the obsolete-wrapper warnings.
@@ -195,16 +207,26 @@ plus tests.
 
 **Objective:** the capability set that makes v3 worth the major bump.
 
+**Decisions taken during implementation:**
+- **`ForPassphrase` uses a small built-in word list** (`WordList`, ~280 common words), not a full
+  EFF/diceware list — avoids bundling ~70KB and an external attribution. Entropy is reported honestly
+  by `PassphraseGenerator.EstimateEntropyBits()`.
+- **Batch API is `Generate(count)` plus a parameterless `Generate()`** that uses a configurable
+  `DefaultBatchCount` (bindable from appSettings). The `.Count(n)` fluent-chaining shape from the
+  design doc was **not** added (no new return type); optional batch uniqueness was not implemented.
+- The existing fluent `IPassword` remains the builder (no separate `IPasswordBuilder`); the new
+  methods/presets hang off it. Passphrases return an `IPasswordGenerator` (they have no char classes).
+
 **Tasks**
 1. **Custom pools:** `WithCharacters(string)` and `WithAllAscii()`; keep `Include*`.
 2. **Presets:** `ForOwasp`, `ForNist`, `ForOtp`, `ForPassphrase`, `ForApiKey`, `ForEnvironmentName`
-   (sugar over `PasswordOptions`; later fluent calls still override).
-3. **`appSettings` configuration** with resolution order **fluent > appSettings > default**
-   (opt-in, separate step).
-4. **`Generate()` batch API:** count overloads, `.Count(n)` chaining, `appSettings` default; optional
-   uniqueness. *(closes §5.10)*
+   (static factories; later fluent calls still override).
+3. **`appSettings` configuration** with resolution order **code-configure > appSettings > default**,
+   realised by the `AddPasswordGenerator(IConfiguration, Action<PasswordOptions>)` overload.
+4. **`Generate()` batch API:** `Generate(count)` + parameterless `Generate()` using `DefaultBatchCount`
+   from appSettings. *(closes §5.10)*
 5. **Quality options:** `ExcludeAmbiguous()`, `RequireAtLeast(class, count)`, and an
-   `IEntropyEstimator` returning strength in bits.
+   `IEntropyEstimator` (`PoolEntropyEstimator`) returning strength in bits.
 
 **Verification / exit criteria**
 - Preset outputs match documented standards.
@@ -219,6 +241,15 @@ plus tests.
 ## Phase 5 — Packaging & release (Tier 2c)
 
 **Objective:** a clean, modern NuGet package and a disciplined release.
+
+**Decisions taken during implementation:**
+- The stale `PasswordGenerator.nuspec` was **deleted** (not regenerated) — SDK-style `dotnet pack`
+  derives the nuspec from the csproj, which is now the single source of version truth (`Version`,
+  `AssemblyVersion`, `FileVersion` only; the duplicate `PackageVersion` was removed).
+- README is the repo root `Readme.md`, packed to the package root as `README.md`.
+- **SourceLink emits one warning in the web sandbox only** ("Source control information is not
+  available") because the sandbox clone's `origin` is a local HTTP proxy, not `github.com`. Packing
+  against a `github.com` remote is fully warning-free, so the config is correct for real CI.
 
 **Tasks**
 1. Delete or regenerate the stale `PasswordGenerator.nuspec` (2.0.5); single source of version truth
@@ -243,6 +274,16 @@ plus tests.
 ## Phase 6 — Documentation & migration (Tier 4)
 
 **Objective:** make the upgrade obvious and the broader use cases discoverable.
+
+**Decisions taken during implementation:**
+- The migration guide drops the "`[Obsolete]` still working" framing: the **entire v2 surface is
+  intact** (no members were obsoleted), so the only behavioural change to flag is error-string →
+  exception/`TryNext`. Async/DI/presets are presented as **opt-in additions**.
+- Standards mapping and the "beyond passwords" use cases live in
+  [`migration-v2-to-v3.md`](migration-v2-to-v3.md); the root `Readme.md` links to them.
+- A root [`CHANGELOG.md`](../../CHANGELOG.md) captures the v3 changes; `current-state/` docs get a
+  "historical / resolved in v3" banner rather than being deleted.
+- Readme/migration snippets are backed by `DocumentationSnippetTests` so docs can't drift from the API.
 
 **Tasks**
 1. **v2→v3 migration guide:** direct→DI, sync→async (with `[Obsolete]` still working),

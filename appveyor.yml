@@ -1,5 +1,5 @@
-version: 2.1.{build}
-image: Visual Studio 2019
+version: 3.0.{build}
+image: Visual Studio 2022
 before_build:
   - cmd: dotnet restore PasswordGenerator.sln
 build_script:
@@ -11,4 +11,6 @@ after_build:
 artifacts:
   - path: artifacts/*.nupkg
     name: NuGet
+  - path: artifacts/*.snupkg
+    name: NuGetSymbols
 deploy: off
