@@ -6,7 +6,7 @@ PasswordGenerator/bin/Debug/$RANDOM_SEED$
 *.suo
 /.vs
 /PasswordGenerator/obj
-/PasswordGenerator/bin/Debug
+/PasswordGenerator/bin
 /UnitTests/obj
 /UnitTests/bin/Debug
 /packages
