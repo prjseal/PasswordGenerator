@@ -1,4 +1,4 @@
-# v3 Target — Generation Flow (proposal)
+# v3 Target — Generation Flow
 
 Replaces probabilistic retry + string sentinels with **deterministic construction + exceptions**.
 
@@ -54,7 +54,7 @@ sequenceDiagram
         RNG-->>Gen: index
     end
     Gen-->>App: Task<IReadOnlyList<string>>
-    Note over App,Gen: sync Next()/Generate() still exist,<br/>marked [Obsolete] pointing here
+    Note over App,Gen: sync Next()/Generate() still exist<br/>and are fully supported (NOT obsoleted)
 ```
 
 > Note: generation is CPU-bound, so async mainly helps large-batch ergonomics and cancellation, not

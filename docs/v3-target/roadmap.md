@@ -1,14 +1,14 @@
-# v3 Target — Roadmap (proposal)
+# v3 Target — Roadmap
 
 Tiered delivery from the adjusted plan in `../V3_VERIFICATION.md` §3. Sequencing only — not committed
-dates.
+dates. (Delivered in v3.0.0; see `implementation-plan.md` for where the shipped code diverged.)
 
 ## Tiers as phases
 
 ```mermaid
 flowchart TD
     T1["Tier 1 — Correctness & Security<br/>exceptions+TryNext · unbiased CSPRNG · delete Guid shuffle<br/>· guarantee classes · fix static RNG · empty-special guard"]
-    T2["Tier 2 — Modernisation<br/>multi-target+nullable · async+[Obsolete] sync · opt-in DI<br/>· BenchmarkDotNet · packaging hygiene · tests→net8/NUnit4"]
+    T2["Tier 2 — Modernisation<br/>multi-target+nullable · async (sync kept, not obsoleted) · opt-in DI<br/>· BenchmarkDotNet · packaging hygiene · tests→net8/NUnit4"]
     T3["Tier 3 — New Features<br/>WithAllAscii/WithCharacters · presets · appSettings<br/>· Generate batch · exclude-ambiguous · min-counts · entropy"]
     T4["Tier 4 — Documentation<br/>v2→v3 migration guide · broader-purpose docs · OWASP/NIST mapping"]
     T1 --> T2 --> T3 --> T4
@@ -36,7 +36,7 @@ gantt
     Remove static RNG + dead code            :t1d, after t1a, 1
     section Tier 2 Modernisation
     Multi-target + nullable                  :t2a, after t1c, 2
-    Async plus Obsolete sync                 :t2b, after t2a, 2
+    Async (sync kept, not obsoleted)         :t2b, after t2a, 2
     Opt-in DI + appSettings bind             :t2c, after t2a, 2
     Tests net8 + NUnit4 + BenchmarkDotNet    :t2d, after t1c, 3
     Packaging hygiene                        :t2e, after t2a, 1
