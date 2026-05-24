@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PasswordGenerator
 {
     /// <summary>
     ///     Generates random passwords that satisfy the configured rules.
     /// </summary>
-    public class Password : IPassword, IDisposable
+    public class Password : IPassword, IPasswordGenerator, IDisposable
     {
         private const int DefaultPasswordLength = 16;
         private const int DefaultMaxPasswordAttempts = 10000;
@@ -147,11 +149,40 @@ namespace PasswordGenerator
 
         public IEnumerable<string> NextGroup(int numberOfPasswordsToGenerate)
         {
-            var passwords = new List<string>(numberOfPasswordsToGenerate);
-            for (var i = 0; i < numberOfPasswordsToGenerate; i++)
+            return Generate(numberOfPasswordsToGenerate);
+        }
+
+        public Task<string> NextAsync(CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.FromResult(Next());
+        }
+
+        public IReadOnlyList<string> Generate(int count)
+        {
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count), "count cannot be negative.");
+
+            var passwords = new List<string>(count);
+            for (var i = 0; i < count; i++)
                 passwords.Add(Next());
 
             return passwords;
+        }
+
+        public Task<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default)
+        {
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count), "count cannot be negative.");
+
+            var passwords = new List<string>(count);
+            for (var i = 0; i < count; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                passwords.Add(Next());
+            }
+
+            return Task.FromResult<IReadOnlyList<string>>(passwords);
         }
 
         private bool TryValidateSettings(out string? error)

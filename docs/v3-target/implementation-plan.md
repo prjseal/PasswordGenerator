@@ -167,24 +167,36 @@ plus tests.
 
 ---
 
-## Phase 3 — API: async, DI, builder split (Tier 2b)
+## Phase 3 — API: async, DI, remove v2 wrappers (Tier 2b)
 
-**Objective:** the modern surface from `api-surface.md` with a gentle deprecation path.
+**Objective:** the modern generation surface from `api-surface.md`, additively (no churn for existing
+callers).
+
+**Decisions taken during implementation** (differ from the earlier draft):
+- **Async is added but sync is NOT marked `[Obsolete]`.** Generation is CPU-bound, so obsoleting sync
+  in favour of async would be an anti-pattern and would spam every consumer with build warnings.
+  Async methods exist for ergonomics/cancellation only.
+- **DI lives in the core package** (chosen over a separate `PasswordGenerator.DependencyInjection`
+  package), adding `Microsoft.Extensions.DependencyInjection.Abstractions` and
+  `Microsoft.Extensions.Configuration.Binder` dependencies.
+- **The full `IPasswordBuilder` split is deferred.** The existing `IPassword` remains the fluent
+  builder; `IPasswordGenerator` is added as the generation contract and is what DI hands out.
 
 **Tasks**
-1. Introduce `IPasswordGenerator` (`Next`/`TryNext`/`NextAsync`/`Generate`/`GenerateAsync`) and
-   `IPasswordBuilder`; keep the fluent feel.
-2. Add **async** methods; mark sync `Next()`/`Generate()` `[Obsolete]` pointing to async equivalents.
+1. Introduce `IPasswordGenerator` (`Next`/`TryNext`/`NextAsync`/`Generate`/`GenerateAsync`);
+   `Password` implements it alongside `IPassword`.
+2. Add **async** methods (`NextAsync`/`GenerateAsync`) that honour `CancellationToken`; keep sync fully
+   supported.
 3. **DI**: `AddPasswordGenerator(Action<PasswordOptions>)` **and**
-   `AddPasswordGenerator(IConfiguration section)` (opt-in; wires `IRandomSource`). Ensure `new` vs DI
-   produce identical results.
-4. **Remove the `[Obsolete] PasswordGenerator` / `PasswordGeneratorSettings` wrappers**
-   (recommended in `../V3_VERIFICATION.md` §4) — clears the 5 `CS0108` warnings.
+   `AddPasswordGenerator(IConfiguration section)` (opt-in; wires `IRandomSource`). `new` vs DI produce
+   identical results.
+4. **Remove the `[Obsolete] PasswordGenerator` / `PasswordGeneratorSettings` wrappers** (and their
+   tests) — clears the 5 `CS0108` warnings.
 
 **Verification / exit criteria**
-- Build has **zero `CS0108`**; DI sample app resolves and generates.
-- **Tests green:** new tests cover async, `TryNext`, and DI-resolved equivalence, and `dotnet test`
-  returns 0 across all target frameworks.
+- Build has **zero `CS0108`** (and zero warnings overall); DI resolves and generates.
+- **Tests green:** new tests cover async, cancellation, batch `Generate`, and DI-resolved equivalence;
+  `dotnet test` returns 0.
 - **Commit & push** this phase, e.g. `feat: async API, DI registration, remove obsolete v2 wrappers`.
 
 **Closes:** §8 async/DI; removes the obsolete-wrapper warnings.
