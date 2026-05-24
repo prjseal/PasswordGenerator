@@ -1,7 +1,13 @@
-version: 2.0.{build}
-image: Visual Studio 2017
+version: 2.1.{build}
+image: Visual Studio 2019
 before_build:
-  ps: nuget restore
-build:
-  publish_nuget: true
-  verbosity: detailed
+  - cmd: dotnet restore PasswordGenerator.sln
+build_script:
+  - cmd: dotnet build PasswordGenerator.sln -c Release --no-restore
+test_script:
+  - cmd: dotnet test PasswordGenerator.Tests/PasswordGenerator.Tests.csproj -c Release --no-build --logger trx
+after_build:
+  - cmd: dotnet pack PasswordGenerator/PasswordGenerator.csproj -c Release --no-build -o artifacts
+artifacts:
+  - path: artifacts/*.nupkg
+    name: NuGet
