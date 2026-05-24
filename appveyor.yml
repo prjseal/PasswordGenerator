@@ -11,3 +11,4 @@ after_build:
 artifacts:
   - path: artifacts/*.nupkg
     name: NuGet
+deploy: off
