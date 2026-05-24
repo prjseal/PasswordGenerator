@@ -25,6 +25,7 @@ flowchart LR
         T5[before-after.md]
         T6[roadmap.md]
         T7[implementation-plan.md]
+        T8[migration-v2-to-v3.md]
     end
     A --> B --> Current
     Current --> Target
@@ -36,9 +37,10 @@ flowchart LR
 
 1. **`V3_REVIEW_AND_DOCUMENTATION.md`** — the original full review (API, bugs, packaging, gaps).
 2. **`V3_VERIFICATION.md`** — each issue re-checked against the current `master` source, with verdicts.
-3. **`current-state/`** — diagrammed snapshot of the code as it runs today.
-4. **`v3-target/`** — the proposed v3 design, diagrammed, with a before/after, a roadmap, and a
-   phased **`implementation-plan.md`** (starts with installing the .NET SDK via bash).
+3. **`current-state/`** — diagrammed snapshot of the v2.1.0 code (now **historical**; the issues it
+   documents are resolved in v3 — see the root [`CHANGELOG.md`](../CHANGELOG.md)).
+4. **`v3-target/`** — the v3 design, diagrammed, with a before/after, a roadmap, a phased
+   **`implementation-plan.md`**, and the user-facing **`migration-v2-to-v3.md`**.
 
 ## Conventions
 

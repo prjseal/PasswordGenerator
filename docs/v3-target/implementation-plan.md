@@ -275,6 +275,16 @@ callers).
 
 **Objective:** make the upgrade obvious and the broader use cases discoverable.
 
+**Decisions taken during implementation:**
+- The migration guide drops the "`[Obsolete]` still working" framing: the **entire v2 surface is
+  intact** (no members were obsoleted), so the only behavioural change to flag is error-string →
+  exception/`TryNext`. Async/DI/presets are presented as **opt-in additions**.
+- Standards mapping and the "beyond passwords" use cases live in
+  [`migration-v2-to-v3.md`](migration-v2-to-v3.md); the root `Readme.md` links to them.
+- A root [`CHANGELOG.md`](../../CHANGELOG.md) captures the v3 changes; `current-state/` docs get a
+  "historical / resolved in v3" banner rather than being deleted.
+- Readme/migration snippets are backed by `DocumentationSnippetTests` so docs can't drift from the API.
+
 **Tasks**
 1. **v2→v3 migration guide:** direct→DI, sync→async (with `[Obsolete]` still working),
    error-string→exception/`TryNext`, preset/appSettings adoption — before/after snippets.

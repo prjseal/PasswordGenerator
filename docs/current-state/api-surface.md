@@ -1,5 +1,8 @@
 # Current State — Public API Surface (v2.1.0)
 
+> **Historical.** This describes v2.1.0. The issues noted here are resolved in v3 — see the root
+> [`CHANGELOG.md`](../../CHANGELOG.md) and the [migration guide](../v3-target/migration-v2-to-v3.md).
+
 What a caller can do today, and how configuration is resolved.
 
 ## API map
