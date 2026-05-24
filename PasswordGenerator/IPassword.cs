@@ -11,7 +11,7 @@ namespace PasswordGenerator
         IPassword IncludeSpecial(string specialCharactersToInclude);
         IPassword LengthRequired(int passwordLength);
         string Next();
-        bool TryNext(out string password);
+        bool TryNext(out string? password);
         IEnumerable<string> NextGroup(int numberOfPasswordsToGenerate);
     }
 }

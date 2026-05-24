@@ -39,8 +39,8 @@ namespace PasswordGenerator.Tests
         {
             var pwd = new Password(3);
             var ok = pwd.TryNext(out var result);
-            Assert.IsFalse(ok);
-            Assert.IsNull(result);
+            Assert.That(ok, Is.False);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
@@ -48,8 +48,8 @@ namespace PasswordGenerator.Tests
         {
             var pwd = new Password(16);
             var ok = pwd.TryNext(out var result);
-            Assert.IsTrue(ok);
-            Assert.AreEqual(16, result.Length);
+            Assert.That(ok, Is.True);
+            Assert.That(result!.Length, Is.EqualTo(16));
         }
 
         [Test]
@@ -70,10 +70,10 @@ namespace PasswordGenerator.Tests
                     includeNumeric: true, includeSpecial: true, passwordLength: 8);
                 var result = pwd.Next();
 
-                Assert.IsTrue(result.Any(char.IsLower), $"missing lowercase: {result}");
-                Assert.IsTrue(result.Any(char.IsUpper), $"missing uppercase: {result}");
-                Assert.IsTrue(result.Any(char.IsDigit), $"missing digit: {result}");
-                Assert.IsTrue(result.Any(c => !char.IsLetterOrDigit(c)), $"missing special: {result}");
+                Assert.That(result.Any(char.IsLower), Is.True, $"missing lowercase: {result}");
+                Assert.That(result.Any(char.IsUpper), Is.True, $"missing uppercase: {result}");
+                Assert.That(result.Any(char.IsDigit), Is.True, $"missing digit: {result}");
+                Assert.That(result.Any(c => !char.IsLetterOrDigit(c)), Is.True, $"missing special: {result}");
             }
         }
 
@@ -85,14 +85,14 @@ namespace PasswordGenerator.Tests
             for (var i = 0; i < 20000; i++)
             {
                 var v = rng.NextInt(10);
-                Assert.GreaterOrEqual(v, 0);
-                Assert.Less(v, 10);
+                Assert.That(v, Is.GreaterThanOrEqualTo(0));
+                Assert.That(v, Is.LessThan(10));
                 seen.Add(v);
             }
 
             // The old modulo implementation could never produce the top index; verify it now can.
-            Assert.IsTrue(seen.Contains(9), "top value (9) was never produced");
-            Assert.AreEqual(10, seen.Count, "not every value in range was produced");
+            Assert.That(seen, Does.Contain(9), "top value (9) was never produced");
+            Assert.That(seen.Count, Is.EqualTo(10), "not every value in range was produced");
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace PasswordGenerator.Tests
             var a = new Password(settingsA, new FixedRandomSource(0, 1, 2, 3, 4, 5));
             var b = new Password(settingsB, new FixedRandomSource(0, 1, 2, 3, 4, 5));
 
-            Assert.AreEqual(a.Next(), b.Next());
+            Assert.That(a.Next(), Is.EqualTo(b.Next()));
         }
     }
 }

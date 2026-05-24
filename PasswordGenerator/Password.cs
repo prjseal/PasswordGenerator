@@ -133,7 +133,7 @@ namespace PasswordGenerator
         /// <summary>
         ///     Tries to generate a password. Returns false (instead of throwing) when the settings are invalid.
         /// </summary>
-        public bool TryNext(out string password)
+        public bool TryNext(out string? password)
         {
             if (!TryValidateSettings(out _))
             {
@@ -154,7 +154,7 @@ namespace PasswordGenerator
             return passwords;
         }
 
-        private bool TryValidateSettings(out string error)
+        private bool TryValidateSettings(out string? error)
         {
             if (!LengthIsValid(Settings.PasswordLength, Settings.MinimumLength, Settings.MaximumLength))
             {

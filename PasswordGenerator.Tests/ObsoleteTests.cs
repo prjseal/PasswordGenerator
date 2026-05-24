@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+using System;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
@@ -13,7 +12,7 @@ namespace PasswordGenerator.Tests
         {
             PasswordGenerator pwdGen = new PasswordGenerator();
             string result = pwdGen.Next();
-            Assert.AreEqual(16, result.Length);
+            Assert.That(result.Length, Is.EqualTo(16));
         }
 
         [Test]
@@ -35,7 +34,7 @@ namespace PasswordGenerator.Tests
         {
             PasswordGenerator pwdGen = new PasswordGenerator(256);
             string result = pwdGen.Next();
-            Assert.AreEqual(256, result.Length);
+            Assert.That(result.Length, Is.EqualTo(256));
         }
 
         [Test]
@@ -43,7 +42,7 @@ namespace PasswordGenerator.Tests
         {
             PasswordGenerator pwdGen = new PasswordGenerator().IncludeLowercase();
             string result = pwdGen.Next();
-            Assert.AreEqual(16, result.Length);
+            Assert.That(result.Length, Is.EqualTo(16));
         }
 
         [Test]
@@ -51,7 +50,7 @@ namespace PasswordGenerator.Tests
         {
             PasswordGenerator pwdGen = new PasswordGenerator().LengthRequired(50);
             string result = pwdGen.Next();
-            Assert.AreEqual(50, result.Length);
+            Assert.That(result.Length, Is.EqualTo(50));
         }
 
         [Test]
@@ -61,7 +60,7 @@ namespace PasswordGenerator.Tests
             var result = pwdGen.Next();
             var pattern = @"^\d{16}$";
             var m = Regex.Match(result, pattern, RegexOptions.IgnoreCase);
-            Assert.IsTrue(m.Success);
+            Assert.That(m.Success, Is.True);
         }
 
         [Test]
@@ -71,7 +70,7 @@ namespace PasswordGenerator.Tests
             var result = pwdGen.Next();
             var pattern = @"^[a-z]{16}$";
             var m = Regex.Match(result, pattern, RegexOptions.IgnoreCase);
-            Assert.IsTrue(m.Success);
+            Assert.That(m.Success, Is.True);
         }
     }
 }
