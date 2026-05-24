@@ -24,10 +24,12 @@ flowchart LR
         T4[configuration-and-di.md]
         T5[before-after.md]
         T6[roadmap.md]
+        T7[implementation-plan.md]
     end
     A --> B --> Current
     Current --> Target
     T5 -. compares .-> Current
+    T6 --> T7
 ```
 
 ## Reading order
@@ -35,7 +37,8 @@ flowchart LR
 1. **`V3_REVIEW_AND_DOCUMENTATION.md`** — the original full review (API, bugs, packaging, gaps).
 2. **`V3_VERIFICATION.md`** — each issue re-checked against the current `master` source, with verdicts.
 3. **`current-state/`** — diagrammed snapshot of the code as it runs today.
-4. **`v3-target/`** — the proposed v3 design, diagrammed, with a before/after and a roadmap.
+4. **`v3-target/`** — the proposed v3 design, diagrammed, with a before/after, a roadmap, and a
+   phased **`implementation-plan.md`** (starts with installing the .NET SDK via bash).
 
 ## Conventions
 
