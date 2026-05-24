@@ -1,16 +1,22 @@
-# v3 Target — Public API Surface (proposal)
+# v3 Target — Public API Surface
 
 Keeps the familiar fluent feel; adds safety, presets, batch, async, and custom pools.
 
-## Target API map
+> **As shipped:** the fluent builder is the existing `IPassword` (the full `IPasswordBuilder`/`Build()`
+> split from the early proposal was deferred). `Password` implements both `IPassword` and the new
+> generation contract `IPasswordGenerator`. Passphrases return an `IPasswordGenerator`
+> (`PassphraseGenerator`). See `implementation-plan.md` for the deviations.
+
+## API map
 
 ```mermaid
 flowchart TD
     subgraph Entry["Entry points"]
-        e1["new PasswordBuilder()"]
-        e2["inject IPasswordGenerator (DI)"]
+        e1["new Password()"]
+        e2["Password.ForOwasp()/ForOtp()/... (static presets)"]
+        e3["inject IPasswordGenerator (DI)"]
     end
-    subgraph Build["Fluent builder (IPasswordBuilder)"]
+    subgraph Build["Fluent builder (IPassword)"]
         direction TB
         b1["IncludeLowercase/Uppercase/Numeric"]
         b2["IncludeSpecial(string)"]
@@ -18,18 +24,17 @@ flowchart TD
         b4["ExcludeAmbiguous()"]
         b5["RequireAtLeast(class, count)"]
         b6["LengthRequired(int)"]
-        b7["Presets: ForOwasp/ForNist/ForOtp/<br/>ForPassphrase/ForApiKey/ForEnvironmentName"]
     end
     subgraph Gen["Generation (IPasswordGenerator)"]
         g1["Next() : string  (throws on bad config)"]
         g2["TryNext(out string) : bool"]
         g3["NextAsync(ct) : Task~string~"]
-        g4["Generate(count) / Generate().Count(n)"]
-        g5["GenerateAsync(count, ct)"]
+        g4["Generate() / Generate(count)"]
+        g5["GenerateAsync() / GenerateAsync(count, ct)"]
     end
     Entry --> Build --> Gen
     classDef good fill:#e6ffe6,stroke:#009900;
-    class g2,g3,g4,g5,b3,b4,b5,b7 good;
+    class g2,g3,g4,g5,b3,b4,b5 good;
 ```
 
 ## Single vs batch (naming kept intentional)
@@ -37,12 +42,14 @@ flowchart TD
 ```mermaid
 flowchart LR
     N["Next() — ONE password<br/>(mirrors Random.Next())"]
-    G["Generate(count) — MANY<br/>Generate().Count(10)<br/>count from appSettings if unset"]
+    G["Generate(count) — MANY<br/>Generate() — DefaultBatchCount<br/>(bindable from appSettings)"]
     N -. same options .- G
 ```
 
 `.Next()` is retained because the original API was modelled on `Random.Next()`. `.Generate()` is the
-new batch-oriented entry with count overloads, `.Count(n)` chaining, and an `appSettings` default.
+new batch-oriented entry: `Generate(count)` plus a parameterless `Generate()` that uses the
+configurable `DefaultBatchCount` (bindable from appSettings). The `.Count(n)` chaining shape from the
+early proposal was not added — there is no new return type.
 
 ## Presets → standards mapping
 
@@ -56,8 +63,8 @@ flowchart LR
     ForEnvironmentName --> En["readable, memorable identifiers"]
 ```
 
-Presets are sugar over `PasswordOptions`; any subsequent fluent call still overrides them
-(resolution order is documented in `configuration-and-di.md`).
+Presets are static factory methods on `Password` (sugar over the fluent builder); any subsequent
+fluent call still overrides them (resolution order is documented in `configuration-and-di.md`).
 
 ## Surfacing the broader purpose
 
@@ -70,7 +77,7 @@ and other identifiers — so v3 deliberately keeps the per-class `Include*` meth
 ```mermaid
 flowchart TD
     Old["v2: new Password().Next() → string (maybe error)"] --> Mig["v3 migration"]
-    Mig --> A["sync Next()/Generate() kept but [Obsolete] → async"]
+    Mig --> A["sync Next()/Generate() kept and fully supported<br/>(NOT obsoleted); async added alongside"]
     Mig --> B["error strings → exception / TryNext"]
     Mig --> C["direct new → optional IPasswordGenerator via DI"]
     Mig --> D["[Obsolete] PasswordGenerator/Settings REMOVED"]
@@ -78,6 +85,10 @@ flowchart TD
     class D warn;
 ```
 
+> Sync methods are **not** marked `[Obsolete]`: generation is CPU-bound, so obsoleting sync in favour
+> of async would be an anti-pattern and would spam every consumer with build warnings. Async exists
+> for ergonomics and cancellation only.
+
 **Why this is better:** every verified gap in `../current-state/api-surface.md` is closed
 (`TryNext`/async/DI/presets/appSettings/custom pools), failures become explicit, and existing single
-`.Next()` users still work (with an obsolete-hint nudge), giving a gentle upgrade path.
+`.Next()` users still work unchanged, giving a gentle upgrade path.

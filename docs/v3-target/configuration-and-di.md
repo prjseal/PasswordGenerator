@@ -1,4 +1,4 @@
-# v3 Target — Configuration & Dependency Injection (proposal)
+# v3 Target — Configuration & Dependency Injection
 
 ## Settings resolution order
 
@@ -24,7 +24,8 @@ applies. `appSettings` binding is an **opt-in, separate step** — it is never a
     "IncludeLowercase": true,
     "IncludeUppercase": true,
     "IncludeNumeric": true,
-    "Special": "!#$%&*@",
+    "IncludeSpecial": true,
+    "SpecialCharacters": "!#$%&*@",
     "ExcludeAmbiguous": true,
     "DefaultBatchCount": 5
   }
@@ -63,7 +64,7 @@ consumer in control and lets the registration wire up `IRandomSource` so callers
 
 ```mermaid
 flowchart LR
-    P1["new PasswordBuilder().ForOwasp().Build().Next()"] --> Same(("same result<br/>semantics"))
+    P1["Password.ForOwasp().Next()"] --> Same(("same result<br/>semantics"))
     P2["injected IPasswordGenerator.Next()"] --> Same
 ```
 

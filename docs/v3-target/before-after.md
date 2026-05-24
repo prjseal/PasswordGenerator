@@ -1,4 +1,4 @@
-# v3 Target — Before / After (proposal)
+# v3 Target — Before / After
 
 Side-by-side of the things that change most, each tied to a verified issue.
 
@@ -85,7 +85,7 @@ flowchart LR
         p4["5x CS0108 from obsolete wrappers"]
     end
     subgraph AfterP["v3"]
-        q1["netstandard2.0 + net8.0 (+net10.0)"]
+        q1["netstandard2.0 + net8.0"]
         q2["tests on net8.0, NUnit 4<br/>+ uniqueness/entropy/edge cases"]
         q3["clean pack: PackageReadmeFile,<br/>PackageIcon, SourceLink, snupkg"]
         q4["obsolete wrappers removed → no CS0108"]

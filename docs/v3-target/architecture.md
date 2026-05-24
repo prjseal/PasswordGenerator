@@ -1,9 +1,11 @@
-# v3 Target — Architecture (proposal)
+# v3 Target — Architecture
 
-> Proposed design for discussion. Multi-target `netstandard2.0;net8.0` (optionally `net10.0`),
-> nullable enabled. Aligns with the adjusted plan in `../V3_VERIFICATION.md` §3.
+> Multi-target `netstandard2.0;net8.0`, nullable enabled. Aligns with the adjusted plan in
+> `../V3_VERIFICATION.md` §3. As shipped, the existing `IPassword` remains the fluent builder (no
+> separate `IPasswordBuilder`/`Build()`); `Password` implements both `IPassword` and the generation
+> contract `IPasswordGenerator`.
 
-## Target type relationships
+## Type relationships
 
 ```mermaid
 classDiagram
@@ -12,59 +14,66 @@ classDiagram
         +Next() string
         +TryNext(out string) bool
         +NextAsync(CancellationToken) Task
+        +Generate() IReadOnlyList
         +Generate(int count) IReadOnlyList
+        +GenerateAsync(CancellationToken) Task
         +GenerateAsync(int count, CancellationToken) Task
     }
-    class IPasswordBuilder {
+    class IPassword {
         <<interface>>
-        +IncludeLowercase() IPasswordBuilder
-        +IncludeUppercase() IPasswordBuilder
-        +IncludeNumeric() IPasswordBuilder
-        +IncludeSpecial(string) IPasswordBuilder
-        +WithAllAscii() IPasswordBuilder
-        +WithCharacters(string) IPasswordBuilder
-        +ExcludeAmbiguous() IPasswordBuilder
-        +RequireAtLeast(class, count) IPasswordBuilder
-        +LengthRequired(int) IPasswordBuilder
-        +ForOwasp() IPasswordBuilder
-        +ForOtp() IPasswordBuilder
-        +ForPassphrase() IPasswordBuilder
-        +Build() IPasswordGenerator
+        +IncludeLowercase() IPassword
+        +IncludeUppercase() IPassword
+        +IncludeNumeric() IPassword
+        +IncludeSpecial(string) IPassword
+        +WithAllAscii() IPassword
+        +WithCharacters(string) IPassword
+        +ExcludeAmbiguous() IPassword
+        +RequireAtLeast(class, count) IPassword
+        +LengthRequired(int) IPassword
+        +Next() string
+        +TryNext(out string) bool
+        +NextGroup(int) IEnumerable
+    }
+    class Password {
+        +static ForOwasp/ForNist/ForOtp() IPassword
+        +static ForApiKey/ForEnvironmentName() IPassword
+        +static ForPassphrase() IPasswordGenerator
+        +EstimateEntropyBits() double
     }
     class PasswordOptions {
-        +pools, length, minCounts
-        +excludeAmbiguous
-        +maxAttempts
+        +IncludeLowercase/Uppercase/Numeric/Special
+        +SpecialCharacters, Length
+        +ExcludeAmbiguous, DefaultBatchCount
         +bind from IConfiguration
     }
     class IRandomSource {
         <<interface>>
         +int NextInt(int maxExclusive)
-        +void Fill(Span~byte~)
     }
     class CryptoRandomSource {
-        uses RandomNumberGenerator.GetInt32
+        GetInt32 on net8, rejection sampling on netstandard2.0
     }
     class IEntropyEstimator {
         <<interface>>
-        +double Bits(string password)
+        +double EstimateBits(IPasswordSettings)
     }
 
-    IPasswordGenerator <|.. PasswordGenerator2
-    IPasswordBuilder <|.. PasswordBuilder
-    PasswordBuilder --> PasswordOptions : produces
-    PasswordGenerator2 --> PasswordOptions : reads
-    PasswordGenerator2 --> IRandomSource : uses
+    IPassword <|.. Password
+    IPasswordGenerator <|.. Password
+    IPasswordGenerator <|.. PassphraseGenerator
+    Password --> IRandomSource : uses
+    PasswordOptions ..> Password : configures (DI)
     IRandomSource <|.. CryptoRandomSource
-    PasswordGenerator2 ..> IEntropyEstimator : optional
+    IEntropyEstimator <|.. PoolEntropyEstimator
+    Password ..> PoolEntropyEstimator : EstimateEntropyBits
 ```
 
 Key shifts from today:
 - **`IRandomSource` abstraction** wraps the CSPRNG (unbiased `RandomNumberGenerator.GetInt32` on
   `net8.0`; rejection-sampling fallback on `netstandard2.0`). No `static`, disposable-aware,
   injectable. Fixes verified §5.2/§5.3/§5.6 and lets the Guid `Shuffle` be deleted (§5.5).
-- **`PasswordOptions`** is the single config object, bindable from `IConfiguration`.
-- **Presets** are builder methods that pre-fill `PasswordOptions`.
+- **`PasswordOptions`** is the DI config object, bindable from `IConfiguration`.
+- **Presets** are static factory methods on `Password` that pre-fill the fluent builder.
 - The `[Obsolete]` v2 wrappers are **removed** in v3 (recommended in `../V3_VERIFICATION.md` §4).
 
 ## Target composition (with DI)
@@ -74,7 +83,7 @@ flowchart TD
     App["Consuming app"] -->|AddPasswordGenerator| DI["IServiceCollection"]
     DI --> Reg["registers IPasswordGenerator,<br/>IRandomSource, PasswordOptions"]
     App -->|inject| IPG["IPasswordGenerator"]
-    App -->|or new directly| Builder["new PasswordBuilder()...Build()"]
+    App -->|or new directly| Builder["new Password()..."]
     IPG --> OPT[PasswordOptions]
     Builder --> OPT
     IPG --> RNG["IRandomSource → CryptoRandomSource"]
@@ -93,8 +102,8 @@ flowchart LR
     subgraph ns["netstandard2.0 (broad reach: .NET Framework, Umbraco)"]
         a["manual rejection sampling"]
     end
-    subgraph net8["net8.0 / net10.0 (modern)"]
-        b["RandomNumberGenerator.GetInt32 / GetItems"]
+    subgraph net8["net8.0 (modern)"]
+        b["RandomNumberGenerator.GetInt32"]
     end
     IRandomSource --> ns
     IRandomSource --> net8

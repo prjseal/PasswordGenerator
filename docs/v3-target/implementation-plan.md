@@ -286,7 +286,7 @@ callers).
 - Readme/migration snippets are backed by `DocumentationSnippetTests` so docs can't drift from the API.
 
 **Tasks**
-1. **v2→v3 migration guide:** direct→DI, sync→async (with `[Obsolete]` still working),
+1. **v2→v3 migration guide:** direct→DI, sync→async (sync kept, not obsoleted),
    error-string→exception/`TryNext`, preset/appSettings adoption — before/after snippets.
 2. Document the **broader purpose** (OTPs, environment names, API keys, identifiers).
 3. **OWASP/NIST mapping** for presets with links.
