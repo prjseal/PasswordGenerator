@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -33,6 +34,7 @@ namespace PasswordGenerator
         }
 
         private bool UsingDefaults { get; set; }
+        private readonly Dictionary<CharacterClass, int> _minimumCounts = new Dictionary<CharacterClass, int>();
 
         public bool IncludeLowercase { get; private set; }
         public bool IncludeUppercase { get; private set; }
@@ -40,6 +42,9 @@ namespace PasswordGenerator
         public bool IncludeSpecial { get; private set; }
         public int PasswordLength { get; set; }
         public string CharacterSet { get; private set; }
+        public bool IsCustomPool { get; private set; }
+        public bool ExcludeAmbiguous { get; private set; }
+        public IReadOnlyDictionary<CharacterClass, int> MinimumCounts => _minimumCounts;
         public int MaximumAttempts { get; }
         public int MinimumLength { get; }
         public int MaximumLength { get; }
@@ -96,6 +101,62 @@ namespace PasswordGenerator
             IncludeSpecial = true;
             SpecialCharacters = specialCharactersToAdd;
             CharacterSet += specialCharactersToAdd;
+            return this;
+        }
+
+        public IPasswordSettings UseCharacters(string characters)
+        {
+            if (characters == null) throw new ArgumentNullException(nameof(characters));
+
+            StopUsingDefaults();
+            IncludeLowercase = false;
+            IncludeUppercase = false;
+            IncludeNumeric = false;
+            IncludeSpecial = false;
+            _minimumCounts.Clear();
+            IsCustomPool = true;
+            CharacterSet = characters;
+            return this;
+        }
+
+        public IPasswordSettings UseAllAscii()
+        {
+            return UseCharacters(CharacterFilter.AllPrintableAscii);
+        }
+
+        public IPasswordSettings ExcludeAmbiguousCharacters()
+        {
+            ExcludeAmbiguous = true;
+            return this;
+        }
+
+        public IPasswordSettings RequireAtLeast(CharacterClass characterClass, int count)
+        {
+            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "count cannot be negative.");
+
+            if (IsCustomPool)
+                throw new InvalidOperationException(
+                    "Per-class minimums cannot be combined with a custom character pool.");
+
+            // Requiring a class implies it is part of the pool.
+            if (count > 0)
+                switch (characterClass)
+                {
+                    case CharacterClass.Lowercase:
+                        if (!IncludeLowercase) AddLowercase();
+                        break;
+                    case CharacterClass.Uppercase:
+                        if (!IncludeUppercase) AddUppercase();
+                        break;
+                    case CharacterClass.Numeric:
+                        if (!IncludeNumeric) AddNumeric();
+                        break;
+                    case CharacterClass.Special:
+                        if (!IncludeSpecial) AddSpecial();
+                        break;
+                }
+
+            _minimumCounts[characterClass] = count;
             return this;
         }
 

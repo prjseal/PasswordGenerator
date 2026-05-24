@@ -22,8 +22,14 @@ namespace PasswordGenerator
         /// </summary>
         Task<string> NextAsync(CancellationToken cancellationToken = default);
 
+        /// <summary>Generates the default number of passwords (configurable; one unless overridden).</summary>
+        IReadOnlyList<string> Generate();
+
         /// <summary>Generates <paramref name="count" /> passwords.</summary>
         IReadOnlyList<string> Generate(int count);
+
+        /// <summary>Generates the default number of passwords, observing <paramref name="cancellationToken" />.</summary>
+        Task<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default);
 
         /// <summary>Generates <paramref name="count" /> passwords, observing <paramref name="cancellationToken" />.</summary>
         Task<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default);

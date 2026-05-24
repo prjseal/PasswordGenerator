@@ -15,5 +15,11 @@ namespace PasswordGenerator
         public string? SpecialCharacters { get; set; }
 
         public int Length { get; set; } = 16;
+
+        /// <summary>Removes look-alike characters from the pool when true.</summary>
+        public bool ExcludeAmbiguous { get; set; }
+
+        /// <summary>The number of passwords produced by the parameterless <c>Generate()</c> overload.</summary>
+        public int DefaultBatchCount { get; set; } = 1;
     }
 }

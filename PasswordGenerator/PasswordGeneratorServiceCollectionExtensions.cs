@@ -19,14 +19,18 @@ namespace PasswordGenerator
             return AddCore(services, options);
         }
 
-        /// <summary>Registers the generator, binding options from a configuration section (e.g. appSettings.json).</summary>
+        /// <summary>
+        ///     Registers the generator, binding options from configuration (e.g. appSettings.json) and then
+        ///     applying an optional code override. Resolution order is <c>configure (code) &gt; configuration &gt; default</c>.
+        /// </summary>
         public static IServiceCollection AddPasswordGenerator(this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration, Action<PasswordOptions>? configure = null)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             var options = new PasswordOptions();
             configuration.Bind(options);
+            configure?.Invoke(options);
             return AddCore(services, options);
         }
 
@@ -45,7 +49,7 @@ namespace PasswordGenerator
             var settings = new PasswordSettings(options.IncludeLowercase, options.IncludeUppercase,
                 options.IncludeNumeric, false, options.Length, 10000, usingDefaults: false);
 
-            var password = new Password(settings, randomSource);
+            var password = new Password(settings, randomSource) { DefaultBatchCount = options.DefaultBatchCount };
 
             if (options.IncludeSpecial)
             {
@@ -54,6 +58,9 @@ namespace PasswordGenerator
                 else
                     password.IncludeSpecial();
             }
+
+            if (options.ExcludeAmbiguous)
+                password.ExcludeAmbiguous();
 
             return password;
         }

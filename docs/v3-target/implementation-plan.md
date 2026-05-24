@@ -207,16 +207,26 @@ callers).
 
 **Objective:** the capability set that makes v3 worth the major bump.
 
+**Decisions taken during implementation:**
+- **`ForPassphrase` uses a small built-in word list** (`WordList`, ~280 common words), not a full
+  EFF/diceware list — avoids bundling ~70KB and an external attribution. Entropy is reported honestly
+  by `PassphraseGenerator.EstimateEntropyBits()`.
+- **Batch API is `Generate(count)` plus a parameterless `Generate()`** that uses a configurable
+  `DefaultBatchCount` (bindable from appSettings). The `.Count(n)` fluent-chaining shape from the
+  design doc was **not** added (no new return type); optional batch uniqueness was not implemented.
+- The existing fluent `IPassword` remains the builder (no separate `IPasswordBuilder`); the new
+  methods/presets hang off it. Passphrases return an `IPasswordGenerator` (they have no char classes).
+
 **Tasks**
 1. **Custom pools:** `WithCharacters(string)` and `WithAllAscii()`; keep `Include*`.
 2. **Presets:** `ForOwasp`, `ForNist`, `ForOtp`, `ForPassphrase`, `ForApiKey`, `ForEnvironmentName`
-   (sugar over `PasswordOptions`; later fluent calls still override).
-3. **`appSettings` configuration** with resolution order **fluent > appSettings > default**
-   (opt-in, separate step).
-4. **`Generate()` batch API:** count overloads, `.Count(n)` chaining, `appSettings` default; optional
-   uniqueness. *(closes §5.10)*
+   (static factories; later fluent calls still override).
+3. **`appSettings` configuration** with resolution order **code-configure > appSettings > default**,
+   realised by the `AddPasswordGenerator(IConfiguration, Action<PasswordOptions>)` overload.
+4. **`Generate()` batch API:** `Generate(count)` + parameterless `Generate()` using `DefaultBatchCount`
+   from appSettings. *(closes §5.10)*
 5. **Quality options:** `ExcludeAmbiguous()`, `RequireAtLeast(class, count)`, and an
-   `IEntropyEstimator` returning strength in bits.
+   `IEntropyEstimator` (`PoolEntropyEstimator`) returning strength in bits.
 
 **Verification / exit criteria**
 - Preset outputs match documented standards.
