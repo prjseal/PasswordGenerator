@@ -21,5 +21,8 @@ PasswordGenerator/bin/Debug/$RANDOM_SEED$
 [Oo]bj/
 /artifacts
 
+# test output
+/test-results
+
 # BenchmarkDotNet output
 BenchmarkDotNet.Artifacts/
