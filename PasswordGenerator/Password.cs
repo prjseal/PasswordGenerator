@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 
 namespace PasswordGenerator
 {
-/// <summary>
-    ///     Generates random passwords and validates that they meet the rules passed in
+    /// <summary>
+    ///     Generates random passwords that satisfy the configured rules.
     /// </summary>
-    public class Password : IPassword
+    public class Password : IPassword, IDisposable
     {
         private const int DefaultPasswordLength = 16;
         private const int DefaultMaxPasswordAttempts = 10000;
@@ -17,38 +14,40 @@ namespace PasswordGenerator
         private const bool DefaultIncludeUppercase = true;
         private const bool DefaultIncludeNumeric = true;
         private const bool DefaultIncludeSpecial = true;
-        private static RandomNumberGenerator _rng;
+
+        private readonly IRandomSource _random;
+        private readonly bool _ownsRandom;
 
         public Password()
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts,
                 true);
-
-            _rng = RandomNumberGenerator.Create();
+            _random = new CryptoRandomSource();
+            _ownsRandom = true;
         }
 
         public Password(IPasswordSettings settings)
         {
             Settings = settings;
-
-            _rng = RandomNumberGenerator.Create();
+            _random = new CryptoRandomSource();
+            _ownsRandom = true;
         }
 
         public Password(int passwordLength)
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
                 DefaultIncludeNumeric, DefaultIncludeSpecial, passwordLength, DefaultMaxPasswordAttempts, true);
-
-            _rng = RandomNumberGenerator.Create();
+            _random = new CryptoRandomSource();
+            _ownsRandom = true;
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, DefaultPasswordLength, DefaultMaxPasswordAttempts, false);
-
-            _rng = RandomNumberGenerator.Create();
+            _random = new CryptoRandomSource();
+            _ownsRandom = true;
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
@@ -56,8 +55,8 @@ namespace PasswordGenerator
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, DefaultMaxPasswordAttempts, false);
-
-            _rng = RandomNumberGenerator.Create();
+            _random = new CryptoRandomSource();
+            _ownsRandom = true;
         }
 
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
@@ -65,8 +64,19 @@ namespace PasswordGenerator
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
                 includeSpecial, passwordLength, maximumAttempts, false);
+            _random = new CryptoRandomSource();
+            _ownsRandom = true;
+        }
 
-            _rng = RandomNumberGenerator.Create();
+        /// <summary>
+        ///     Creates a password generator with an explicit random source. The caller owns the
+        ///     supplied <paramref name="randomSource" /> and is responsible for disposing it.
+        /// </summary>
+        public Password(IPasswordSettings settings, IRandomSource randomSource)
+        {
+            Settings = settings;
+            _random = randomSource ?? throw new ArgumentNullException(nameof(randomSource));
+            _ownsRandom = false;
         }
 
         public IPasswordSettings Settings { get; set; }
@@ -108,145 +118,116 @@ namespace PasswordGenerator
         }
 
         /// <summary>
-        ///     Gets the next random password which meets the requirements
+        ///     Generates a password that meets the configured requirements.
         /// </summary>
-        /// <returns>A password as a string</returns>
+        /// <returns>A password as a string.</returns>
+        /// <exception cref="ArgumentException">Thrown when the configured settings cannot produce a valid password.</exception>
         public string Next()
         {
-            string password;
-            if (!LengthIsValid(Settings.PasswordLength, Settings.MinimumLength, Settings.MaximumLength))
-            {
-                password =
-                    $"Password length invalid. Must be between {Settings.MinimumLength} and {Settings.MaximumLength} characters long";
-            }
-            else
-            {
-                var passwordAttempts = 0;
-                do
-                {
-                    password = GenerateRandomPassword(Settings);
-                    passwordAttempts++;
-                } while (passwordAttempts < Settings.MaximumAttempts && !PasswordIsValid(Settings, password));
+            if (!TryValidateSettings(out var error))
+                throw new ArgumentException(error);
 
-                password = PasswordIsValid(Settings, password) ? password : "Try again";
-            }
-
-            return password;
+            return GenerateRandomPassword(Settings);
         }
 
+        /// <summary>
+        ///     Tries to generate a password. Returns false (instead of throwing) when the settings are invalid.
+        /// </summary>
+        public bool TryNext(out string password)
+        {
+            if (!TryValidateSettings(out _))
+            {
+                password = null;
+                return false;
+            }
+
+            password = GenerateRandomPassword(Settings);
+            return true;
+        }
 
         public IEnumerable<string> NextGroup(int numberOfPasswordsToGenerate)
         {
-            var passwords = new List<string>();
-
+            var passwords = new List<string>(numberOfPasswordsToGenerate);
             for (var i = 0; i < numberOfPasswordsToGenerate; i++)
-            {
-                var pwd = this.Next();
-                passwords.Add(pwd);
-            }
-            
+                passwords.Add(Next());
+
             return passwords;
         }
 
-        /// <summary>
-        ///     Generates a random password based on the rules passed in the settings parameter
-        ///     This does not do any validation
-        /// </summary>
-        /// <param name="settings">Password generator settings object</param>
-        /// <returns>a random password</returns>
-        private static string GenerateRandomPassword(IPasswordSettings settings)
+        private bool TryValidateSettings(out string error)
         {
-            const int maximumIdenticalConsecutiveChars = 2;
-            var password = new char[settings.PasswordLength];
-
-            var characters = settings.CharacterSet.ToCharArray();
-            var shuffledChars = Shuffle(characters.Select(x => x)).ToArray();
-
-            var shuffledCharacterSet = string.Join(null, shuffledChars);
-            var characterSetLength = shuffledCharacterSet.Length;
-
-            for (var characterPosition = 0; characterPosition < settings.PasswordLength; characterPosition++)
+            if (!LengthIsValid(Settings.PasswordLength, Settings.MinimumLength, Settings.MaximumLength))
             {
-                password[characterPosition] = shuffledCharacterSet[GetRandomNumberInRange(0,characterSetLength - 1)];
-
-                var moreThanTwoIdenticalInARow =
-                    characterPosition > maximumIdenticalConsecutiveChars
-                    && password[characterPosition] == password[characterPosition - 1]
-                    && password[characterPosition - 1] == password[characterPosition - 2];
-
-                if (moreThanTwoIdenticalInARow) characterPosition--;
+                error =
+                    $"Password length invalid. Must be between {Settings.MinimumLength} and {Settings.MaximumLength} characters long";
+                return false;
             }
 
-            return string.Join(null, password);
-        }
-
-        private static int GetRandomNumberInRange(int min, int max)
-        {
-            if (min > max)
-                throw new ArgumentOutOfRangeException();
-
-            var data = new byte[sizeof(int)];
-            _rng.GetBytes(data);
-            var randomNumber = BitConverter.ToInt32(data, 0);
-
-            return (int)Math.Floor((double)(min + Math.Abs(randomNumber % (max - min))));
-        }
-
-        private static int GetRngCryptoSeed(RNGCryptoServiceProvider rng)
-        {
-            var rngByteArray = new byte[4];
-            rng.GetBytes(rngByteArray);
-            return BitConverter.ToInt32(rngByteArray, 0);
-        }
-
-        /// <summary>
-        ///     When you give it a password and some _settings, it validates the password against the _settings.
-        /// </summary>
-        /// <param name="settings">Password settings</param>
-        /// <param name="password">Password to test</param>
-        /// <returns>True or False to say if the password is valid or not</returns>
-        private static bool PasswordIsValid(IPasswordSettings settings, string password)
-        {
-            const string regexLowercase = @"[a-z]";
-            const string regexUppercase = @"[A-Z]";
-            const string regexNumeric = @"[\d]";
-
-            var lowerCaseIsValid = !settings.IncludeLowercase ||
-                                   settings.IncludeLowercase && Regex.IsMatch(password, regexLowercase);
-            var upperCaseIsValid = !settings.IncludeUppercase ||
-                                   settings.IncludeUppercase && Regex.IsMatch(password, regexUppercase);
-            var numericIsValid = !settings.IncludeNumeric ||
-                                 settings.IncludeNumeric && Regex.IsMatch(password, regexNumeric);
-
-            var specialIsValid = !settings.IncludeSpecial;
-
-            if (settings.IncludeSpecial && !string.IsNullOrWhiteSpace(settings.SpecialCharacters))
+            if (Settings.IncludeSpecial && string.IsNullOrWhiteSpace(Settings.SpecialCharacters))
             {
-                var listA = settings.SpecialCharacters.ToCharArray();
-                var listB = password.ToCharArray();
-
-                specialIsValid = listA.Any(x => listB.Contains(x));
+                error = "Special characters are required but no special characters have been provided.";
+                return false;
             }
 
-            return lowerCaseIsValid && upperCaseIsValid && numericIsValid && specialIsValid &&
-                   LengthIsValid(password.Length, settings.MinimumLength, settings.MaximumLength);
+            if (string.IsNullOrEmpty(Settings.CharacterSet))
+            {
+                error = "No character sets have been selected to generate a password from.";
+                return false;
+            }
+
+            error = null;
+            return true;
         }
 
         /// <summary>
-        ///     Checks that the password is within the valid length range
+        ///     Builds a password that is valid by construction: one character is taken from each required
+        ///     class first, the remainder is filled from the full pool, and the result is shuffled.
         /// </summary>
-        /// <param name="passwordLength">The length of the password</param>
-        /// <param name="minLength">The minimum allowed length</param>
-        /// <param name="maxLength">The maximum allowed length</param>
-        /// <returns>A bool to say if it is valid or not</returns>
+        private string GenerateRandomPassword(IPasswordSettings settings)
+        {
+            var length = settings.PasswordLength;
+            var pool = settings.CharacterSet;
+            var groups = settings.CharacterGroups;
+
+            var password = new char[length];
+            var position = 0;
+
+            // Guarantee at least one character from each required class (only as many as fit).
+            for (var i = 0; i < groups.Count && position < length; i++, position++)
+            {
+                var group = groups[i];
+                password[position] = group[_random.NextInt(group.Length)];
+            }
+
+            // Fill the rest from the full character pool.
+            for (; position < length; position++)
+                password[position] = pool[_random.NextInt(pool.Length)];
+
+            ShuffleInPlace(password);
+
+            return new string(password);
+        }
+
+        private void ShuffleInPlace(char[] items)
+        {
+            for (var i = items.Length - 1; i > 0; i--)
+            {
+                var j = _random.NextInt(i + 1);
+                var temp = items[i];
+                items[i] = items[j];
+                items[j] = temp;
+            }
+        }
+
         private static bool LengthIsValid(int passwordLength, int minLength, int maxLength)
         {
             return passwordLength >= minLength && passwordLength <= maxLength;
         }
 
-        private static IEnumerable<T> Shuffle<T>(IEnumerable<T> items)
+        public void Dispose()
         {
-            return from item in items orderby Guid.NewGuid() select item;
+            if (_ownsRandom && _random is IDisposable disposable)
+                disposable.Dispose();
         }
     }
 }

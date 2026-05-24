@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace PasswordGenerator
@@ -7,9 +8,9 @@ namespace PasswordGenerator
     /// </summary>
     public class PasswordSettings : IPasswordSettings
     {
-        private const string LowercaseCharacters = "abcdefghijklmnopqrstuvwxyz";
-        private const string UppercaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        private const string NumericCharacters = "0123456789";
+        public const string LowercaseCharacters = "abcdefghijklmnopqrstuvwxyz";
+        public const string UppercaseCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        public const string NumericCharacters = "0123456789";
         private const string DefaultSpecialCharacters = @"!#$%&*@\";
         private const int DefaultMinPasswordLength = 4;
         private const int DefaultMaxPasswordLength = 256;
@@ -42,6 +43,19 @@ namespace PasswordGenerator
         public int MaximumAttempts { get; }
         public int MinimumLength { get; }
         public int MaximumLength { get; }
+
+        public IReadOnlyList<string> CharacterGroups
+        {
+            get
+            {
+                var groups = new List<string>();
+                if (IncludeLowercase) groups.Add(LowercaseCharacters);
+                if (IncludeUppercase) groups.Add(UppercaseCharacters);
+                if (IncludeNumeric) groups.Add(NumericCharacters);
+                if (IncludeSpecial && !string.IsNullOrEmpty(SpecialCharacters)) groups.Add(SpecialCharacters);
+                return groups;
+            }
+        }
 
         public IPasswordSettings AddLowercase()
         {

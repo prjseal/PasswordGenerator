@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
@@ -15,19 +16,17 @@ namespace PasswordGenerator.Tests
         }
 
         [Test]
-        public void PasswordGenerator_GivenLength3_ShouldReturnLengthErrorMessage()
+        public void PasswordGenerator_GivenLength3_ShouldThrowArgumentException()
         {
             var pwd = new Password(3);
-            var result = pwd.Next();
-            Assert.AreEqual("Password length invalid. Must be between 4 and 256 characters long", result);
+            Assert.Throws<ArgumentException>(() => pwd.Next());
         }
 
         [Test]
-        public void PasswordGenerator_GivenLength257_ShouldReturnLengthErrorMessage()
+        public void PasswordGenerator_GivenLength257_ShouldThrowArgumentException()
         {
             var pwd = new Password(257);
-            var result = pwd.Next();
-            Assert.AreEqual("Password length invalid. Must be between 4 and 256 characters long", result);
+            Assert.Throws<ArgumentException>(() => pwd.Next());
         }
 
         [Test]
