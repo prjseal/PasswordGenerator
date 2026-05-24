@@ -7,10 +7,39 @@
 ## Working principles
 
 - **One phase = one PR** (or a small stack), each independently green and reviewable.
+- **Commit and push at the end of every phase** — no phase spans an uncommitted working tree. Each
+  phase ends with its own commit (suggested messages below) pushed to the working branch.
+- **Tests must pass before each phase's commit.** A phase is not "done" until the appropriate test
+  suite is green (`dotnet test` exits 0). Never commit a phase with failing or skipped-for-
+  convenience tests.
 - **Keep `master` shippable.** Behaviour-breaking changes (exceptions, removed wrappers) land behind
   the v3 major and are called out in the migration guide.
 - **Test-first for correctness work** — write the failing test that encodes the bug, then fix it.
-- **Verify every phase with the SDK** (see Phase 0) before opening the PR.
+- **Verify every phase with the SDK** (see Phase 0) before committing.
+
+## Definition of done — applies to EVERY phase
+
+Each phase repeats the same loop and only advances once it closes:
+
+```mermaid
+flowchart LR
+    A["implement phase tasks"] --> B["add/update tests<br/>for this phase"]
+    B --> C{"dotnet build<br/>+ dotnet test<br/>green?"}
+    C -- no --> A
+    C -- yes --> D["commit + push<br/>(one commit per phase)"]
+    D --> E["open / update PR"]
+    E --> F["next phase"]
+    classDef gate fill:#fff5e6,stroke:#cc6600;
+    classDef good fill:#e6ffe6,stroke:#009900;
+    class C gate;
+    class D good;
+```
+
+A phase's checklist is complete only when **all** of the following hold:
+1. The phase's tasks are implemented.
+2. Tests covering the phase's changes exist and **pass** (`dotnet test` returns 0).
+3. The build is green at the warning level the phase targets (e.g. Phase 3 must show zero `CS0108`).
+4. The work is **committed and pushed** as that phase's commit.
 
 ## Phase map
 
@@ -66,7 +95,10 @@ CI containers do **not** ship the .NET SDK, so installing it is the first task o
 **Verification / exit criteria**
 - `dotnet --version` prints an 8.0.x SDK.
 - Library builds (warnings only); CI build is green.
+- **Tests:** the existing suite (24 tests) runs and **passes** (run on net8 in this environment, since
+  the `netcoreapp2.2` runtime is EOL) — this is the green baseline every later phase is measured against.
 - A `docs/`-referenced note records the baseline warning set so later phases can show them clearing.
+- **Commit & push** this phase, e.g. `chore: establish v3 toolchain and green baseline`.
 
 **Closes:** nothing yet (setup).
 
@@ -102,7 +134,9 @@ plus tests.
 **Verification / exit criteria**
 - New unit tests with a **deterministic `IRandomSource` stub** prove uniform selection, the seeding
   guarantee, and exception/`TryNext` behaviour.
-- `dotnet test` green; statistical test confirms every pool index is reachable.
+- **Tests green:** `dotnet test` returns 0, including the new correctness tests and the existing
+  suite; a statistical test confirms every pool index is reachable.
+- **Commit & push** this phase, e.g. `feat: unbiased CSPRNG selection, fail-loud contract (§5.1-5.8)`.
 
 **Closes:** §5.1, §5.2, §5.3, §5.4, §5.5, §5.6, §5.7, §5.8.
 
@@ -123,9 +157,11 @@ plus tests.
    allocations.
 
 **Verification / exit criteria**
-- `dotnet test` runs on `net8.0` with **no `NU1903/NU1902`** warnings.
+- **Tests green on `net8.0`** with NUnit 4: `dotnet test` returns 0 with **no `NU1903/NU1902`**
+  warnings (the full migrated suite passes, not a subset).
 - `dotnet build` produces both TFMs; nullable warnings triaged to zero.
 - Benchmarks run and emit a baseline report.
+- **Commit & push** this phase, e.g. `build: multi-target net8.0, migrate tests to NUnit4, add benchmarks`.
 
 **Closes:** §8 multi-target/nullable; unblocks reliable CI `dotnet test`.
 
@@ -147,7 +183,9 @@ plus tests.
 
 **Verification / exit criteria**
 - Build has **zero `CS0108`**; DI sample app resolves and generates.
-- Tests cover async, `TryNext`, and DI-resolved equivalence.
+- **Tests green:** new tests cover async, `TryNext`, and DI-resolved equivalence, and `dotnet test`
+  returns 0 across all target frameworks.
+- **Commit & push** this phase, e.g. `feat: async API, DI registration, remove obsolete v2 wrappers`.
 
 **Closes:** §8 async/DI; removes the obsolete-wrapper warnings.
 
@@ -169,8 +207,10 @@ plus tests.
    `IEntropyEstimator` returning strength in bits.
 
 **Verification / exit criteria**
-- Preset outputs match documented standards; tests for ambiguity exclusion, minimum counts, batch
-  uniqueness, and entropy bounds pass.
+- Preset outputs match documented standards.
+- **Tests green:** tests for ambiguity exclusion, minimum counts, batch uniqueness, appSettings
+  precedence, and entropy bounds **pass** (`dotnet test` returns 0).
+- **Commit & push** this phase, e.g. `feat: presets, custom pools, appSettings, batch Generate, entropy`.
 
 **Closes:** §8 presets/appSettings/custom-pools/exclude-ambiguous/min-counts/entropy; §5.10.
 
@@ -192,6 +232,9 @@ plus tests.
 **Verification / exit criteria**
 - `dotnet pack -c Release` produces `PasswordGenerator.3.0.0.nupkg` + `.snupkg` with **no NU5048 / no
   missing-readme** warnings.
+- **Tests stay green:** `dotnet test` returns 0 after the packaging/version changes (a regression
+  check that retargeting/version bumps broke nothing).
+- **Commit & push** this phase, e.g. `build: clean packaging, SourceLink, snupkg, bump to 3.0.0`.
 
 **Closes:** §7 packaging issues.
 
@@ -212,7 +255,10 @@ plus tests.
    to a CHANGELOG).
 
 **Verification / exit criteria**
-- Docs build/render; all mermaid diagrams validated; migration snippets compile against the v3 API.
+- Docs build/render; all mermaid diagrams validated.
+- **Tests green:** migration-guide snippets are backed by compiling sample/test code and the full
+  suite still passes (`dotnet test` returns 0) — docs changes must not land on a red tree.
+- **Commit & push** this phase, e.g. `docs: v2->v3 migration guide, standards mapping, readme refresh`.
 
 **Closes:** §6 documentation defects; addendum Tier 4.
 
@@ -248,4 +294,6 @@ dotnet build PasswordGenerator.sln -c Release
 dotnet test PasswordGenerator.Tests/PasswordGenerator.Tests.csproj -c Release
 # 3. pack check (Phase 5)
 dotnet pack PasswordGenerator/PasswordGenerator.csproj -c Release -o artifacts
+# 4. only once tests are green, commit + push this phase (one commit per phase)
+git add -A && git commit -m "<phase summary>" && git push -u origin <branch>
 ```
