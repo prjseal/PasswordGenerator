@@ -242,6 +242,15 @@ callers).
 
 **Objective:** a clean, modern NuGet package and a disciplined release.
 
+**Decisions taken during implementation:**
+- The stale `PasswordGenerator.nuspec` was **deleted** (not regenerated) — SDK-style `dotnet pack`
+  derives the nuspec from the csproj, which is now the single source of version truth (`Version`,
+  `AssemblyVersion`, `FileVersion` only; the duplicate `PackageVersion` was removed).
+- README is the repo root `Readme.md`, packed to the package root as `README.md`.
+- **SourceLink emits one warning in the web sandbox only** ("Source control information is not
+  available") because the sandbox clone's `origin` is a local HTTP proxy, not `github.com`. Packing
+  against a `github.com` remote is fully warning-free, so the config is correct for real CI.
+
 **Tasks**
 1. Delete or regenerate the stale `PasswordGenerator.nuspec` (2.0.5); single source of version truth
    in the csproj, bumped to **3.0.0**.
