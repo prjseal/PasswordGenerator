@@ -73,10 +73,11 @@ namespace PasswordGenerator
             return true;
         }
 
-        public Task<string> NextAsync(CancellationToken cancellationToken = default)
+        public ValueTask<string> NextAsync(CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(Next());
+            return cancellationToken.IsCancellationRequested
+                ? ValueTask.FromCanceled<string>(cancellationToken)
+                : new ValueTask<string>(Next());
         }
 
         public IReadOnlyList<string> Generate()
@@ -96,24 +97,28 @@ namespace PasswordGenerator
             return passphrases;
         }
 
-        public Task<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default)
+        public ValueTask<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default)
         {
             return GenerateAsync(DefaultBatchCount, cancellationToken);
         }
 
-        public Task<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default)
+        public ValueTask<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default)
         {
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count), "count cannot be negative.");
 
+            if (cancellationToken.IsCancellationRequested)
+                return ValueTask.FromCanceled<IReadOnlyList<string>>(cancellationToken);
+
             var passphrases = new List<string>(count);
             for (var i = 0; i < count; i++)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                if (cancellationToken.IsCancellationRequested)
+                    return ValueTask.FromCanceled<IReadOnlyList<string>>(cancellationToken);
                 passphrases.Add(Next());
             }
 
-            return Task.FromResult<IReadOnlyList<string>>(passphrases);
+            return new ValueTask<IReadOnlyList<string>>(passphrases);
         }
 
         /// <summary>Estimates passphrase entropy in bits from the word-list size, word count, and trailing number.</summary>

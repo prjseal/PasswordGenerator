@@ -28,7 +28,7 @@ flowchart TD
     subgraph Gen["Generation (IPasswordGenerator)"]
         g1["Next() : string  (throws on bad config)"]
         g2["TryNext(out string) : bool"]
-        g3["NextAsync(ct) : Task~string~"]
+        g3["NextAsync(ct) : ValueTask~string~"]
         g4["Generate() / Generate(count)"]
         g5["GenerateAsync() / GenerateAsync(count, ct)"]
     end

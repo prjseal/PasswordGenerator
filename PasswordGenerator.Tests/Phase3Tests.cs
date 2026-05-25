@@ -30,6 +30,30 @@ namespace PasswordGenerator.Tests
         }
 
         [Test]
+        public void NextAsync_WithCancelledToken_SurfacesCancellationThroughTask()
+        {
+            var pwd = new Password(20);
+            var cts = new CancellationTokenSource();
+            cts.Cancel();
+
+            // Cancellation must come back through the returned task, not as a synchronous throw,
+            // so the result composes correctly when not awaited immediately.
+            var task = pwd.NextAsync(cts.Token);
+            Assert.That(task.IsCanceled, Is.True);
+        }
+
+        [Test]
+        public void GenerateAsync_WithCancelledToken_SurfacesCancellationThroughTask()
+        {
+            var pwd = new Password(16);
+            var cts = new CancellationTokenSource();
+            cts.Cancel();
+
+            var task = pwd.GenerateAsync(10, cts.Token);
+            Assert.That(task.IsCanceled, Is.True);
+        }
+
+        [Test]
         public void Generate_ReturnsRequestedCount()
         {
             var pwd = new Password(16);

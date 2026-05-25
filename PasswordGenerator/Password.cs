@@ -187,10 +187,11 @@ namespace PasswordGenerator
             return Generate(numberOfPasswordsToGenerate);
         }
 
-        public Task<string> NextAsync(CancellationToken cancellationToken = default)
+        public ValueTask<string> NextAsync(CancellationToken cancellationToken = default)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(Next());
+            return cancellationToken.IsCancellationRequested
+                ? ValueTask.FromCanceled<string>(cancellationToken)
+                : new ValueTask<string>(Next());
         }
 
         public IReadOnlyList<string> Generate()
@@ -210,24 +211,28 @@ namespace PasswordGenerator
             return passwords;
         }
 
-        public Task<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default)
+        public ValueTask<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default)
         {
             return GenerateAsync(DefaultBatchCount, cancellationToken);
         }
 
-        public Task<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default)
+        public ValueTask<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default)
         {
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count), "count cannot be negative.");
 
+            if (cancellationToken.IsCancellationRequested)
+                return ValueTask.FromCanceled<IReadOnlyList<string>>(cancellationToken);
+
             var passwords = new List<string>(count);
             for (var i = 0; i < count; i++)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                if (cancellationToken.IsCancellationRequested)
+                    return ValueTask.FromCanceled<IReadOnlyList<string>>(cancellationToken);
                 passwords.Add(Next());
             }
 
-            return Task.FromResult<IReadOnlyList<string>>(passwords);
+            return new ValueTask<IReadOnlyList<string>>(passwords);
         }
 
         private static readonly CharacterClass[] OrderedClasses =
