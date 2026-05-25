@@ -31,6 +31,7 @@ flowchart TD
         g3["NextAsync(ct) : ValueTask~string~"]
         g4["Generate() / Generate(count)"]
         g5["GenerateAsync() / GenerateAsync(count, ct)"]
+        g6["EstimateEntropyBits() : double"]
     end
     Entry --> Build --> Gen
     classDef good fill:#e6ffe6,stroke:#009900;
@@ -58,10 +59,25 @@ flowchart LR
     ForOwasp --> O["all printable ASCII, no forced composition"]
     ForNist --> Nn["NIST 800-63B aligned length/charset"]
     ForOtp --> Ot["short numeric, e.g. 4-6 digits"]
-    ForPassphrase --> Pp["diceware word-list"]
+    ForPassphrase --> Pp["EFF Large Wordlist (7,776 words)"]
+    ForPassphraseWithEntropy --> Pe["word count derived from a target bits"]
+    ForMemorable --> Pm["capitalized words, ~80+ bits"]
     ForApiKey --> Ak["long, URL-safe charset"]
     ForEnvironmentName --> En["readable, memorable identifiers"]
 ```
+
+### Passphrases
+
+Passphrases are built from the **EFF Large Wordlist** (7,776 words, ~12.9 bits/word; CC BY 3.0, see
+`THIRD-PARTY-NOTICES.md`). Beyond `ForPassphrase(words, ...)`:
+
+- `ForPassphraseWithEntropy(targetBits)` derives the word count needed to clear a target and enforces
+  it as a floor; `ForPassphrase(..., minimumEntropyBits)` enforces a floor for an explicit word count.
+- `includeSymbol: true` attaches a random symbol to one randomly chosen word, satisfying
+  "needs a number and a symbol" composition rules while staying memorable.
+- `EstimateEntropyBits()` (on `IPasswordGenerator`) reports the estimated strength.
+- Via DI, set `PasswordOptions.Passphrase` (a `PassphraseOptions`) in code or bind a `Passphrase`
+  configuration section to resolve a passphrase `IPasswordGenerator`.
 
 Presets are static factory methods on `Password` (sugar over the fluent builder); any subsequent
 fluent call still overrides them (resolution order is documented in `configuration-and-di.md`).

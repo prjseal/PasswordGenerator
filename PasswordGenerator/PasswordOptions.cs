@@ -29,5 +29,11 @@ namespace PasswordGenerator
 
         /// <summary>The number of passwords produced by the parameterless <c>Generate()</c> overload.</summary>
         public int DefaultBatchCount { get; set; } = 1;
+
+        /// <summary>
+        ///     When set, the registered generator produces passphrases (from the EFF Large Wordlist)
+        ///     instead of character passwords, and the character-pool options above are ignored.
+        /// </summary>
+        public PassphraseOptions? Passphrase { get; set; }
     }
 }

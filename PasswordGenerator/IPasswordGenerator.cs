@@ -35,5 +35,8 @@ namespace PasswordGenerator
 
         /// <summary>Generates <paramref name="count" /> passwords, observing <paramref name="cancellationToken" />.</summary>
         ValueTask<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default);
+
+        /// <summary>Estimates the strength, in bits, of the output produced by this generator.</summary>
+        double EstimateEntropyBits();
     }
 }

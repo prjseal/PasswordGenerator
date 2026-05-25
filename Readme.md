@@ -90,7 +90,17 @@ string otp     = Password.ForOtp(6).Next();             // 6-digit one-time code
 string apiKey  = Password.ForApiKey(32).Next();         // URL-safe token
 string envName = Password.ForEnvironmentName(12).Next();// readable id, no look-alike characters
 string phrase  = Password.ForPassphrase(4).Next();      // e.g. "maple-river-quartz-bloom-42"
+string strong  = Password.ForPassphraseWithEntropy(80).Next(); // word count derived to clear 80 bits
+string memorable = Password.ForMemorable().Next();      // capitalized, ~80+ bits, e.g. "Maple-River-Quartz-Bloom-Glade-Vivid-42"
 ```
+
+`ForPassphraseWithEntropy(targetBits)` derives the word count needed to reach the target and
+enforces it as a floor. You can also pass `minimumEntropyBits` to `ForPassphrase(...)` to reject
+configurations that are too weak.
+
+For sites that require a digit and a symbol, pass `includeSymbol: true`. A random symbol is attached
+to one randomly chosen word (e.g. `maple-river#-quartz-bloom-42`), so the phrase passes composition
+rules while staying memorable.
 
 ## Quality controls
 
@@ -146,8 +156,25 @@ public class SignupService(IPasswordGenerator generator)
 }
 ```
 
+To register a passphrase generator instead, set the `Passphrase` options (or bind a `Passphrase`
+section from configuration):
+
+```csharp
+services.AddPasswordGenerator(o =>
+    o.Passphrase = new PassphraseOptions { WordCount = 6, Capitalize = true });
+```
+
 ## Documentation
 
 - [v2 → v3 migration guide](docs/migration-v2-to-v3.md)
 - [Changelog](CHANGELOG.md)
 - [Design & architecture docs](docs/README.md)
+
+## License & attribution
+
+PasswordGenerator is licensed under the [MIT License](License.md).
+
+Passphrases are generated from the **EFF Large Wordlist** (7,776 words) by the
+[Electronic Frontier Foundation](https://www.eff.org/dice), used under the
+[Creative Commons Attribution 3.0 US](https://creativecommons.org/licenses/by/3.0/us/)
+license. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for details.
