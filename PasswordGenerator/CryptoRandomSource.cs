@@ -10,6 +10,15 @@ namespace PasswordGenerator
     /// </summary>
     public sealed class CryptoRandomSource : IRandomSource
     {
+        /// <summary>
+        ///     Returns a uniformly distributed, non-negative random integer that is less than
+        ///     <paramref name="maxExclusive" />.
+        /// </summary>
+        /// <param name="maxExclusive">The exclusive upper bound; must be positive.</param>
+        /// <returns>A random integer in the range <c>[0, maxExclusive)</c>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     <paramref name="maxExclusive" /> is zero or negative.
+        /// </exception>
         public int NextInt(int maxExclusive)
         {
             if (maxExclusive <= 0)

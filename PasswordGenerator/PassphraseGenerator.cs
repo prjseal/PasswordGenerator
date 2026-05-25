@@ -16,6 +16,16 @@ namespace PasswordGenerator
         private readonly IRandomSource _random;
         private readonly bool _ownsRandom;
 
+        /// <summary>Creates a passphrase generator.</summary>
+        /// <param name="wordCount">The number of words in each passphrase; must be at least one.</param>
+        /// <param name="separator">The character placed between words (and before the trailing number).</param>
+        /// <param name="capitalize">Whether to capitalize the first letter of each word.</param>
+        /// <param name="includeNumber">Whether to append a random two-digit number.</param>
+        /// <param name="randomSource">
+        ///     An optional random source. When supplied, the caller owns it; otherwise a
+        ///     <see cref="CryptoRandomSource" /> is created and owned by this instance.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="wordCount" /> is less than one.</exception>
         public PassphraseGenerator(int wordCount = 4, char separator = '-', bool capitalize = false,
             bool includeNumber = true, IRandomSource? randomSource = null)
         {
@@ -30,14 +40,22 @@ namespace PasswordGenerator
             _ownsRandom = randomSource == null;
         }
 
+        /// <summary>The number of words in each passphrase.</summary>
         public int WordCount { get; }
+
+        /// <summary>The character placed between words.</summary>
         public char Separator { get; }
+
+        /// <summary>Whether the first letter of each word is capitalized.</summary>
         public bool Capitalize { get; }
+
+        /// <summary>Whether a random two-digit number is appended.</summary>
         public bool IncludeNumber { get; }
 
         /// <summary>The number of passphrases produced by the parameterless <see cref="Generate()" /> overload.</summary>
         public int DefaultBatchCount { get; set; } = 1;
 
+        /// <inheritdoc />
         public string Next()
         {
             var sb = new StringBuilder();
@@ -67,12 +85,14 @@ namespace PasswordGenerator
             return sb.ToString();
         }
 
+        /// <inheritdoc />
         public bool TryNext(out string? password)
         {
             password = Next();
             return true;
         }
 
+        /// <inheritdoc />
         public ValueTask<string> NextAsync(CancellationToken cancellationToken = default)
         {
             return cancellationToken.IsCancellationRequested
@@ -80,11 +100,13 @@ namespace PasswordGenerator
                 : new ValueTask<string>(Next());
         }
 
+        /// <inheritdoc />
         public IReadOnlyList<string> Generate()
         {
             return Generate(DefaultBatchCount);
         }
 
+        /// <inheritdoc />
         public IReadOnlyList<string> Generate(int count)
         {
             if (count < 0)
@@ -97,11 +119,13 @@ namespace PasswordGenerator
             return passphrases;
         }
 
+        /// <inheritdoc />
         public ValueTask<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default)
         {
             return GenerateAsync(DefaultBatchCount, cancellationToken);
         }
 
+        /// <inheritdoc />
         public ValueTask<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default)
         {
             if (count < 0)
@@ -129,6 +153,7 @@ namespace PasswordGenerator
             return bits;
         }
 
+        /// <summary>Disposes the random source when this instance owns it (i.e. it was not supplied by the caller).</summary>
         public void Dispose()
         {
             if (_ownsRandom && _random is IDisposable disposable)

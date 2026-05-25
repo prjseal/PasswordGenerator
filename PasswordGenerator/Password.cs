@@ -20,6 +20,7 @@ namespace PasswordGenerator
         private readonly IRandomSource _random;
         private readonly bool _ownsRandom;
 
+        /// <summary>Creates a generator with the default settings (all character classes, length 16).</summary>
         public Password()
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
@@ -29,6 +30,8 @@ namespace PasswordGenerator
             _ownsRandom = true;
         }
 
+        /// <summary>Creates a generator from the supplied settings.</summary>
+        /// <param name="settings">The settings to use.</param>
         public Password(IPasswordSettings settings)
         {
             Settings = settings;
@@ -36,6 +39,8 @@ namespace PasswordGenerator
             _ownsRandom = true;
         }
 
+        /// <summary>Creates a generator with the default character classes and the given length.</summary>
+        /// <param name="passwordLength">The required password length.</param>
         public Password(int passwordLength)
         {
             Settings = new PasswordSettings(DefaultIncludeLowercase, DefaultIncludeUppercase,
@@ -44,6 +49,11 @@ namespace PasswordGenerator
             _ownsRandom = true;
         }
 
+        /// <summary>Creates a generator with the given character classes enabled and the default length.</summary>
+        /// <param name="includeLowercase">Whether to include lowercase letters.</param>
+        /// <param name="includeUppercase">Whether to include uppercase letters.</param>
+        /// <param name="includeNumeric">Whether to include digits.</param>
+        /// <param name="includeSpecial">Whether to include special characters.</param>
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial)
         {
             Settings = new PasswordSettings(includeLowercase, includeUppercase, includeNumeric,
@@ -52,6 +62,12 @@ namespace PasswordGenerator
             _ownsRandom = true;
         }
 
+        /// <summary>Creates a generator with the given character classes enabled and a specific length.</summary>
+        /// <param name="includeLowercase">Whether to include lowercase letters.</param>
+        /// <param name="includeUppercase">Whether to include uppercase letters.</param>
+        /// <param name="includeNumeric">Whether to include digits.</param>
+        /// <param name="includeSpecial">Whether to include special characters.</param>
+        /// <param name="passwordLength">The required password length.</param>
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength)
         {
@@ -61,6 +77,13 @@ namespace PasswordGenerator
             _ownsRandom = true;
         }
 
+        /// <summary>Creates a generator with the given character classes, length, and attempt limit.</summary>
+        /// <param name="includeLowercase">Whether to include lowercase letters.</param>
+        /// <param name="includeUppercase">Whether to include uppercase letters.</param>
+        /// <param name="includeNumeric">Whether to include digits.</param>
+        /// <param name="includeSpecial">Whether to include special characters.</param>
+        /// <param name="passwordLength">The required password length.</param>
+        /// <param name="maximumAttempts">The maximum number of generation attempts.</param>
         public Password(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial,
             int passwordLength, int maximumAttempts)
         {
@@ -81,62 +104,73 @@ namespace PasswordGenerator
             _ownsRandom = false;
         }
 
+        /// <summary>The settings that drive generation. Replaced in place by the fluent configuration methods.</summary>
         public IPasswordSettings Settings { get; set; }
 
+        /// <inheritdoc />
         public IPassword IncludeLowercase()
         {
             Settings = Settings.AddLowercase();
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword IncludeUppercase()
         {
             Settings = Settings.AddUppercase();
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword IncludeNumeric()
         {
             Settings = Settings.AddNumeric();
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword IncludeSpecial()
         {
             Settings = Settings.AddSpecial();
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword IncludeSpecial(string specialCharactersToInclude)
         {
             Settings = Settings.AddSpecial(specialCharactersToInclude);
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword WithCharacters(string characters)
         {
             Settings = Settings.UseCharacters(characters);
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword WithAllAscii()
         {
             Settings = Settings.UseAllAscii();
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword ExcludeAmbiguous()
         {
             Settings = Settings.ExcludeAmbiguousCharacters();
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword RequireAtLeast(CharacterClass characterClass, int count)
         {
             Settings = Settings.RequireAtLeast(characterClass, count);
             return this;
         }
 
+        /// <inheritdoc />
         public IPassword LengthRequired(int passwordLength)
         {
             Settings.PasswordLength = passwordLength;
@@ -182,11 +216,13 @@ namespace PasswordGenerator
             return true;
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> NextGroup(int numberOfPasswordsToGenerate)
         {
             return Generate(numberOfPasswordsToGenerate);
         }
 
+        /// <inheritdoc />
         public ValueTask<string> NextAsync(CancellationToken cancellationToken = default)
         {
             return cancellationToken.IsCancellationRequested
@@ -194,11 +230,13 @@ namespace PasswordGenerator
                 : new ValueTask<string>(Next());
         }
 
+        /// <inheritdoc />
         public IReadOnlyList<string> Generate()
         {
             return Generate(DefaultBatchCount);
         }
 
+        /// <inheritdoc />
         public IReadOnlyList<string> Generate(int count)
         {
             if (count < 0)
@@ -211,11 +249,13 @@ namespace PasswordGenerator
             return passwords;
         }
 
+        /// <inheritdoc />
         public ValueTask<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default)
         {
             return GenerateAsync(DefaultBatchCount, cancellationToken);
         }
 
+        /// <inheritdoc />
         public ValueTask<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default)
         {
             if (count < 0)
@@ -374,6 +414,7 @@ namespace PasswordGenerator
             return passwordLength >= minLength && passwordLength <= maxLength;
         }
 
+        /// <summary>Disposes the random source when this instance owns it (i.e. it was not supplied by the caller).</summary>
         public void Dispose()
         {
             if (_ownsRandom && _random is IDisposable disposable)
