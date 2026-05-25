@@ -17,6 +17,7 @@ classDiagram
         +Generate(int count) IReadOnlyList
         +GenerateAsync(CancellationToken) Task
         +GenerateAsync(int count, CancellationToken) Task
+        +EstimateEntropyBits() double
     }
     class IPassword {
         <<interface>>
@@ -36,14 +37,29 @@ classDiagram
     class Password {
         +static ForOwasp/ForNist/ForOtp() IPassword
         +static ForApiKey/ForEnvironmentName() IPassword
-        +static ForPassphrase() IPasswordGenerator
+        +static ForPassphrase()/ForPassphraseWithEntropy()/ForMemorable() IPasswordGenerator
         +EstimateEntropyBits() double
+    }
+    class PassphraseGenerator {
+        +WordCount, Separator, Capitalize
+        +IncludeNumber, IncludeSymbol, MinimumEntropyBits
+        +static WordCountForEntropy(bits, includeNumber) int
+        +EstimateEntropyBits() double
+    }
+    class WordList {
+        <<internal static>>
+        EFF Large Wordlist (7,776 words, CC BY 3.0)
     }
     class PasswordOptions {
         +IncludeLowercase/Uppercase/Numeric/Special
         +SpecialCharacters, Length
         +ExcludeAmbiguous, DefaultBatchCount
+        +Passphrase : PassphraseOptions?
         +bind from IConfiguration
+    }
+    class PassphraseOptions {
+        +WordCount, Separator, Capitalize
+        +IncludeNumber, IncludeSymbol, MinimumEntropyBits
     }
     class IRandomSource {
         <<interface>>
@@ -61,7 +77,11 @@ classDiagram
     IPasswordGenerator <|.. Password
     IPasswordGenerator <|.. PassphraseGenerator
     Password --> IRandomSource : uses
+    PassphraseGenerator --> IRandomSource : uses
+    PassphraseGenerator --> WordList : samples
     PasswordOptions ..> Password : configures (DI)
+    PasswordOptions *-- PassphraseOptions
+    PassphraseOptions ..> PassphraseGenerator : configures (DI)
     IRandomSource <|.. CryptoRandomSource
     IEntropyEstimator <|.. PoolEntropyEstimator
     Password ..> PoolEntropyEstimator : EstimateEntropyBits
@@ -71,7 +91,12 @@ Key points:
 - **`IRandomSource` abstraction** wraps the CSPRNG (unbiased `RandomNumberGenerator.GetInt32`). No
   `static`, injectable — a deterministic `IRandomSource` can be injected in unit tests — and the
   Guid-based `Shuffle` is gone in favour of Fisher–Yates.
-- **`PasswordOptions`** is the DI config object, bindable from `IConfiguration`.
+- **`PasswordOptions`** is the DI config object, bindable from `IConfiguration`. Setting its
+  `Passphrase` (a `PassphraseOptions`) makes the DI registration resolve a `PassphraseGenerator`
+  instead of a character `Password`.
+- **Passphrases** (`PassphraseGenerator`) sample the internal `WordList` (the EFF Large Wordlist,
+  CC BY 3.0) and share the injectable `IRandomSource`, with entropy targeting/floor and optional
+  symbol injection.
 - **Presets** are static factory methods on `Password` that pre-fill the fluent builder.
 - The `[Obsolete]` v2 wrappers from earlier proposals are not present.
 

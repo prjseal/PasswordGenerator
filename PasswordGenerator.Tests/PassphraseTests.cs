@@ -9,6 +9,22 @@ namespace PasswordGenerator.Tests
 {
     public class PassphraseTests
     {
+        // A deterministic random source that cycles a fixed sequence, so generation is reproducible.
+        private class FixedRandomSource : IRandomSource
+        {
+            private readonly int[] _values;
+            private int _index;
+
+            public FixedRandomSource(params int[] values) => _values = values;
+
+            public int NextInt(int maxExclusive)
+            {
+                var value = _values[_index % _values.Length] % maxExclusive;
+                _index++;
+                return value;
+            }
+        }
+
         [Test]
         public void WordCountForEntropy_DerivesEnoughWordsToMeetTarget()
         {
@@ -123,6 +139,56 @@ namespace PasswordGenerator.Tests
 
             var parts = generator.Next().Split('.');
             Assert.That(parts.Length, Is.EqualTo(7)); // 6 words + trailing number (on by default)
+        }
+
+        [Test]
+        public void Next_SelectsWordsByRandomIndex()
+        {
+            var rng = new FixedRandomSource(0, 1, 2, 3);
+            var generator = new PassphraseGenerator(4, '.', capitalize: false, includeNumber: false,
+                includeSymbol: false, minimumEntropyBits: 0, randomSource: rng);
+
+            var expected = string.Join('.',
+                WordList.Words[0], WordList.Words[1], WordList.Words[2], WordList.Words[3]);
+            Assert.That(generator.Next(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Next_CapitalizesEachWordsFirstLetter()
+        {
+            var rng = new FixedRandomSource(0);
+            var generator = new PassphraseGenerator(1, '.', capitalize: true, includeNumber: false,
+                includeSymbol: false, minimumEntropyBits: 0, randomSource: rng);
+
+            var word = WordList.Words[0];
+            var expected = char.ToUpperInvariant(word[0]) + word.Substring(1);
+            Assert.That(generator.Next(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Next_PlacesSymbolOnTheChosenWord()
+        {
+            // Draw order: symbol-word index, symbol char index, then one index per word.
+            var rng = new FixedRandomSource(0, 0, 0, 1);
+            var generator = new PassphraseGenerator(2, '.', capitalize: false, includeNumber: false,
+                includeSymbol: true, minimumEntropyBits: 0, randomSource: rng);
+
+            // Symbol index 0 maps to '!' (first of "!@#$%&*?").
+            var expected = WordList.Words[0] + "!" + "." + WordList.Words[1];
+            Assert.That(generator.Next(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Next_SamplesBroadlyAcrossTheWordList()
+        {
+            var generator = new PassphraseGenerator(1, '.', capitalize: false, includeNumber: false);
+
+            var seen = new HashSet<string>();
+            for (var i = 0; i < 2000; i++) seen.Add(generator.Next());
+
+            // With 7,776 words and 2,000 draws the distinct count is ~1,700; >500 confirms broad,
+            // non-degenerate sampling without being flaky.
+            Assert.That(seen.Count, Is.GreaterThan(500));
         }
 
         [Test]
