@@ -1,7 +1,7 @@
 # Current State — Public API Surface (v2.1.0)
 
 > **Historical.** This describes v2.1.0. The issues noted here are resolved in v3 — see the root
-> [`CHANGELOG.md`](../../CHANGELOG.md) and the [migration guide](../v3-target/migration-v2-to-v3.md).
+> [`CHANGELOG.md`](../../../CHANGELOG.md) and the [migration guide](../../migration-v2-to-v3.md).
 
 What a caller can do today, and how configuration is resolved.
 
@@ -74,4 +74,4 @@ flowchart TD
 | Exclude-ambiguous, per-class minimums, entropy estimate | ✅ |
 | `netstandard2.0` + `net8.0` multi-target / nullable | ✅ (netstandard2.0 only) |
 
-These gaps define the v3 surface in `../v3-target/api-surface.md`.
+These gaps define the v3 surface in `../../api-surface.md`.

@@ -1,6 +1,10 @@
 # v3 Target — Roadmap
 
-Tiered delivery from the adjusted plan in `../V3_VERIFICATION.md` §3. Sequencing only — not committed
+> **Archived / historical.** This is a v3 planning document, kept for reference. It is superseded by
+> the shipped v3 docs in [`../`](../README.md). Note that v3 ultimately **dropped `netstandard2.0`**
+> (targets `net8.0;net10.0`), contrary to the multi-target recommendation below.
+
+Tiered delivery from the adjusted plan in `V3_VERIFICATION.md` §3. Sequencing only — not committed
 dates. (Delivered in v3.0.0; see `implementation-plan.md` for where the shipped code diverged.)
 
 ## Tiers as phases
@@ -76,7 +80,7 @@ flowchart TD
     class D1,D2,D3 q;
 ```
 
-See `../V3_VERIFICATION.md` §4 for the reasoning behind each recommendation.
+See `V3_VERIFICATION.md` §4 for the reasoning behind each recommendation.
 
 ## Release-note discipline
 

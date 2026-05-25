@@ -1,8 +1,8 @@
-# v3 Target — Generation Flow
+# Generation Flow
 
-Replaces probabilistic retry + string sentinels with **deterministic construction + exceptions**.
+Uses **deterministic construction + exceptions** rather than probabilistic retry + string sentinels.
 
-## Target `Next()` / `TryNext()` flow
+## `Next()` / `TryNext()` flow
 
 ```mermaid
 flowchart TD
@@ -20,14 +20,13 @@ flowchart TD
     class Throw bad;
 ```
 
-**What changed vs today (`../current-state/generation-flow.md`):**
+**Design properties:**
 - No retry loop, no `MaximumAttempts` gamble, **no `"Try again"` string**. Required classes are
-  *guaranteed* by construction (fixes the probabilistic guarantee gap, §8).
-- Invalid configuration **throws** (`Next()`) or returns `false` (`TryNext`) — never a fake password
-  (fixes §5.1 and §5.8).
+  *guaranteed* by construction.
+- Invalid configuration **throws** (`Next()`) or returns `false` (`TryNext`) — never a fake password.
 - Selection uses unbiased `IRandomSource.NextInt(maxExclusive)` — no `% (len-1)` off-by-one, no
-  modulo bias (fixes §5.2, §5.3).
-- Shuffle is a real crypto Fisher–Yates, replacing `orderby Guid.NewGuid()` (fixes/cleans §5.5).
+  modulo bias.
+- Shuffle is a real crypto Fisher–Yates, not `orderby Guid.NewGuid()`.
 
 ## Deterministic class-seeding (the core idea)
 
@@ -54,23 +53,23 @@ sequenceDiagram
         RNG-->>Gen: index
     end
     Gen-->>App: Task<IReadOnlyList<string>>
-    Note over App,Gen: sync Next()/Generate() still exist<br/>and are fully supported (NOT obsoleted)
+    Note over App,Gen: sync Next()/Generate() also exist<br/>and are fully supported (NOT obsoleted)
 ```
 
 > Note: generation is CPU-bound, so async mainly helps large-batch ergonomics and cancellation, not
-> raw throughput — the **BenchmarkDotNet** suite (plan §10/§12) exists to prove where async actually
+> raw throughput — the **BenchmarkDotNet** suite exists to prove where async actually
 > pays off, with numbers published in every release note.
 
-## Failure contract — before vs after
+## Failure contract — v2.1.0 vs v3
 
 ```mermaid
 stateDiagram-v2
-    state "v2.1.0 (today)" as Old {
+    state "v2.1.0 (previous)" as Old {
         [*] --> RetryLoop
         RetryLoop --> OKo: valid
         RetryLoop --> StrFail: attempts exhausted → 'Try again' STRING
     }
-    state "v3 (target)" as New {
+    state "v3 (current)" as New {
         [*] --> Validate
         Validate --> BuildOK: build guarantees validity
         Validate --> Throw: invalid config → exception / false

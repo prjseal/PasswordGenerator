@@ -6,15 +6,17 @@ All notable changes to this project are documented here. This project adheres to
 ## 3.0.0
 
 A major release focused on cryptographic correctness, a modern API, and broader use cases.
-See the [v2 → v3 migration guide](docs/v3-target/migration-v2-to-v3.md).
+See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
 
 ### Breaking changes
 - **Invalid settings now throw** `ArgumentException` from `Next()` instead of returning an error
   message as the "password". Use `TryNext(out var password)` for a non-throwing path.
+- **Minimum runtime is now .NET 8.** The package targets `net8.0` and `net10.0`; `netstandard2.0`
+  has been dropped. Consumers on .NET Framework or other older runtimes should stay on the 2.x line.
 
 ### Security / correctness fixes
 - Cryptographically secure RNG (`CryptoRandomSource`) with **unbiased** integer sampling
-  (rejection sampling — removes modulo bias).
+  (via `RandomNumberGenerator.GetInt32` — removes modulo bias).
 - Fixed an off-by-one in length handling and removed the GUID-based shuffle in favour of a
   Fisher–Yates shuffle.
 - Disposed/owned RNG lifecycle; removed dead code and the static RNG.
@@ -32,7 +34,7 @@ See the [v2 → v3 migration guide](docs/v3-target/migration-v2-to-v3.md).
   `PasswordOptions.DefaultBatchCount`.
 
 ### Packaging
-- Multi-targets `netstandard2.0` and `net8.0`; nullable reference types enabled.
+- Multi-targets `net8.0` and `net10.0`; nullable reference types enabled.
 - Single source of version truth in the csproj (removed the stale `.nuspec`).
 - `PackageIcon` + `PackageReadmeFile` (clears `NU5048`), SourceLink, deterministic build, and a
   `.snupkg` symbol package.
@@ -44,4 +46,4 @@ See the [v2 → v3 migration guide](docs/v3-target/migration-v2-to-v3.md).
 ## 2.1.0 and earlier
 
 See the project history and the original review in
-[`docs/V3_REVIEW_AND_DOCUMENTATION.md`](docs/V3_REVIEW_AND_DOCUMENTATION.md).
+[`docs/archive/V3_REVIEW_AND_DOCUMENTATION.md`](docs/archive/V3_REVIEW_AND_DOCUMENTATION.md).

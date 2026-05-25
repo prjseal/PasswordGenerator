@@ -1,5 +1,10 @@
 # PasswordGenerator v3 — Verification Report
 
+> **Archived / historical (2026-05-24).** Point-in-time analysis of the v2.1.0 source, kept for
+> reference. Its target-framework recommendation (multi-target `netstandard2.0;net8.0`) was **not**
+> followed: v3 dropped `netstandard2.0` and targets `net8.0;net10.0`. See the root
+> [`CHANGELOG.md`](../../CHANGELOG.md).
+
 > Companion to `V3_REVIEW_AND_DOCUMENTATION.md` and the v3 Planning Addendum.
 > This document does the verification the addendum asked for: every item from the original
 > review's bug list (§5) and feature gaps (§8) was re-checked against the **current source**,

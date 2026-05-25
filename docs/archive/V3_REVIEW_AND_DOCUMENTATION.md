@@ -1,5 +1,9 @@
 # PasswordGenerator — Full Package Documentation & v3 Review
 
+> **Archived / historical.** Review of the v2.1.0 source written to plan v3, kept for reference.
+> Where it recommends multi-targeting `netstandard2.0`, note that v3 dropped `netstandard2.0` and
+> targets `net8.0;net10.0`. See the root [`CHANGELOG.md`](../../CHANGELOG.md).
+
 > Purpose: a single, self-contained reference for the `PasswordGenerator` NuGet package as it
 > stands today (v2.1.0). Written so it can be pasted into a Claude chat to plan v3. It covers
 > what the package is, every public API, the internal implementation, confirmed bugs, design
