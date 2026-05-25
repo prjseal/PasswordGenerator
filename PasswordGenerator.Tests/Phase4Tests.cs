@@ -129,13 +129,16 @@ namespace PasswordGenerator.Tests
         [Test]
         public void ForPassphrase_ProducesRequestedWordsPlusNumber()
         {
-            var generator = Password.ForPassphrase(4, '-', capitalize: false, includeNumber: true);
+            // Use '.' as the separator: a handful of EFF words are themselves hyphenated
+            // (e.g. "t-shirt"), so splitting on '-' would over-split the phrase.
+            var generator = Password.ForPassphrase(4, '.', capitalize: false, includeNumber: true);
             var phrase = generator.Next();
-            var parts = phrase.Split('-');
+            var parts = phrase.Split('.');
 
             Assert.That(parts.Length, Is.EqualTo(5)); // 4 words + trailing number
             Assert.That(int.TryParse(parts[4], out _), Is.True, phrase);
-            Assert.That(parts.Take(4).All(p => p.All(char.IsLetter)), Is.True, phrase);
+            Assert.That(parts.Take(4).All(p => p.Length > 0 && p.All(c => char.IsLetter(c) || c == '-')),
+                Is.True, phrase);
         }
 
         // ----- DI / appSettings precedence -----

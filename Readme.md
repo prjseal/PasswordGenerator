@@ -151,3 +151,12 @@ public class SignupService(IPasswordGenerator generator)
 - [v2 → v3 migration guide](docs/migration-v2-to-v3.md)
 - [Changelog](CHANGELOG.md)
 - [Design & architecture docs](docs/README.md)
+
+## License & attribution
+
+PasswordGenerator is licensed under the [MIT License](License.md).
+
+Passphrases are generated from the **EFF Large Wordlist** (7,776 words) by the
+[Electronic Frontier Foundation](https://www.eff.org/dice), used under the
+[Creative Commons Attribution 3.0 US](https://creativecommons.org/licenses/by/3.0/us/)
+license. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for details.

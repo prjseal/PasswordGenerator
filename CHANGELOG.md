@@ -27,6 +27,9 @@ See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
 - **Dependency injection:** `AddPasswordGenerator(...)` with code and `appSettings.json` binding
   (resolution order: code-configure > appSettings > default).
 - **Presets:** `ForOwasp`, `ForNist`, `ForOtp`, `ForApiKey`, `ForEnvironmentName`, `ForPassphrase`.
+- **Passphrases use the EFF Large Wordlist** (7,776 words, ~12.9 bits/word), replacing the small
+  built-in list — a 6-word phrase is now ~77 bits. The list is © EFF under CC BY 3.0; see
+  [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 - **Custom pools:** `WithCharacters(string)`, `WithAllAscii()`.
 - **Quality controls:** `ExcludeAmbiguous()`, `RequireAtLeast(CharacterClass, count)`.
 - **Entropy estimation:** `IEntropyEstimator` / `PoolEntropyEstimator` and `EstimateEntropyBits()`.
