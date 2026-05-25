@@ -21,13 +21,13 @@ dotnet pack PasswordGenerator/PasswordGenerator.csproj -c Release -o /tmp/localn
 Output (trimmed):
 
 ```
-PasswordGenerator -> .../bin/Release/netstandard2.0/PasswordGenerator.dll
 PasswordGenerator -> .../bin/Release/net8.0/PasswordGenerator.dll
+PasswordGenerator -> .../bin/Release/net10.0/PasswordGenerator.dll
 Successfully created package '/tmp/localnuget/PasswordGenerator.3.0.0.nupkg'.
 Successfully created package '/tmp/localnuget/PasswordGenerator.3.0.0.snupkg'.
 ```
 
-The package multi-targets `netstandard2.0` and `net8.0`, and a `.snupkg` symbol package is
+The package multi-targets `net8.0` and `net10.0`, and a `.snupkg` symbol package is
 produced alongside it. **Expected** — this matches the packaging notes in `CHANGELOG.md`.
 
 > The only build warnings were `SourceLink` notices that the source-control information is
@@ -375,7 +375,7 @@ passwords matching `DefaultBatchCount`.
 
 | # | Scenario | Result | Expected? |
 |---|----------|--------|-----------|
-| – | `dotnet pack` (netstandard2.0 + net8.0, .snupkg) | Built | Yes |
+| – | `dotnet pack` (net8.0 + net10.0, .snupkg) | Built | Yes |
 | – | Register local feed + install package | Installed, framework-compatible | Yes |
 | 1 | Basic default | length 16, all classes | Yes |
 | 2 | Explicit length 32 | length 32 | Yes |

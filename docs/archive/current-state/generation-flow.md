@@ -1,7 +1,7 @@
 # Current State — Generation Flow (v2.1.0)
 
 > **Historical.** This describes v2.1.0. The issues noted here are resolved in v3 — see the root
-> [`CHANGELOG.md`](../../CHANGELOG.md) and the [migration guide](../v3-target/migration-v2-to-v3.md).
+> [`CHANGELOG.md`](../../../CHANGELOG.md) and the [migration guide](../../migration-v2-to-v3.md).
 
 How `Next()` produces a password today (`Password.cs:114-193`).
 
@@ -91,4 +91,4 @@ stateDiagram-v2
 ```
 
 The whole correctness contract hinges on probabilistic retry + string sentinels — the core thing v3
-replaces (see `../v3-target/generation-flow.md`).
+replaces (see `../../generation-flow.md`).

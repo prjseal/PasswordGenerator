@@ -14,12 +14,10 @@ Install via NuGet: ``` Install-Package PasswordGenerator ```
 
 [Or click here to go to the package landing page](https://www.nuget.org/packages/PasswordGenerator)
 
-It targets `netstandard2.0` and `net8.0`, so it runs on .NET Framework, .NET Core and modern .NET.
-See the chart below:
+It targets `net8.0` and `net10.0`, so it requires .NET 8 or later. If you need to run on .NET
+Framework or other older runtimes, use the 2.x line (which targets `netstandard2.0`).
 
-![Compatibility Chart](https://github.com/prjseal/PasswordGenerator/blob/master/compatibility.png "Compatibility Chart")
-
-> **Upgrading from 2.x?** See the [v2 → v3 migration guide](docs/v3-target/migration-v2-to-v3.md).
+> **Upgrading from 2.x?** See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
 > The v2 API still works; the one behavioural change is that invalid settings now **throw** (or use
 > `TryNext`) instead of returning an error string as the "password".
 
@@ -82,7 +80,7 @@ var password = pwd.Next();
 ## Presets
 
 Ready-made starting points; later fluent calls still override them. See the
-[standards mapping](docs/v3-target/migration-v2-to-v3.md#6-standards-mapping-for-the-presets) for the
+[standards mapping](docs/migration-v2-to-v3.md#6-standards-mapping-for-the-presets) for the
 OWASP/NIST rationale.
 
 ```csharp
@@ -150,6 +148,6 @@ public class SignupService(IPasswordGenerator generator)
 
 ## Documentation
 
-- [v2 → v3 migration guide](docs/v3-target/migration-v2-to-v3.md)
+- [v2 → v3 migration guide](docs/migration-v2-to-v3.md)
 - [Changelog](CHANGELOG.md)
 - [Design & architecture docs](docs/README.md)

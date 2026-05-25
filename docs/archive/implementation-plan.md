@@ -1,8 +1,12 @@
 # v3 Target — Implementation Plan (phased)
 
-> Actionable, phase-by-phase plan to deliver the v3 design in `architecture.md`,
-> `generation-flow.md`, `api-surface.md`, `configuration-and-di.md` and `before-after.md`.
-> Sequencing follows `roadmap.md`; issue numbers (§5.x / §8) reference `../V3_VERIFICATION.md`.
+> **Archived / historical.** This is a v3 planning document, kept for reference and superseded by the
+> shipped v3 docs in [`../`](../README.md). Note that v3 ultimately **dropped `netstandard2.0`**
+> (targets `net8.0;net10.0`), contrary to the multi-target plan described here.
+
+> Actionable, phase-by-phase plan to deliver the v3 design in `../architecture.md`,
+> `../generation-flow.md`, `../api-surface.md`, `../configuration-and-di.md` and `before-after.md`.
+> Sequencing follows `roadmap.md`; issue numbers (§5.x / §8) reference `V3_VERIFICATION.md`.
 
 ## Working principles
 

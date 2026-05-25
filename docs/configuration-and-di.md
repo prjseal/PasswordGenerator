@@ -1,4 +1,4 @@
-# v3 Target — Configuration & Dependency Injection
+# Configuration & Dependency Injection
 
 ## Settings resolution order
 
@@ -49,7 +49,7 @@ sequenceDiagram
     Svc->>Svc: generator.Generate(5)
 ```
 
-Two overloads (answering open question #3 in `../V3_VERIFICATION.md`):
+Two overloads:
 
 ```csharp
 services.AddPasswordGenerator(options => { options.Length = 20; });        // code
@@ -72,6 +72,6 @@ The fluent API must produce identical results whether the instance is constructe
 resolved from the container; DI only changes *how the dependencies are supplied*, not *what the
 builder does*.
 
-**Why this is better:** teams can centralise password policy in `appSettings` (closing verified gap
-§8) without forcing it on every call site, the RNG dependency is wired once, and unit tests can swap
+**Why this is better:** teams can centralise password policy in `appSettings`
+without forcing it on every call site, the RNG dependency is wired once, and unit tests can swap
 `IRandomSource` for a deterministic stub.

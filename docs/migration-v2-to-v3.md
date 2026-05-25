@@ -8,6 +8,9 @@ about, plus the new capabilities you can adopt at your own pace.
 > **Length range:** valid password lengths are **4–256** characters (the old "8–128" Readme claim was
 > never the actual limit).
 
+> **Runtime requirement:** v3 targets `net8.0` and `net10.0` and **drops `netstandard2.0`**. You need
+> .NET 8 or later. Projects on .NET Framework or other older runtimes should stay on the 2.x line.
+
 ---
 
 ## 1. The one breaking change: error strings → exceptions / `TryNext`

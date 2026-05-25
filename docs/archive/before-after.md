@@ -1,5 +1,9 @@
 # v3 Target — Before / After
 
+> **Archived / historical.** A v3 planning document, kept for reference and superseded by the shipped
+> v3 docs in [`../`](../README.md). The "after" column reflects the early plan; note that v3 ultimately
+> **dropped `netstandard2.0`** (targets `net8.0;net10.0`).
+
 Side-by-side of the things that change most, each tied to a verified issue.
 
 ## 1. Failure handling

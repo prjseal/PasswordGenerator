@@ -1,11 +1,11 @@
-# v3 Target — Public API Surface
+# Public API Surface
 
 Keeps the familiar fluent feel; adds safety, presets, batch, async, and custom pools.
 
-> **As shipped:** the fluent builder is the existing `IPassword` (the full `IPasswordBuilder`/`Build()`
-> split from the early proposal was deferred). `Password` implements both `IPassword` and the new
-> generation contract `IPasswordGenerator`. Passphrases return an `IPasswordGenerator`
-> (`PassphraseGenerator`). See `implementation-plan.md` for the deviations.
+> The fluent builder is `IPassword` (there is no separate `IPasswordBuilder`/`Build()` split).
+> `Password` implements both `IPassword` and the generation contract `IPasswordGenerator`.
+> Passphrases return an `IPasswordGenerator` (`PassphraseGenerator`). See
+> `archive/implementation-plan.md` for how the shipped surface diverged from the early proposal.
 
 ## API map
 
@@ -69,7 +69,7 @@ fluent call still overrides them (resolution order is documented in `configurati
 ## Surfacing the broader purpose
 
 The library is **not password-only**. The same surface generates OTPs, environment names, API keys,
-and other identifiers — so v3 deliberately keeps the per-class `Include*` methods and adds
+and other identifiers — so the library deliberately keeps the per-class `Include*` methods and adds
 `WithCharacters`/`WithAllAscii` rather than forcing OWASP composition or a global 12-char minimum.
 
 ## Deprecation / migration shape
@@ -89,6 +89,6 @@ flowchart TD
 > of async would be an anti-pattern and would spam every consumer with build warnings. Async exists
 > for ergonomics and cancellation only.
 
-**Why this is better:** every verified gap in `../current-state/api-surface.md` is closed
+**Why this is better:** every gap noted in the v2.1.0 review (`archive/current-state/api-surface.md`) is closed
 (`TryNext`/async/DI/presets/appSettings/custom pools), failures become explicit, and existing single
 `.Next()` users still work unchanged, giving a gentle upgrade path.
