@@ -97,6 +97,10 @@ string strong  = Password.ForPassphraseWithEntropy(80).Next(); // word count der
 enforces it as a floor. You can also pass `minimumEntropyBits` to `ForPassphrase(...)` to reject
 configurations that are too weak.
 
+For sites that require a digit and a symbol, pass `includeSymbol: true`. A random symbol is attached
+to one randomly chosen word (e.g. `maple-river#-quartz-bloom-42`), so the phrase passes composition
+rules while staying memorable.
+
 ## Quality controls
 
 ```csharp

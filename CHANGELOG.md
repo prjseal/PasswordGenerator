@@ -32,6 +32,9 @@ See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
   [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 - **Entropy-targeted passphrases:** `ForPassphraseWithEntropy(targetBits)` derives the word count
   to meet a target, and `ForPassphrase(..., minimumEntropyBits)` enforces an entropy floor.
+- **Symbol injection:** `ForPassphrase(..., includeSymbol: true)` attaches a random symbol to one
+  randomly chosen word, so passphrases satisfy "needs a number and a symbol" rules while staying
+  memorable. Entropy estimation now accounts for both the trailing number and the symbol.
 - `EstimateEntropyBits()` is now part of the `IPasswordGenerator` interface.
 - **Custom pools:** `WithCharacters(string)`, `WithAllAscii()`.
 - **Quality controls:** `ExcludeAmbiguous()`, `RequireAtLeast(CharacterClass, count)`.

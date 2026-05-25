@@ -61,5 +61,42 @@ namespace PasswordGenerator.Tests
             IPasswordGenerator generator = Password.ForPassphrase(6);
             Assert.That(generator.EstimateEntropyBits(), Is.GreaterThan(0));
         }
+
+        private static readonly char[] SymbolChars = "!@#$%&*?".ToCharArray();
+
+        [Test]
+        public void IncludeSymbol_InjectsASymbol()
+        {
+            var generator = Password.ForPassphrase(4, separator: '.', includeNumber: false,
+                includeSymbol: true);
+            var phrase = generator.Next();
+            Assert.That(phrase.IndexOfAny(SymbolChars), Is.GreaterThanOrEqualTo(0), phrase);
+        }
+
+        [Test]
+        public void NumberAndSymbol_SatisfyCompositionRules()
+        {
+            var generator = Password.ForPassphrase(4, separator: '.', includeNumber: true,
+                includeSymbol: true);
+            var phrase = generator.Next();
+            Assert.That(phrase.Any(char.IsDigit), Is.True, phrase);
+            Assert.That(phrase.IndexOfAny(SymbolChars), Is.GreaterThanOrEqualTo(0), phrase);
+        }
+
+        [Test]
+        public void IncludeSymbol_IsOffByDefault()
+        {
+            var generator = Password.ForPassphrase(4, separator: '.', includeNumber: false);
+            var phrase = generator.Next();
+            Assert.That(phrase.IndexOfAny(SymbolChars), Is.EqualTo(-1), phrase);
+        }
+
+        [Test]
+        public void IncludeSymbol_AddsEntropy()
+        {
+            var withoutSymbol = Password.ForPassphrase(6, includeSymbol: false).EstimateEntropyBits();
+            var withSymbol = Password.ForPassphrase(6, includeSymbol: true).EstimateEntropyBits();
+            Assert.That(withSymbol, Is.GreaterThan(withoutSymbol));
+        }
     }
 }

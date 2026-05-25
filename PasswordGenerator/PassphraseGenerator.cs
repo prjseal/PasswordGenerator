@@ -18,9 +18,17 @@ namespace PasswordGenerator
 
         /// <summary>Creates a passphrase generator.</summary>
         /// <param name="wordCount">The number of words in each passphrase; must be at least one.</param>
-        /// <param name="separator">The character placed between words (and before the trailing number).</param>
+        /// <param name="separator">
+        ///     The character placed between words (and before the trailing number). Note that a few EFF
+        ///     words contain a hyphen (e.g. "t-shirt"), so if you need to split the output back into words
+        ///     choose a separator that does not occur in any word, such as '.' or a space.
+        /// </param>
         /// <param name="capitalize">Whether to capitalize the first letter of each word.</param>
         /// <param name="includeNumber">Whether to append a random two-digit number.</param>
+        /// <param name="includeSymbol">
+        ///     Whether to attach a random symbol to one randomly chosen word, so the phrase satisfies
+        ///     "must contain a symbol" composition rules while staying memorable.
+        /// </param>
         /// <param name="minimumEntropyBits">
         ///     An optional entropy floor. When greater than zero, the configuration is rejected if its
         ///     estimated entropy is below this many bits, so callers cannot silently produce weak phrases.
@@ -32,7 +40,8 @@ namespace PasswordGenerator
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="wordCount" /> is less than one.</exception>
         /// <exception cref="ArgumentException">The estimated entropy is below <paramref name="minimumEntropyBits" />.</exception>
         public PassphraseGenerator(int wordCount = 4, char separator = '-', bool capitalize = false,
-            bool includeNumber = true, double minimumEntropyBits = 0, IRandomSource? randomSource = null)
+            bool includeNumber = true, bool includeSymbol = false, double minimumEntropyBits = 0,
+            IRandomSource? randomSource = null)
         {
             if (wordCount < 1)
                 throw new ArgumentOutOfRangeException(nameof(wordCount), "A passphrase needs at least one word.");
@@ -41,6 +50,7 @@ namespace PasswordGenerator
             Separator = separator;
             Capitalize = capitalize;
             IncludeNumber = includeNumber;
+            IncludeSymbol = includeSymbol;
             MinimumEntropyBits = minimumEntropyBits;
             _random = randomSource ?? new CryptoRandomSource();
             _ownsRandom = randomSource == null;
@@ -65,8 +75,14 @@ namespace PasswordGenerator
         /// <summary>Whether a random two-digit number is appended.</summary>
         public bool IncludeNumber { get; }
 
+        /// <summary>Whether a random symbol is attached to one randomly chosen word.</summary>
+        public bool IncludeSymbol { get; }
+
         /// <summary>The entropy floor enforced at construction, in bits; zero means no floor.</summary>
         public double MinimumEntropyBits { get; }
+
+        /// <summary>The symbols eligible for injection when <see cref="IncludeSymbol" /> is set.</summary>
+        private const string Symbols = "!@#$%&*?";
 
         /// <summary>The number of passphrases produced by the parameterless <see cref="Generate()" /> overload.</summary>
         public int DefaultBatchCount { get; set; } = 1;
@@ -75,6 +91,16 @@ namespace PasswordGenerator
         public string Next()
         {
             var sb = new StringBuilder();
+
+            // Pick which word gets the symbol (and which symbol) up front, so placement varies
+            // and the choice is unpredictable rather than always trailing.
+            var symbolWordIndex = -1;
+            var symbol = '\0';
+            if (IncludeSymbol)
+            {
+                symbolWordIndex = _random.NextInt(WordCount);
+                symbol = Symbols[_random.NextInt(Symbols.Length)];
+            }
 
             for (var i = 0; i < WordCount; i++)
             {
@@ -90,6 +116,8 @@ namespace PasswordGenerator
                 {
                     sb.Append(word);
                 }
+
+                if (i == symbolWordIndex) sb.Append(symbol);
             }
 
             if (IncludeNumber)
@@ -161,11 +189,16 @@ namespace PasswordGenerator
             return new ValueTask<IReadOnlyList<string>>(passphrases);
         }
 
-        /// <summary>Estimates passphrase entropy in bits from the word-list size, word count, and trailing number.</summary>
+        /// <summary>
+        ///     Estimates passphrase entropy in bits from the word-list size and word count, plus the
+        ///     trailing number (90 possible values, 10-99) and the injected symbol (its value and which
+        ///     word it lands on) when those are enabled.
+        /// </summary>
         public double EstimateEntropyBits()
         {
             var bits = WordCount * Math.Log(WordList.Words.Length, 2);
             if (IncludeNumber) bits += Math.Log(90, 2);
+            if (IncludeSymbol) bits += Math.Log(Symbols.Length, 2) + Math.Log(WordCount, 2);
             return bits;
         }
 

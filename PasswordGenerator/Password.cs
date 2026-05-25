@@ -461,14 +461,17 @@ namespace PasswordGenerator
         /// <param name="separator">The character placed between words.</param>
         /// <param name="capitalize">Whether to capitalize the first letter of each word.</param>
         /// <param name="includeNumber">Whether to append a random two-digit number.</param>
+        /// <param name="includeSymbol">Whether to attach a random symbol to one randomly chosen word.</param>
         /// <param name="minimumEntropyBits">
         ///     An optional entropy floor; when greater than zero the configuration is rejected if it
         ///     falls below this many bits.
         /// </param>
         public static IPasswordGenerator ForPassphrase(int words = 4, char separator = '-',
-            bool capitalize = false, bool includeNumber = true, double minimumEntropyBits = 0)
+            bool capitalize = false, bool includeNumber = true, bool includeSymbol = false,
+            double minimumEntropyBits = 0)
         {
-            return new PassphraseGenerator(words, separator, capitalize, includeNumber, minimumEntropyBits);
+            return new PassphraseGenerator(words, separator, capitalize, includeNumber, includeSymbol,
+                minimumEntropyBits);
         }
 
         /// <summary>
@@ -479,11 +482,12 @@ namespace PasswordGenerator
         /// <param name="separator">The character placed between words.</param>
         /// <param name="capitalize">Whether to capitalize the first letter of each word.</param>
         /// <param name="includeNumber">Whether to append a random two-digit number.</param>
+        /// <param name="includeSymbol">Whether to attach a random symbol to one randomly chosen word.</param>
         public static IPasswordGenerator ForPassphraseWithEntropy(double targetBits = 80, char separator = '-',
-            bool capitalize = false, bool includeNumber = true)
+            bool capitalize = false, bool includeNumber = true, bool includeSymbol = false)
         {
             var words = PassphraseGenerator.WordCountForEntropy(targetBits, includeNumber);
-            return new PassphraseGenerator(words, separator, capitalize, includeNumber, targetBits);
+            return new PassphraseGenerator(words, separator, capitalize, includeNumber, includeSymbol, targetBits);
         }
     }
 }
