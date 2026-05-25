@@ -7,11 +7,22 @@ namespace PasswordGenerator
     /// </summary>
     public interface IPasswordSettings
     {
+        /// <summary>Whether lowercase letters are included in the pool.</summary>
         bool IncludeLowercase { get; }
+
+        /// <summary>Whether uppercase letters are included in the pool.</summary>
         bool IncludeUppercase { get; }
+
+        /// <summary>Whether digits are included in the pool.</summary>
         bool IncludeNumeric { get; }
+
+        /// <summary>Whether special characters are included in the pool.</summary>
         bool IncludeSpecial { get; }
+
+        /// <summary>The number of characters the generated password should contain.</summary>
         int PasswordLength { get; set; }
+
+        /// <summary>The full set of characters the password is drawn from, after applying all settings.</summary>
         string CharacterSet { get; }
 
         /// <summary>True when a custom pool (e.g. <see cref="UseCharacters" />) replaces the per-class sets.</summary>
@@ -28,13 +39,35 @@ namespace PasswordGenerator
         ///     guarantee at least one character from each required class is present in the output.
         /// </summary>
         IReadOnlyList<string> CharacterGroups { get; }
+
+        /// <summary>The maximum number of attempts allowed when generating a valid password.</summary>
         int MaximumAttempts { get; }
+
+        /// <summary>The smallest allowed password length.</summary>
         int MinimumLength { get; }
+
+        /// <summary>The largest allowed password length.</summary>
         int MaximumLength { get; }
+
+        /// <summary>Enables lowercase letters in the pool.</summary>
+        /// <returns>The same settings, for chaining.</returns>
         IPasswordSettings AddLowercase();
+
+        /// <summary>Enables uppercase letters in the pool.</summary>
+        /// <returns>The same settings, for chaining.</returns>
         IPasswordSettings AddUppercase();
+
+        /// <summary>Enables digits in the pool.</summary>
+        /// <returns>The same settings, for chaining.</returns>
         IPasswordSettings AddNumeric();
+
+        /// <summary>Enables the default special characters in the pool.</summary>
+        /// <returns>The same settings, for chaining.</returns>
         IPasswordSettings AddSpecial();
+
+        /// <summary>Enables the given special characters in the pool.</summary>
+        /// <param name="specialCharactersToAdd">The special characters to add to the pool.</param>
+        /// <returns>The same settings, for chaining.</returns>
         IPasswordSettings AddSpecial(string specialCharactersToAdd);
 
         /// <summary>Replaces the entire pool with an explicit set of characters (no forced composition).</summary>
@@ -49,6 +82,7 @@ namespace PasswordGenerator
         /// <summary>Requires at least <paramref name="count" /> characters from the given class, enabling it if needed.</summary>
         IPasswordSettings RequireAtLeast(CharacterClass characterClass, int count);
 
+        /// <summary>The special characters used when special characters are included.</summary>
         string SpecialCharacters { get; set; }
     }
 }

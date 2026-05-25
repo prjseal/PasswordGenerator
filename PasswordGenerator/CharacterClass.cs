@@ -6,9 +6,16 @@ namespace PasswordGenerator
     /// </summary>
     public enum CharacterClass
     {
+        /// <summary>Lowercase letters (<c>a–z</c>).</summary>
         Lowercase,
+
+        /// <summary>Uppercase letters (<c>A–Z</c>).</summary>
         Uppercase,
+
+        /// <summary>Digits (<c>0–9</c>).</summary>
         Numeric,
+
+        /// <summary>Special / symbol characters.</summary>
         Special
     }
 }

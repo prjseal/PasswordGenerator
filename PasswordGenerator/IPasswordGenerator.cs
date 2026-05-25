@@ -17,10 +17,12 @@ namespace PasswordGenerator
         bool TryNext(out string? password);
 
         /// <summary>
-        ///     Generates a single password. Generation is CPU-bound; this overload exists for ergonomics
-        ///     and to honour cancellation, not to offload work to another thread.
+        ///     Generates a single password. Generation is CPU-bound and completes synchronously; this overload
+        ///     exists for ergonomics and to honour cancellation, not to offload work to another thread. A
+        ///     <see cref="ValueTask{TResult}" /> is used because the result is always available synchronously.
+        ///     If <paramref name="cancellationToken" /> is already cancelled, the returned task is cancelled.
         /// </summary>
-        Task<string> NextAsync(CancellationToken cancellationToken = default);
+        ValueTask<string> NextAsync(CancellationToken cancellationToken = default);
 
         /// <summary>Generates the default number of passwords (configurable; one unless overridden).</summary>
         IReadOnlyList<string> Generate();
@@ -29,9 +31,9 @@ namespace PasswordGenerator
         IReadOnlyList<string> Generate(int count);
 
         /// <summary>Generates the default number of passwords, observing <paramref name="cancellationToken" />.</summary>
-        Task<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default);
+        ValueTask<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default);
 
         /// <summary>Generates <paramref name="count" /> passwords, observing <paramref name="cancellationToken" />.</summary>
-        Task<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default);
+        ValueTask<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default);
     }
 }

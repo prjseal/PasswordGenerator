@@ -26,13 +26,13 @@ namespace PasswordGenerator.Benchmarks
         }
 
         [Benchmark]
-        public Task<string> NextAsync()
+        public ValueTask<string> NextAsync()
         {
             return _password.NextAsync();
         }
 
         [Benchmark]
-        public Task<IReadOnlyList<string>> GenerateAsync()
+        public ValueTask<IReadOnlyList<string>> GenerateAsync()
         {
             return _password.GenerateAsync(Count);
         }
