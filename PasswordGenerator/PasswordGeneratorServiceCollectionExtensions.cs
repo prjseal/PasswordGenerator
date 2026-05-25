@@ -42,8 +42,20 @@ namespace PasswordGenerator
             return services;
         }
 
-        private static Password CreateGenerator(PasswordOptions options, IRandomSource randomSource)
+        private static IPasswordGenerator CreateGenerator(PasswordOptions options, IRandomSource randomSource)
         {
+            if (options.Passphrase != null)
+            {
+                var p = options.Passphrase;
+                // The random source is a DI singleton owned by the container, so it is passed in and
+                // must not be disposed by the generator.
+                return new PassphraseGenerator(p.WordCount, p.Separator, p.Capitalize, p.IncludeNumber,
+                    p.IncludeSymbol, p.MinimumEntropyBits, randomSource)
+                {
+                    DefaultBatchCount = options.DefaultBatchCount
+                };
+            }
+
             // Build with the non-special classes first, then layer special characters on (default or
             // custom) so the combined character set is assembled correctly.
             var settings = new PasswordSettings(options.IncludeLowercase, options.IncludeUppercase,

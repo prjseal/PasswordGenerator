@@ -35,6 +35,10 @@ See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
 - **Symbol injection:** `ForPassphrase(..., includeSymbol: true)` attaches a random symbol to one
   randomly chosen word, so passphrases satisfy "needs a number and a symbol" rules while staying
   memorable. Entropy estimation now accounts for both the trailing number and the symbol.
+- **`ForMemorable()` preset:** capitalized words sized to at least 80 bits of entropy.
+- **Passphrases via dependency injection:** set `PasswordOptions.Passphrase` (a `PassphraseOptions`)
+  in code or bind a `Passphrase` section from configuration to resolve a passphrase
+  `IPasswordGenerator`.
 - `EstimateEntropyBits()` is now part of the `IPasswordGenerator` interface.
 - **Custom pools:** `WithCharacters(string)`, `WithAllAscii()`.
 - **Quality controls:** `ExcludeAmbiguous()`, `RequireAtLeast(CharacterClass, count)`.

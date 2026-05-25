@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace PasswordGenerator.Tests
@@ -97,6 +100,51 @@ namespace PasswordGenerator.Tests
             var withoutSymbol = Password.ForPassphrase(6, includeSymbol: false).EstimateEntropyBits();
             var withSymbol = Password.ForPassphrase(6, includeSymbol: true).EstimateEntropyBits();
             Assert.That(withSymbol, Is.GreaterThan(withoutSymbol));
+        }
+
+        [Test]
+        public void ForMemorable_IsCapitalizedAndStrong()
+        {
+            var generator = Password.ForMemorable();
+            Assert.That(generator.EstimateEntropyBits(), Is.GreaterThanOrEqualTo(80));
+            var phrase = generator.Next();
+            Assert.That(char.IsUpper(phrase[0]), Is.True, phrase);
+        }
+
+        [Test]
+        public void Di_CodeConfiguresPassphrase()
+        {
+            var services = new ServiceCollection();
+            services.AddPasswordGenerator(o =>
+                o.Passphrase = new PassphraseOptions { WordCount = 6, Separator = '.' });
+
+            using var provider = services.BuildServiceProvider();
+            var generator = provider.GetRequiredService<IPasswordGenerator>();
+
+            var parts = generator.Next().Split('.');
+            Assert.That(parts.Length, Is.EqualTo(7)); // 6 words + trailing number (on by default)
+        }
+
+        [Test]
+        public void Di_BindsPassphraseFromConfiguration()
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["Passphrase:WordCount"] = "5",
+                    ["Passphrase:Separator"] = ".",
+                    ["Passphrase:IncludeNumber"] = "false"
+                })
+                .Build();
+
+            var services = new ServiceCollection();
+            services.AddPasswordGenerator(configuration);
+
+            using var provider = services.BuildServiceProvider();
+            var generator = provider.GetRequiredService<IPasswordGenerator>();
+
+            var parts = generator.Next().Split('.');
+            Assert.That(parts.Length, Is.EqualTo(5)); // 5 words, no trailing number
         }
     }
 }

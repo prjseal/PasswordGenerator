@@ -489,5 +489,14 @@ namespace PasswordGenerator
             var words = PassphraseGenerator.WordCountForEntropy(targetBits, includeNumber);
             return new PassphraseGenerator(words, separator, capitalize, includeNumber, includeSymbol, targetBits);
         }
+
+        /// <summary>
+        ///     A memorable, high-strength passphrase preset: capitalized words with a trailing number,
+        ///     sized to at least 80 bits of entropy.
+        /// </summary>
+        public static IPasswordGenerator ForMemorable()
+        {
+            return ForPassphraseWithEntropy(80, separator: '-', capitalize: true, includeNumber: true);
+        }
     }
 }

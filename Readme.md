@@ -91,6 +91,7 @@ string apiKey  = Password.ForApiKey(32).Next();         // URL-safe token
 string envName = Password.ForEnvironmentName(12).Next();// readable id, no look-alike characters
 string phrase  = Password.ForPassphrase(4).Next();      // e.g. "maple-river-quartz-bloom-42"
 string strong  = Password.ForPassphraseWithEntropy(80).Next(); // word count derived to clear 80 bits
+string memorable = Password.ForMemorable().Next();      // capitalized, ~80+ bits, e.g. "Maple-River-Quartz-Bloom-Glade-Vivid-42"
 ```
 
 `ForPassphraseWithEntropy(targetBits)` derives the word count needed to reach the target and
@@ -153,6 +154,14 @@ public class SignupService(IPasswordGenerator generator)
 {
     public string NewTempPassword() => generator.Next();
 }
+```
+
+To register a passphrase generator instead, set the `Passphrase` options (or bind a `Passphrase`
+section from configuration):
+
+```csharp
+services.AddPasswordGenerator(o =>
+    o.Passphrase = new PassphraseOptions { WordCount = 6, Capitalize = true });
 ```
 
 ## Documentation
