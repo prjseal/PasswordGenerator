@@ -90,7 +90,12 @@ string otp     = Password.ForOtp(6).Next();             // 6-digit one-time code
 string apiKey  = Password.ForApiKey(32).Next();         // URL-safe token
 string envName = Password.ForEnvironmentName(12).Next();// readable id, no look-alike characters
 string phrase  = Password.ForPassphrase(4).Next();      // e.g. "maple-river-quartz-bloom-42"
+string strong  = Password.ForPassphraseWithEntropy(80).Next(); // word count derived to clear 80 bits
 ```
+
+`ForPassphraseWithEntropy(targetBits)` derives the word count needed to reach the target and
+enforces it as a floor. You can also pass `minimumEntropyBits` to `ForPassphrase(...)` to reject
+configurations that are too weak.
 
 ## Quality controls
 

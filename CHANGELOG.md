@@ -30,6 +30,9 @@ See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
 - **Passphrases use the EFF Large Wordlist** (7,776 words, ~12.9 bits/word), replacing the small
   built-in list — a 6-word phrase is now ~77 bits. The list is © EFF under CC BY 3.0; see
   [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+- **Entropy-targeted passphrases:** `ForPassphraseWithEntropy(targetBits)` derives the word count
+  to meet a target, and `ForPassphrase(..., minimumEntropyBits)` enforces an entropy floor.
+- `EstimateEntropyBits()` is now part of the `IPasswordGenerator` interface.
 - **Custom pools:** `WithCharacters(string)`, `WithAllAscii()`.
 - **Quality controls:** `ExcludeAmbiguous()`, `RequireAtLeast(CharacterClass, count)`.
 - **Entropy estimation:** `IEntropyEstimator` / `PoolEntropyEstimator` and `EstimateEntropyBits()`.
