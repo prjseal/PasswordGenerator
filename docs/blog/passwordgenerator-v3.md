@@ -42,6 +42,21 @@ This is the part I care about most.
 var password = new Password(20).Next();
 ```
 
+Here's how a password is built in v3. If you ask for, say, at least two digits,
+those get placed first, the rest of the length is filled from your chosen pool,
+and then the whole thing gets a proper crypto shuffle. So your requirements are
+guaranteed by construction, with no "generate and hope" retry loop.
+
+```mermaid
+flowchart LR
+    R["RequireAtLeast:<br/>1 lower, 1 upper, 2 digits, 1 special"] --> Place["place those characters first"]
+    Place --> Rest["fill the rest from the full pool"]
+    Rest --> Shuf["crypto Fisher-Yates shuffle"]
+    Shuf --> Out["valid by construction"]
+    classDef good fill:#e6ffe6,stroke:#009900;
+    class Out good;
+```
+
 ## New features worth knowing about
 
 There's quite a lot here, so I'll pick out the highlights.
@@ -133,6 +148,25 @@ fix. If you'd rather not deal with exceptions, there's a non-throwing path.
 ```csharp
 if (new Password(16).TryNext(out var result))
     Console.WriteLine(result);
+```
+
+The difference is easier to see than to describe. In v2, a configuration that
+couldn't produce a password eventually handed you the string "Try again" as if it
+were a real password. In v3, you either get a real password or a clear signal that
+something's wrong.
+
+```mermaid
+stateDiagram-v2
+    state "v2 (before)" as Old {
+        [*] --> RetryLoop
+        RetryLoop --> OKo: valid
+        RetryLoop --> StrFail: gives up, returns 'Try again' string
+    }
+    state "v3 (now)" as New {
+        [*] --> Validate
+        Validate --> BuildOK: build guarantees a real password
+        Validate --> Throw: invalid config, throws or returns false
+    }
 ```
 
 ## What you need to run it
