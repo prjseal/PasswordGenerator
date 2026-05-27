@@ -30,6 +30,13 @@ namespace PasswordGenerator
 
             var options = new PasswordOptions();
             configuration.Bind(options);
+
+            // The configuration binder skips empty string values, so an explicit empty separator
+            // (the way a config file asks for "no separator") would otherwise be lost and the
+            // default '-' kept. Honor it explicitly as null.
+            if (options.Passphrase != null && configuration["Passphrase:Separator"] == string.Empty)
+                options.Passphrase.Separator = null;
+
             configure?.Invoke(options);
             return AddCore(services, options);
         }

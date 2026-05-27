@@ -102,6 +102,12 @@ For sites that require a digit and a symbol, pass `includeSymbol: true`. A rando
 to one randomly chosen word (e.g. `maple-river#-quartz-bloom-42`), so the phrase passes composition
 rules while staying memorable.
 
+To omit the separator entirely, pass `separator: null` (or an empty string when binding from
+configuration); the words are concatenated directly, e.g.
+`Password.ForPassphrase(4, separator: null).Next()` → `"mapleriverquartzbloom42"`. This does not
+change the passphrase's entropy — the separator is a fixed character and never contributes to
+strength — it only affects readability.
+
 ## Quality controls
 
 ```csharp

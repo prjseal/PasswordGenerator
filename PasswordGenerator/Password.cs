@@ -458,7 +458,7 @@ namespace PasswordGenerator
 
         /// <summary>Diceware-style passphrase built from the EFF Large Wordlist.</summary>
         /// <param name="words">The number of words in the passphrase.</param>
-        /// <param name="separator">The character placed between words.</param>
+        /// <param name="separator">The character placed between words, or <see langword="null" /> for no separator.</param>
         /// <param name="capitalize">Whether to capitalize the first letter of each word.</param>
         /// <param name="includeNumber">Whether to append a random two-digit number.</param>
         /// <param name="includeSymbol">Whether to attach a random symbol to one randomly chosen word.</param>
@@ -466,7 +466,7 @@ namespace PasswordGenerator
         ///     An optional entropy floor; when greater than zero the configuration is rejected if it
         ///     falls below this many bits.
         /// </param>
-        public static IPasswordGenerator ForPassphrase(int words = 4, char separator = '-',
+        public static IPasswordGenerator ForPassphrase(int words = 4, char? separator = '-',
             bool capitalize = false, bool includeNumber = true, bool includeSymbol = false,
             double minimumEntropyBits = 0)
         {
@@ -479,11 +479,11 @@ namespace PasswordGenerator
         ///     The word count is derived from the word-list size, and the same value is enforced as a floor.
         /// </summary>
         /// <param name="targetBits">The minimum entropy in bits (defaults to 80, a strong target).</param>
-        /// <param name="separator">The character placed between words.</param>
+        /// <param name="separator">The character placed between words, or <see langword="null" /> for no separator.</param>
         /// <param name="capitalize">Whether to capitalize the first letter of each word.</param>
         /// <param name="includeNumber">Whether to append a random two-digit number.</param>
         /// <param name="includeSymbol">Whether to attach a random symbol to one randomly chosen word.</param>
-        public static IPasswordGenerator ForPassphraseWithEntropy(double targetBits = 80, char separator = '-',
+        public static IPasswordGenerator ForPassphraseWithEntropy(double targetBits = 80, char? separator = '-',
             bool capitalize = false, bool includeNumber = true, bool includeSymbol = false)
         {
             var words = PassphraseGenerator.WordCountForEntropy(targetBits, includeNumber);

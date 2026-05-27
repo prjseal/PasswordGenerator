@@ -19,9 +19,10 @@ namespace PasswordGenerator
         /// <summary>Creates a passphrase generator.</summary>
         /// <param name="wordCount">The number of words in each passphrase; must be at least one.</param>
         /// <param name="separator">
-        ///     The character placed between words (and before the trailing number). Note that a few EFF
-        ///     words contain a hyphen (e.g. "t-shirt"), so if you need to split the output back into words
-        ///     choose a separator that does not occur in any word, such as '.' or a space.
+        ///     The character placed between words (and before the trailing number), or <see langword="null" />
+        ///     for no separator at all (the words are concatenated directly). Note that a few EFF words
+        ///     contain a hyphen (e.g. "t-shirt"), so if you need to split the output back into words choose a
+        ///     separator that does not occur in any word, such as '.' or a space.
         /// </param>
         /// <param name="capitalize">Whether to capitalize the first letter of each word.</param>
         /// <param name="includeNumber">Whether to append a random two-digit number.</param>
@@ -39,7 +40,7 @@ namespace PasswordGenerator
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="wordCount" /> is less than one.</exception>
         /// <exception cref="ArgumentException">The estimated entropy is below <paramref name="minimumEntropyBits" />.</exception>
-        public PassphraseGenerator(int wordCount = 4, char separator = '-', bool capitalize = false,
+        public PassphraseGenerator(int wordCount = 4, char? separator = '-', bool capitalize = false,
             bool includeNumber = true, bool includeSymbol = false, double minimumEntropyBits = 0,
             IRandomSource? randomSource = null)
         {
@@ -66,8 +67,8 @@ namespace PasswordGenerator
         /// <summary>The number of words in each passphrase.</summary>
         public int WordCount { get; }
 
-        /// <summary>The character placed between words.</summary>
-        public char Separator { get; }
+        /// <summary>The character placed between words, or <see langword="null" /> for no separator.</summary>
+        public char? Separator { get; }
 
         /// <summary>Whether the first letter of each word is capitalized.</summary>
         public bool Capitalize { get; }
@@ -104,7 +105,7 @@ namespace PasswordGenerator
 
             for (var i = 0; i < WordCount; i++)
             {
-                if (i > 0) sb.Append(Separator);
+                if (i > 0 && Separator is char sep) sb.Append(sep);
 
                 var word = WordList.Words[_random.NextInt(WordList.Words.Length)];
                 if (Capitalize && word.Length > 0)
@@ -122,7 +123,7 @@ namespace PasswordGenerator
 
             if (IncludeNumber)
             {
-                sb.Append(Separator);
+                if (Separator is char numSep) sb.Append(numSep);
                 sb.Append((_random.NextInt(90) + 10).ToString(CultureInfo.InvariantCulture));
             }
 

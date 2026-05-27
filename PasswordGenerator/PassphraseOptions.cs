@@ -10,8 +10,11 @@ namespace PasswordGenerator
         /// <summary>The number of words in each passphrase. Defaults to <c>4</c>.</summary>
         public int WordCount { get; set; } = 4;
 
-        /// <summary>The character placed between words. Defaults to <c>'-'</c>.</summary>
-        public char Separator { get; set; } = '-';
+        /// <summary>
+        ///     The character placed between words. Defaults to <c>'-'</c>. Set to <see langword="null" />
+        ///     (or an empty string in configuration) for no separator.
+        /// </summary>
+        public char? Separator { get; set; } = '-';
 
         /// <summary>Whether the first letter of each word is capitalized.</summary>
         public bool Capitalize { get; set; }
