@@ -1,6 +1,6 @@
 # Password Generator
 
-![Password Logo](https://github.com/prjseal/PasswordGenerator/blob/dev/v2/passwordgeneratorlogo.png "Password Logo")
+![Password Logo](https://raw.githubusercontent.com/prjseal/PasswordGenerator/master/passwordgeneratorlogo.png "Password Logo")
 
 A cross-platform .NET library that generates cryptographically secure random passwords, passphrases,
 OTPs, API keys and readable identifiers. Configure it with a fluent API, ready-made presets
@@ -17,7 +17,7 @@ Install via NuGet: ``` Install-Package PasswordGenerator ```
 It targets `net8.0` and `net10.0`, so it requires .NET 8 or later. If you need to run on .NET
 Framework or other older runtimes, use the 2.x line (which targets `netstandard2.0`).
 
-> **Upgrading from 2.x?** See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
+> **Upgrading from 2.x?** See the [v2 → v3 migration guide](https://github.com/prjseal/PasswordGenerator/blob/master/docs/migration-v2-to-v3.md).
 > The v2 API still works; the one behavioural change is that invalid settings now **throw** (or use
 > `TryNext`) instead of returning an error string as the "password".
 
