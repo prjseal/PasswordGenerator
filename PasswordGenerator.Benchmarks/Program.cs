@@ -12,11 +12,9 @@ namespace PasswordGenerator.Benchmarks
         {
             // DefaultConfig already supplies the GitHub markdown exporter (MarkdownExporter-github),
             // which produces the *-report-github.md files the workflow drops into the step summary.
-            // Every benchmark is run on both runtimes so the reports compare .NET 8 against .NET 10
-            // side by side (BenchmarkDotNet adds a "Runtime" column).
+            // Benchmarks run on .NET 10, the runtime the library is built and shipped against.
             var config = DefaultConfig.Instance
                 .AddDiagnoser(MemoryDiagnoser.Default)
-                .AddJob(Job.Default.WithRuntime(CoreRuntime.Core80))
                 .AddJob(Job.Default.WithRuntime(CoreRuntime.Core10_0));
 
             BenchmarkSwitcher

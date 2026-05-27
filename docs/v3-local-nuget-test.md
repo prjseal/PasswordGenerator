@@ -395,3 +395,7 @@ NuGet feed, and the public API — fluent builder, presets, quality controls, er
 async, batch generation, and both dependency-injection registration paths — all behave as
 documented in the Readme and CHANGELOG. The only non-fatal note during the whole run was the
 empty-SourceLink build warning, which is expected when packing outside CI.
+
+---
+
+**Docs:** [← Migrating from v2.x to v3.0](migration-v2-to-v3.md) · [Index](README.md)

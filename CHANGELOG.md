@@ -61,5 +61,4 @@ See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
 
 ## 2.1.0 and earlier
 
-See the project history and the original review in
-[`docs/archive/V3_REVIEW_AND_DOCUMENTATION.md`](docs/archive/V3_REVIEW_AND_DOCUMENTATION.md).
+See the project history in the Git log and the [GitHub releases](https://github.com/prjseal/PasswordGenerator/releases).

@@ -152,3 +152,7 @@ string apiKey  = Password.ForApiKey(32).Next();          // URL-safe token
 string envName = Password.ForEnvironmentName(12).Next(); // readable, no look-alikes
 string phrase  = Password.ForPassphrase(4).Next();       // "maple-river-quartz-bloom-42"
 ```
+
+---
+
+**Docs:** [← Configuration & DI](configuration-and-di.md) · [Index](README.md) · Next → [Local NuGet test report](v3-local-nuget-test.md)
