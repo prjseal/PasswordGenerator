@@ -23,6 +23,7 @@ namespace PasswordGenerator
         ///     Registers the generator, binding options from configuration (e.g. appSettings.json) and then
         ///     applying an optional code override. Resolution order is <c>configure (code) &gt; configuration &gt; default</c>.
         /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="configuration" /> is <see langword="null" />.</exception>
         public static IServiceCollection AddPasswordGenerator(this IServiceCollection services,
             IConfiguration configuration, Action<PasswordOptions>? configure = null)
         {

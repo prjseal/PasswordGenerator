@@ -30,6 +30,7 @@ namespace PasswordGenerator
         IPassword IncludeSpecial(string specialCharactersToInclude);
 
         /// <summary>Replaces the pool with an explicit set of characters (no forced composition).</summary>
+        /// <exception cref="System.ArgumentNullException"><paramref name="characters" /> is <see langword="null" />.</exception>
         IPassword WithCharacters(string characters);
 
         /// <summary>Uses every printable ASCII character as the pool (no forced composition).</summary>
@@ -39,6 +40,8 @@ namespace PasswordGenerator
         IPassword ExcludeAmbiguous();
 
         /// <summary>Requires at least <paramref name="count" /> characters from the given class.</summary>
+        /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="count" /> is negative.</exception>
+        /// <exception cref="System.InvalidOperationException">A custom character pool is in use (per-class minimums cannot be combined with it).</exception>
         IPassword RequireAtLeast(CharacterClass characterClass, int count);
 
         /// <summary>Sets the required password length.</summary>

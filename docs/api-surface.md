@@ -73,6 +73,11 @@ Passphrases are built from the **EFF Large Wordlist** (7,776 words, ~12.9 bits/w
 
 - `ForPassphraseWithEntropy(targetBits)` derives the word count needed to clear a target and enforces
   it as a floor; `ForPassphrase(..., minimumEntropyBits)` enforces a floor for an explicit word count.
+  The derivation is exposed directly as the static `PassphraseGenerator.WordCountForEntropy(targetBits,
+  includeNumber)` if you want the word count without building a generator.
+- The separator is a `char?` — pass `separator: null` (or an empty string when binding from
+  configuration) to concatenate the words with no separator. This does not change entropy; the
+  separator is a fixed character and never contributes to strength.
 - `includeSymbol: true` attaches a random symbol to one randomly chosen word, satisfying
   "needs a number and a symbol" composition rules while staying memorable.
 - `EstimateEntropyBits()` (on `IPasswordGenerator`) reports the estimated strength.

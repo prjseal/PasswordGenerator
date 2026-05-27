@@ -97,6 +97,7 @@ namespace PasswordGenerator
         ///     Creates a password generator with an explicit random source. The caller owns the
         ///     supplied <paramref name="randomSource" /> and is responsible for disposing it.
         /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="randomSource" /> is <see langword="null" />.</exception>
         public Password(IPasswordSettings settings, IRandomSource randomSource)
         {
             Settings = settings;

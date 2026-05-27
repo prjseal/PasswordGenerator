@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace PasswordGenerator.Tests
 {
     /// <summary>
-    ///     Compile-and-run guards for the snippets in Readme.md and the v2->v3 migration guide, so the
+    ///     Compile-and-run guards for the snippets in README.md and the v2->v3 migration guide, so the
     ///     documentation cannot drift from the public API.
     /// </summary>
     public class DocumentationSnippetTests

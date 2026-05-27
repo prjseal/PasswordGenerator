@@ -32,6 +32,26 @@ applies. `appSettings` binding is an **opt-in, separate step** — it is never a
 }
 ```
 
+## Example `appSettings.json` (passphrase)
+
+Setting a `Passphrase` section makes the registered generator produce passphrases instead of
+character passwords (the character-pool options above are then ignored). An empty `Separator`
+(`""`) means *no separator* — the configuration binder skips empty values, so the DI registration
+maps an explicit empty string to `null` for you.
+
+```jsonc
+{
+  "PasswordGenerator": {
+    "Passphrase": {
+      "WordCount": 6,
+      "Separator": "",
+      "Capitalize": true,
+      "IncludeNumber": true
+    }
+  }
+}
+```
+
 ## DI registration (opt-in, not auto-registered on install)
 
 ```mermaid
