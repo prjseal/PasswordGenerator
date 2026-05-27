@@ -35,6 +35,9 @@ See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
 - **Symbol injection:** `ForPassphrase(..., includeSymbol: true)` attaches a random symbol to one
   randomly chosen word, so passphrases satisfy "needs a number and a symbol" rules while staying
   memorable. Entropy estimation now accounts for both the trailing number and the symbol.
+- **Optional passphrase separator:** the separator is now a `char?` — pass `separator: null` (or an
+  empty string when binding from configuration) to concatenate words with no separator. This does not
+  affect entropy.
 - **`ForMemorable()` preset:** capitalized words sized to at least 80 bits of entropy.
 - **Passphrases via dependency injection:** set `PasswordOptions.Passphrase` (a `PassphraseOptions`)
   in code or bind a `Passphrase` section from configuration to resolve a passphrase

@@ -1,6 +1,6 @@
 # Password Generator
 
-![Password Logo](https://github.com/prjseal/PasswordGenerator/blob/dev/v2/passwordgeneratorlogo.png "Password Logo")
+![Password Logo](https://raw.githubusercontent.com/prjseal/PasswordGenerator/master/passwordgeneratorlogo.png "Password Logo")
 
 A cross-platform .NET library that generates cryptographically secure random passwords, passphrases,
 OTPs, API keys and readable identifiers. Configure it with a fluent API, ready-made presets
@@ -17,11 +17,14 @@ Install via NuGet: ``` Install-Package PasswordGenerator ```
 It targets `net8.0` and `net10.0`, so it requires .NET 8 or later. If you need to run on .NET
 Framework or other older runtimes, use the 2.x line (which targets `netstandard2.0`).
 
-> **Upgrading from 2.x?** See the [v2 → v3 migration guide](docs/migration-v2-to-v3.md).
+> **Upgrading from 2.x?** See the [v2 → v3 migration guide](https://github.com/prjseal/PasswordGenerator/blob/master/docs/migration-v2-to-v3.md).
 > The v2 API still works; the one behavioural change is that invalid settings now **throw** (or use
 > `TryNext`) instead of returning an error string as the "password".
 
 ## Basic usage
+
+> The examples below assume `using PasswordGenerator;` (and, for the dependency-injection section,
+> `using Microsoft.Extensions.DependencyInjection;`).
 
 ```csharp
 // By default, all character types are available and the length is 16.
@@ -80,8 +83,8 @@ var password = pwd.Next();
 ## Presets
 
 Ready-made starting points; later fluent calls still override them. See the
-[standards mapping](docs/migration-v2-to-v3.md#6-standards-mapping-for-the-presets) for the
-OWASP/NIST rationale.
+[standards mapping](https://github.com/prjseal/PasswordGenerator/blob/master/docs/migration-v2-to-v3.md#6-standards-mapping-for-the-presets)
+for the OWASP/NIST rationale.
 
 ```csharp
 string strong  = Password.ForOwasp().Next();            // full printable-ASCII pool, length 16
@@ -90,7 +93,7 @@ string otp     = Password.ForOtp(6).Next();             // 6-digit one-time code
 string apiKey  = Password.ForApiKey(32).Next();         // URL-safe token
 string envName = Password.ForEnvironmentName(12).Next();// readable id, no look-alike characters
 string phrase  = Password.ForPassphrase(4).Next();      // e.g. "maple-river-quartz-bloom-42"
-string strong  = Password.ForPassphraseWithEntropy(80).Next(); // word count derived to clear 80 bits
+string strongPhrase = Password.ForPassphraseWithEntropy(80).Next(); // word count derived to clear 80 bits
 string memorable = Password.ForMemorable().Next();      // capitalized, ~80+ bits, e.g. "Maple-River-Quartz-Bloom-Glade-Vivid-42"
 ```
 
@@ -102,13 +105,20 @@ For sites that require a digit and a symbol, pass `includeSymbol: true`. A rando
 to one randomly chosen word (e.g. `maple-river#-quartz-bloom-42`), so the phrase passes composition
 rules while staying memorable.
 
+To omit the separator entirely, pass `separator: null` (or an empty string when binding from
+configuration); the words are concatenated directly, e.g.
+`Password.ForPassphrase(4, separator: null).Next()` → `"mapleriverquartzbloom42"`. This does not
+change the passphrase's entropy — the separator is a fixed character and never contributes to
+strength — it only affects readability.
+
 ## Quality controls
 
 ```csharp
 // Remove look-alike characters (I l 1 O 0 o)
 var readable = new Password(20).ExcludeAmbiguous().Next();
 
-// Guarantee at least N characters from a class
+// Guarantee at least N characters from a class.
+// CharacterClass values: Lowercase, Uppercase, Numeric, Special.
 var pwd = new Password(16).RequireAtLeast(CharacterClass.Numeric, 2).Next();
 
 // Use a custom pool, or every printable ASCII character
@@ -132,10 +142,19 @@ if (new Password(16).TryNext(out var result))
 
 ## Async and batches
 
+`Generate(count)` returns a batch synchronously; the `Async` overloads return a `ValueTask` and honour
+a `CancellationToken`. The parameterless `Generate()` returns `DefaultBatchCount` passwords (1 by
+default; set the property to change it).
+
 ```csharp
-string password           = await pwd.NextAsync(cancellationToken);
-IReadOnlyList<string> ten = pwd.Generate(10);
-IReadOnlyList<string> ten2 = await pwd.GenerateAsync(10, cancellationToken);
+async Task ExampleAsync(CancellationToken cancellationToken)
+{
+    var pwd = new Password(16);
+
+    string password            = await pwd.NextAsync(cancellationToken);
+    IReadOnlyList<string> ten  = pwd.Generate(10);
+    IReadOnlyList<string> ten2 = await pwd.GenerateAsync(10, cancellationToken);
+}
 ```
 
 ## Dependency injection
@@ -164,17 +183,35 @@ services.AddPasswordGenerator(o =>
     o.Passphrase = new PassphraseOptions { WordCount = 6, Capitalize = true });
 ```
 
+You can also bind from `appSettings.json` (code configuration still takes precedence over bound
+values, which in turn take precedence over the defaults):
+
+```jsonc
+{
+  "PasswordGenerator": {
+    "Length": 20,
+    "IncludeSpecial": true,
+    "ExcludeAmbiguous": true,
+    "DefaultBatchCount": 5
+  }
+}
+```
+
+```csharp
+services.AddPasswordGenerator(config.GetSection("PasswordGenerator"));
+```
+
 ## Documentation
 
-- [v2 → v3 migration guide](docs/migration-v2-to-v3.md)
-- [Changelog](CHANGELOG.md)
-- [Design & architecture docs](docs/README.md)
+- [v2 → v3 migration guide](https://github.com/prjseal/PasswordGenerator/blob/master/docs/migration-v2-to-v3.md)
+- [Changelog](https://github.com/prjseal/PasswordGenerator/blob/master/CHANGELOG.md)
+- [Design & architecture docs](https://github.com/prjseal/PasswordGenerator/blob/master/docs/README.md)
 
 ## License & attribution
 
-PasswordGenerator is licensed under the [MIT License](License.md).
+PasswordGenerator is licensed under the [MIT License](https://github.com/prjseal/PasswordGenerator/blob/master/License.md).
 
 Passphrases are generated from the **EFF Large Wordlist** (7,776 words) by the
 [Electronic Frontier Foundation](https://www.eff.org/dice), used under the
 [Creative Commons Attribution 3.0 US](https://creativecommons.org/licenses/by/3.0/us/)
-license. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for details.
+license. See [THIRD-PARTY-NOTICES.md](https://github.com/prjseal/PasswordGenerator/blob/master/THIRD-PARTY-NOTICES.md) for details.

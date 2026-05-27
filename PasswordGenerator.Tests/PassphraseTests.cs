@@ -212,5 +212,77 @@ namespace PasswordGenerator.Tests
             var parts = generator.Next().Split('.');
             Assert.That(parts.Length, Is.EqualTo(5)); // 5 words, no trailing number
         }
+
+        [Test]
+        public void Next_WithNullSeparator_ConcatenatesWordsDirectly()
+        {
+            var rng = new FixedRandomSource(0, 1, 2, 3);
+            var generator = new PassphraseGenerator(4, separator: null, capitalize: false,
+                includeNumber: false, includeSymbol: false, minimumEntropyBits: 0, randomSource: rng);
+
+            var expected = string.Concat(
+                WordList.Words[0], WordList.Words[1], WordList.Words[2], WordList.Words[3]);
+            Assert.That(generator.Next(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Next_WithNullSeparator_AppendsNumberWithoutSeparator()
+        {
+            // Draw order: one index per word, then the trailing number (NextInt(90) + 10).
+            var rng = new FixedRandomSource(0, 1, 5);
+            var generator = new PassphraseGenerator(2, separator: null, capitalize: false,
+                includeNumber: true, includeSymbol: false, minimumEntropyBits: 0, randomSource: rng);
+
+            var expected = WordList.Words[0] + WordList.Words[1] + "15"; // 5 % 90 + 10
+            Assert.That(generator.Next(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Next_WithNullSeparator_StillCapitalizesEachWord()
+        {
+            var rng = new FixedRandomSource(0, 1);
+            var generator = new PassphraseGenerator(2, separator: null, capitalize: true,
+                includeNumber: false, includeSymbol: false, minimumEntropyBits: 0, randomSource: rng);
+
+            static string Cap(string w) => char.ToUpperInvariant(w[0]) + w.Substring(1);
+            var expected = Cap(WordList.Words[0]) + Cap(WordList.Words[1]);
+            Assert.That(generator.Next(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void ForPassphrase_AcceptsNullSeparator()
+        {
+            var generator = (PassphraseGenerator)Password.ForPassphrase(4, separator: null);
+            Assert.That(generator.Separator, Is.Null);
+        }
+
+        [Test]
+        public void NullSeparator_DoesNotChangeEntropy()
+        {
+            var withSeparator = Password.ForPassphrase(6, separator: '-').EstimateEntropyBits();
+            var withoutSeparator = Password.ForPassphrase(6, separator: null).EstimateEntropyBits();
+            Assert.That(withoutSeparator, Is.EqualTo(withSeparator));
+        }
+
+        [Test]
+        public void Di_BindsEmptySeparatorAsNull()
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["Passphrase:WordCount"] = "3",
+                    ["Passphrase:Separator"] = "",
+                    ["Passphrase:IncludeNumber"] = "false"
+                })
+                .Build();
+
+            var services = new ServiceCollection();
+            services.AddPasswordGenerator(configuration);
+
+            using var provider = services.BuildServiceProvider();
+            var generator = (PassphraseGenerator)provider.GetRequiredService<IPasswordGenerator>();
+
+            Assert.That(generator.Separator, Is.Null);
+        }
     }
 }

@@ -28,12 +28,14 @@ namespace PasswordGenerator
         IReadOnlyList<string> Generate();
 
         /// <summary>Generates <paramref name="count" /> passwords.</summary>
+        /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="count" /> is negative.</exception>
         IReadOnlyList<string> Generate(int count);
 
         /// <summary>Generates the default number of passwords, observing <paramref name="cancellationToken" />.</summary>
         ValueTask<IReadOnlyList<string>> GenerateAsync(CancellationToken cancellationToken = default);
 
         /// <summary>Generates <paramref name="count" /> passwords, observing <paramref name="cancellationToken" />.</summary>
+        /// <exception cref="System.ArgumentOutOfRangeException"><paramref name="count" /> is negative.</exception>
         ValueTask<IReadOnlyList<string>> GenerateAsync(int count, CancellationToken cancellationToken = default);
 
         /// <summary>Estimates the strength, in bits, of the output produced by this generator.</summary>
