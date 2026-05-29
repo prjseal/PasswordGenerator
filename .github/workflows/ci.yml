@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # full history so SourceLink can resolve the commit
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore PasswordGenerator.sln
+
+      - name: Build
+        run: dotnet build PasswordGenerator.sln -c Release --no-restore
+
+      - name: Test
+        run: >
+          dotnet test PasswordGenerator.Tests/PasswordGenerator.Tests.csproj
+          -c Release --no-build
+          --logger "trx;LogFileName=test-results.trx"
+          --results-directory ./test-results
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: ./test-results/*.trx
+
+      - name: Pack
+        run: dotnet pack PasswordGenerator/PasswordGenerator.csproj -c Release --no-build -o artifacts
+
+      - name: Upload package
+        uses: actions/upload-artifact@v7
+        with:
+          name: nuget
+          path: |
+            artifacts/*.nupkg
+            artifacts/*.snupkg

@@ -1,0 +1,63 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [main, dev/v3]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore PasswordGenerator.Benchmarks/PasswordGenerator.Benchmarks.csproj
+
+      - name: Build (Release)
+        run: dotnet build PasswordGenerator.Benchmarks/PasswordGenerator.Benchmarks.csproj -c Release --no-restore
+
+      - name: Run benchmarks
+        run: |
+          cd PasswordGenerator.Benchmarks
+          dotnet run -c Release --no-build -f net10.0 -- --filter '*'
+
+      - name: Publish results to workflow summary
+        if: always()
+        run: |
+          echo "# 📊 PasswordGenerator Benchmark Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Run date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          shopt -s nullglob
+          reports=(PasswordGenerator.Benchmarks/BenchmarkDotNet.Artifacts/results/*-report-github.md)
+          if [ ${#reports[@]} -eq 0 ]; then
+            echo "_No benchmark reports were produced._" >> $GITHUB_STEP_SUMMARY
+          fi
+          for f in "${reports[@]}"; do
+            name=$(basename "$f" -report-github.md)
+            echo "## $name" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            cat "$f" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          done
+
+      - name: Upload raw artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: benchmark-results-${{ github.run_number }}
+          path: PasswordGenerator.Benchmarks/BenchmarkDotNet.Artifacts/results/
+          retention-days: 90

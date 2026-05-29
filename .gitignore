@@ -6,7 +6,7 @@ PasswordGenerator/bin/Debug/$RANDOM_SEED$
 *.suo
 /.vs
 /PasswordGenerator/obj
-/PasswordGenerator/bin/Debug
+/PasswordGenerator/bin
 /UnitTests/obj
 /UnitTests/bin/Debug
 /packages
@@ -15,3 +15,14 @@ PasswordGenerator/bin/Debug/$RANDOM_SEED$
 /.idea
 /PasswordGenerator.2.0.0.nupkg
 *.nupkg
+
+# build output (all projects/configurations)
+[Bb]in/
+[Oo]bj/
+/artifacts
+
+# test output
+/test-results
+
+# BenchmarkDotNet output
+BenchmarkDotNet.Artifacts/
