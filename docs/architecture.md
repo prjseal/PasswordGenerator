@@ -140,3 +140,7 @@ rejection-sampling fallback, was dropped in v3 — see the [changelog](../CHANGE
 **Why this is better:** removes the `static`/undisposed RNG, makes randomness unbiased and testable
 (inject a deterministic `IRandomSource` in unit tests), and uses the fast, allocation-free built-in
 crypto API on every supported runtime.
+
+---
+
+**Docs:** [Index](README.md) · Next → [Generation Flow](generation-flow.md)

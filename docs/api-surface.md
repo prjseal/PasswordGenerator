@@ -4,8 +4,7 @@ Keeps the familiar fluent feel; adds safety, presets, batch, async, and custom p
 
 > The fluent builder is `IPassword` (there is no separate `IPasswordBuilder`/`Build()` split).
 > `Password` implements both `IPassword` and the generation contract `IPasswordGenerator`.
-> Passphrases return an `IPasswordGenerator` (`PassphraseGenerator`). See
-> `archive/implementation-plan.md` for how the shipped surface diverged from the early proposal.
+> Passphrases return an `IPasswordGenerator` (`PassphraseGenerator`).
 
 ## API map
 
@@ -110,6 +109,10 @@ flowchart TD
 > of async would be an anti-pattern and would spam every consumer with build warnings. Async exists
 > for ergonomics and cancellation only.
 
-**Why this is better:** every gap noted in the v2.1.0 review (`archive/current-state/api-surface.md`) is closed
+**Why this is better:** every gap from the v2.1.0 API is closed
 (`TryNext`/async/DI/presets/appSettings/custom pools), failures become explicit, and existing single
 `.Next()` users still work unchanged, giving a gentle upgrade path.
+
+---
+
+**Docs:** [← Generation Flow](generation-flow.md) · [Index](README.md) · Next → [Configuration & DI](configuration-and-di.md)

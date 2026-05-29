@@ -79,3 +79,7 @@ stateDiagram-v2
 **Why this is better:** failure is impossible to ignore (exception or `bool`), output is always a
 real password, randomness is unbiased and fully covered by deterministic-RNG unit tests, and the
 slowest part of the old design (validate-and-retry) is gone.
+
+---
+
+**Docs:** [← Architecture](architecture.md) · [Index](README.md) · Next → [Public API Surface](api-surface.md)

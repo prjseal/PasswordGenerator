@@ -95,3 +95,7 @@ builder does*.
 **Why this is better:** teams can centralise password policy in `appSettings`
 without forcing it on every call site, the RNG dependency is wired once, and unit tests can swap
 `IRandomSource` for a deterministic stub.
+
+---
+
+**Docs:** [← Public API Surface](api-surface.md) · [Index](README.md) · Next → [Migrating from v2.x to v3.0](migration-v2-to-v3.md)
