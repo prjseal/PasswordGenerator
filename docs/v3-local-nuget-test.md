@@ -65,8 +65,8 @@ info : Package 'PasswordGenerator' is compatible with all the specified framewor
 For the dependency-injection / `appsettings.json` scenarios two more packages were added:
 
 ```bash
-dotnet add package Microsoft.Extensions.DependencyInjection --version 8.0.0
-dotnet add package Microsoft.Extensions.Configuration.Json --version 8.0.0
+dotnet add package Microsoft.Extensions.DependencyInjection --version 10.0.8
+dotnet add package Microsoft.Extensions.Configuration.Json --version 10.0.8
 ```
 
 ### Resulting `PgTestApp.csproj`
@@ -85,8 +85,8 @@ dotnet add package Microsoft.Extensions.Configuration.Json --version 8.0.0
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
     <PackageReference Include="PasswordGenerator" Version="3.0.0" />
   </ItemGroup>
 </Project>
